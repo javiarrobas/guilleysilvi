@@ -1,0 +1,315 @@
+---
+/**
+ * Mapa (Leaflet + teselas de OpenStreetMap) con los puntos
+ * de la boda y, opcionalmente, la zona recomendada para alojarse.
+ * Se inicializa solo cuando el mapa entra en pantalla.
+ */
+import 'leaflet/dist/leaflet.css';
+import { getDictionary, getLocale, l } from '@/i18n';
+import type { Location } from '@/data/locations';
+
+interface Props {
+  locations: Location[];
+  zone?: { lat: number; lng: number; radiusMeters: number };
+  zoneLabel?: string;
+  /** 'all': encuadra todos los puntos. 'zone': encuadra solo la zona recomendada. */
+  fit?: 'all' | 'zone';
+  class?: string;
+  id?: string;
+}
+
+const { locations, zone, zoneLabel, fit = 'all', class: className, id, ...rest } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+
+const payload = {
+  fit,
+  zone: zone ? { ...zone, label: zoneLabel ?? '' } : null,
+  markers: locations.map((loc, i) => ({
+    n: i + 1,
+    lat: loc.lat,
+    lng: loc.lng,
+    name: loc.name,
+    short: l(loc.short, locale),
+    address: loc.address.join(', '),
+    mapsUrl: loc.mapsUrl,
+    highlight: Boolean(loc.highlight),
+  })),
+  labels: { open: t.common.openInMaps },
+};
+---
+
+<div {...rest} class:list={['venue-map', className]} id={id} data-venue-map={JSON.stringify(payload)}>
+  <p class="venue-map__loading small muted">{t.transport.mapLoading}</p>
+</div>
+
+<style is:global>
+  .venue-map {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    min-height: 20rem;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--sea-3);
+    border: 1px solid var(--line);
+  }
+
+  @media (min-width: 48em) {
+    .venue-map {
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  .venue-map.is-ready .venue-map__loading {
+    display: none;
+  }
+
+  .venue-map .leaflet-container {
+    font-family: var(--font-body);
+    background: var(--sea-3);
+  }
+
+  /* Teselas en tonos suaves, acordes con la paleta */
+  .venue-map .leaflet-tile-pane {
+    filter: saturate(0.25) brightness(1.03) contrast(0.95);
+  }
+
+  .venue-map .leaflet-control-attribution {
+    font-size: 0.6rem;
+    background: rgba(246, 243, 238, 0.8);
+    color: var(--stone);
+  }
+
+  .venue-map .leaflet-bar {
+    border: 1px solid var(--line-strong);
+    box-shadow: none;
+  }
+
+  .venue-map .leaflet-bar a {
+    color: var(--ink);
+    background: var(--paper);
+    border-bottom-color: var(--line);
+  }
+
+  .venue-marker {
+    background: transparent;
+    border: 0;
+  }
+
+  .venue-marker__pin {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid var(--paper);
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    box-shadow: 0 2px 10px rgba(22, 35, 43, 0.28);
+  }
+
+  .venue-marker--highlight .venue-marker__pin {
+    background: var(--sea);
+    font-size: 1.2rem;
+  }
+
+  .venue-marker--highlight::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--sea);
+    opacity: 0.7;
+    animation: venue-pulse 2.4s ease-out infinite;
+  }
+
+  @keyframes venue-pulse {
+    0% {
+      transform: scale(0.75);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .venue-marker--highlight::before {
+      animation: none;
+      opacity: 0.5;
+    }
+  }
+
+  .venue-map .leaflet-popup-content-wrapper {
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow);
+    color: var(--ink);
+  }
+
+  .venue-map .leaflet-popup-content {
+    margin: 0.9rem 1.1rem;
+    line-height: 1.45;
+    font-size: 0.9rem;
+  }
+
+  .venue-popup__short {
+    margin: 0;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .venue-popup__name {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.15;
+  }
+
+  .venue-popup__addr {
+    margin: 0.35rem 0 0;
+    color: var(--ink-2);
+  }
+
+  .venue-popup__link {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sea) !important;
+  }
+
+  .venue-map .leaflet-tooltip {
+    border: 1px solid var(--sea);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--sea);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    box-shadow: none;
+  }
+</style>
+
+<script>
+  import L from 'leaflet';
+
+  type Marker = {
+    n: number;
+    lat: number;
+    lng: number;
+    name: string;
+    short: string;
+    address: string;
+    mapsUrl: string;
+    highlight: boolean;
+  };
+
+  type Payload = {
+    fit: 'all' | 'zone';
+    zone: { lat: number; lng: number; radiusMeters: number; label: string } | null;
+    markers: Marker[];
+    labels: { open: string };
+  };
+
+  const escapeHtml = (value: string) =>
+    value.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c] ?? c);
+
+  const SEA = '#2f5f6e';
+
+  function init(el: HTMLElement) {
+    const data = JSON.parse(el.dataset.venueMap ?? '{}') as Payload;
+    el.classList.add('is-ready');
+
+    const map = L.map(el, {
+      scrollWheelZoom: false,
+      dragging: !L.Browser.mobile,
+      tapHold: false,
+      zoomSnap: 0.5,
+    });
+
+    // Teselas estándar de OpenStreetMap (sin clave). El CSS las desatura para
+    // integrarlas con la paleta de la web.
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19,
+    }).addTo(map);
+
+    const bounds = L.latLngBounds([]);
+    let zoneBounds: L.LatLngBounds | undefined;
+
+    if (data.zone) {
+      const circle = L.circle([data.zone.lat, data.zone.lng], {
+        radius: data.zone.radiusMeters,
+        color: SEA,
+        weight: 1.5,
+        dashArray: '4 6',
+        fillColor: SEA,
+        fillOpacity: 0.09,
+      }).addTo(map);
+      if (data.zone.label) circle.bindTooltip(data.zone.label, { direction: 'top', sticky: true });
+      // Sin depender de la vista del mapa (circle.getBounds() exige center/zoom previos).
+      zoneBounds = L.latLng(data.zone.lat, data.zone.lng).toBounds(data.zone.radiusMeters * 2);
+      bounds.extend(zoneBounds);
+    }
+
+    data.markers.forEach((m) => {
+      const size = m.highlight ? 40 : 34;
+      const icon = L.divIcon({
+        className: `venue-marker${m.highlight ? ' venue-marker--highlight' : ''}`,
+        html: `<span class="venue-marker__pin">${m.n}</span>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size / 2],
+        popupAnchor: [0, -(size / 2 + 4)],
+      });
+      const marker = L.marker([m.lat, m.lng], { icon, title: m.name, riseOnHover: true }).addTo(map);
+      marker.bindPopup(
+        `<div class="venue-popup">
+          <p class="venue-popup__short">${escapeHtml(m.short)}</p>
+          <p class="venue-popup__name">${escapeHtml(m.name)}</p>
+          <p class="venue-popup__addr">${escapeHtml(m.address)}</p>
+          <a class="venue-popup__link" href="${escapeHtml(m.mapsUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(data.labels.open)} ↗</a>
+        </div>`,
+      );
+      bounds.extend([m.lat, m.lng]);
+    });
+
+    if (data.fit === 'zone' && zoneBounds) {
+      map.fitBounds(zoneBounds, { padding: [24, 24] });
+    } else if (bounds.isValid()) {
+      map.fitBounds(bounds, { padding: [36, 36] });
+    }
+  }
+
+  const maps = document.querySelectorAll<HTMLElement>('[data-venue-map]');
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(entry.target);
+            init(entry.target as HTMLElement);
+          }
+        });
+      },
+      { rootMargin: '300px 0px' },
+    );
+    maps.forEach((el) => observer.observe(el));
+  } else {
+    maps.forEach(init);
+  }
+</script>

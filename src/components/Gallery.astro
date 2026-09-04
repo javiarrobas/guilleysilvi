@@ -1,0 +1,284 @@
+---
+/**
+ * Galería en mosaico editorial. Las formas (ancha / alta / grande) se asignan
+ * por posición para que el conjunto respire sin parecer un carrusel.
+ * Al tocar una foto se abre en un visor (<dialog>) con navegación.
+ */
+import { Image } from 'astro:assets';
+import { getDictionary, getLocale, interpolate } from '@/i18n';
+import type { GalleryImage } from '@/data/gallery';
+import Icon from './Icon.astro';
+
+interface Props {
+  images: GalleryImage[];
+}
+
+const { images } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+
+type Shape = 'square' | 'wide' | 'tall' | 'big';
+const pattern: Shape[] = ['wide', 'tall', 'square', 'square', 'big', 'square', 'tall', 'wide', 'square', 'square'];
+const cells: Record<Shape, number> = { square: 1, wide: 2, tall: 2, big: 4 };
+
+// Asigna formas por posición y ajusta el final para que la última fila
+// (4 columnas en escritorio, 2 en móvil) quede completa, sin huecos.
+const shapes: Shape[] = images.map((_, i) => pattern[i % pattern.length]);
+for (let i = Math.max(0, shapes.length - 4); i < shapes.length; i++) {
+  if (shapes[i] === 'tall' || shapes[i] === 'big') shapes[i] = 'square';
+}
+let missing = (4 - (shapes.reduce((n, shape) => n + cells[shape], 0) % 4)) % 4;
+for (let i = shapes.length - 1; i >= 0 && missing > 0; i--) {
+  if (shapes[i] === 'square') {
+    shapes[i] = 'wide';
+    missing--;
+  }
+}
+const shapeFor = (i: number) => shapes[i];
+---
+
+<div class="gallery" data-gallery>
+  {
+    images.map((img, i) => (
+      <figure class:list={['gallery__item', `gallery__item--${shapeFor(i)}`]}>
+        <button
+          class="gallery__button"
+          type="button"
+          data-gallery-open={i}
+          aria-label={interpolate(t.common.photoOf, { n: i + 1, total: images.length })}
+        >
+          <Image
+            class="gallery__img"
+            src={img.src}
+            alt={img.alt}
+            widths={[400, 800, 1200]}
+            sizes="(min-width: 64em) 33vw, 50vw"
+            loading={i < 4 ? 'eager' : 'lazy'}
+          />
+        </button>
+      </figure>
+    ))
+  }
+</div>
+
+<dialog class="lightbox" data-lightbox aria-label={t.photos.title}>
+  <button class="lightbox__close" type="button" data-lightbox-close aria-label={t.common.close}>
+    <Icon name="close" />
+  </button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lightbox-prev aria-label={t.common.previous}>
+    <Icon name="arrowRight" />
+  </button>
+  <figure class="lightbox__figure">
+    <img class="lightbox__img" alt="" data-lightbox-img />
+    <figcaption class="lightbox__caption small" data-lightbox-caption></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next aria-label={t.common.next}>
+    <Icon name="arrowRight" />
+  </button>
+</dialog>
+
+<style>
+  .gallery {
+    --gap: 0.5rem;
+    --cols: 2;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    /* Alto de fila = ancho de columna → las celdas son cuadradas */
+    grid-auto-rows: calc((min(100vw - 2 * var(--gutter), var(--container)) - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    grid-auto-flow: dense;
+    gap: var(--gap);
+  }
+
+  .gallery__item--wide {
+    grid-column: span 2;
+  }
+
+  .gallery__item--tall {
+    grid-row: span 2;
+  }
+
+  .gallery__item--big {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .gallery__button {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--paper-2);
+    cursor: zoom-in;
+  }
+
+  .gallery__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s var(--ease);
+  }
+
+  .gallery__button:hover .gallery__img {
+    transform: scale(1.03);
+  }
+
+  @media (min-width: 48em) {
+    .gallery {
+      --gap: 0.75rem;
+      --cols: 4;
+    }
+  }
+
+  /* Visor */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgba(22, 35, 43, 0.96);
+    color: var(--paper);
+  }
+
+  .lightbox::backdrop {
+    background: transparent;
+  }
+
+  .lightbox[open] {
+    display: grid;
+    grid-template-columns: 3.5rem minmax(0, 1fr) 3.5rem;
+    align-items: center;
+  }
+
+  .lightbox__figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    max-height: 100dvh;
+    padding: 4rem 0;
+  }
+
+  .lightbox__img {
+    max-width: 100%;
+    max-height: calc(100dvh - 9rem);
+    object-fit: contain;
+  }
+
+  .lightbox__caption {
+    color: rgba(246, 243, 238, 0.7);
+    text-align: center;
+  }
+
+  .lightbox__caption:empty {
+    display: none;
+  }
+
+  .lightbox__close,
+  .lightbox__nav {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid rgba(246, 243, 238, 0.3);
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .lightbox__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .lightbox__nav {
+    justify-self: center;
+  }
+
+  .lightbox__nav--prev .icon {
+    transform: rotate(180deg);
+  }
+
+  @media (max-width: 40em) {
+    .lightbox[open] {
+      grid-template-columns: 1fr;
+    }
+    .lightbox__nav {
+      position: absolute;
+      bottom: 1rem;
+    }
+    .lightbox__nav--prev {
+      left: 1rem;
+    }
+    .lightbox__nav--next {
+      right: 1rem;
+    }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-gallery]');
+  const dialog = document.querySelector<HTMLDialogElement>('[data-lightbox]');
+
+  if (root && dialog && typeof dialog.showModal === 'function') {
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-gallery-open]'));
+    const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    let current = 0;
+
+    const show = (index: number) => {
+      current = (index + buttons.length) % buttons.length;
+      const source = buttons[current].querySelector('img');
+      if (!source) return;
+      // Usa la versión más grande disponible en srcset; si no, el src.
+      const candidates = (source.getAttribute('srcset') ?? '')
+        .split(',')
+        .map((s) => s.trim().split(' ')[0])
+        .filter(Boolean);
+      img.src = candidates[candidates.length - 1] ?? source.currentSrc ?? source.src;
+      img.alt = source.alt;
+      caption.textContent = source.alt;
+    };
+
+    buttons.forEach((button, index) =>
+      button.addEventListener('click', () => {
+        show(index);
+        dialog.showModal();
+      }),
+    );
+
+    dialog.querySelector('[data-lightbox-close]')?.addEventListener('click', () => dialog.close());
+    dialog.querySelector('[data-lightbox-prev]')?.addEventListener('click', () => show(current - 1));
+    dialog.querySelector('[data-lightbox-next]')?.addEventListener('click', () => show(current + 1));
+
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight') show(current + 1);
+    });
+
+    // Gestos: deslizar para cambiar de foto
+    let startX = 0;
+    dialog.addEventListener('touchstart', (e) => (startX = e.changedTouches[0].clientX), { passive: true });
+    dialog.addEventListener(
+      'touchend',
+      (e) => {
+        const delta = e.changedTouches[0].clientX - startX;
+        if (Math.abs(delta) > 50) show(delta < 0 ? current + 1 : current - 1);
+      },
+      { passive: true },
+    );
+  }
+</script>

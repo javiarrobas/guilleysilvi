@@ -1,0 +1,122 @@
+---
+import { Image } from 'astro:assets';
+import { getDictionary, getLocale, l } from '@/i18n';
+import { recommendationMapsUrl, type Recommendation } from '@/data/santander';
+import type { IconName } from './icons';
+import Icon from './Icon.astro';
+
+interface Props {
+  item: Recommendation;
+  icon: IconName;
+}
+
+const { item, icon } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<article class="card reco">
+  {
+    item.image && (
+      <Image
+        class="reco__img"
+        src={item.image}
+        alt={item.imageAlt ?? item.name}
+        widths={[400, 800]}
+        sizes="(min-width: 64em) 360px, 100vw"
+      />
+    )
+  }
+  <div class="reco__body">
+    <div class="reco__head">
+      {
+        !item.image && (
+          <span class="reco__icon" aria-hidden="true">
+            <Icon name={icon} />
+          </span>
+        )
+      }
+      <h3 class="reco__name">{item.name}</h3>
+    </div>
+    <p class="reco__comment">{l(item.comment, locale)}</p>
+    <p class="reco__location small muted">
+      <Icon name="pin" />
+      {l(item.location, locale)}
+    </p>
+    <a class="arrow-link" href={recommendationMapsUrl(item)} target="_blank" rel="noopener noreferrer">
+      {t.common.viewOnMap}
+      <Icon name="external" />
+    </a>
+  </div>
+</article>
+
+<style>
+  .reco {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .reco__img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .reco__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1.25rem 1.25rem 1.35rem;
+  }
+
+  .reco__head {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .reco__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--sea-3);
+    color: var(--sea);
+  }
+
+  .reco__icon .icon {
+    width: 1.2rem;
+    height: 1.2rem;
+  }
+
+  .reco__name {
+    font-size: clamp(1.375rem, 3vw, 1.625rem);
+    line-height: 1.1;
+  }
+
+  .reco__comment {
+    color: var(--ink-2);
+  }
+
+  .reco__location {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.4rem;
+    margin-top: auto;
+  }
+
+  .reco__location .icon {
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.2rem;
+  }
+
+  @media (min-width: 40em) {
+    .reco__body {
+      padding: 1.4rem 1.5rem 1.5rem;
+    }
+  }
+</style>

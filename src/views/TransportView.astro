@@ -1,0 +1,147 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import VenueMap from '@/components/VenueMap.astro';
+import LocationCard from '@/components/LocationCard.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+import { locations, stayZone } from '@/data/locations';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="transport" title={t.nav.transport}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.transport.eyebrow} title={t.transport.title} lead={t.transport.lead} />
+  </header>
+
+  <section class="container section section--flush-top">
+    <VenueMap locations={locations} zone={stayZone} zoneLabel={t.transport.zoneTitle} />
+    <ul class="legend small">
+      <li><span class="legend__dot legend__dot--bus" aria-hidden="true">1</span>{t.transport.mapLegendBus}</li>
+      <li><span class="legend__ring" aria-hidden="true"></span>{t.transport.mapLegendZone}</li>
+    </ul>
+  </section>
+
+  <section class="container section section--flush-top">
+    <SectionHead eyebrow={t.transport.locationsEyebrow} title={t.transport.locationsTitle} size="lg" />
+    <div class="grid grid--3 locations">
+      {locations.map((location, i) => <LocationCard location={location} index={i + 1} />)}
+    </div>
+  </section>
+
+  <section class="container section section--flush-top">
+    <SectionHead eyebrow={t.transport.busEyebrow} title={t.transport.busTitle} size="lg" />
+    <div class="grid grid--2 buses">
+      {
+        [t.transport.busOut, t.transport.busBack].map((bus) => (
+          <article class="bus">
+            <Icon name="bus" class="bus__icon" />
+            <p class="bus__time">{bus.time}</p>
+            <h3 class="title-sm">{bus.title}</h3>
+            <p class="bus__text">{bus.text}</p>
+          </article>
+        ))
+      }
+    </div>
+    <p class="small muted busnote">{t.transport.busNote} <a href={href(locale, 'rsvp')}>{t.common.rsvp}</a>.</p>
+  </section>
+
+  <section class="container section section--flush-top">
+    <div class="grid grid--2 info">
+      <div>
+        <h2 class="title-md">{t.transport.zoneTitle}</h2>
+        <p class="info__text">{t.transport.zoneText}</p>
+        <a class="arrow-link" href={href(locale, 'stay')}>{t.nav.stay}<Icon name="arrowRight" /></a>
+      </div>
+      <div>
+        <h2 class="title-md">{t.transport.byCarTitle}</h2>
+        <p class="info__text">{t.transport.byCarText}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
+    margin-top: 1rem;
+    color: var(--ink-2);
+  }
+
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .legend__dot {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--sea);
+    color: var(--paper);
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+  }
+
+  .legend__ring {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 1.5px dashed var(--sea);
+    border-radius: 50%;
+    background: rgba(47, 95, 110, 0.1);
+  }
+
+  .locations,
+  .buses,
+  .info {
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .bus {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+
+  .bus__icon {
+    color: var(--sea);
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .bus__time {
+    margin-top: 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 7vw, 3rem);
+    line-height: 1;
+  }
+
+  .bus .title-sm {
+    margin-top: 0.5rem;
+  }
+
+  .bus__text {
+    margin-top: 0.6rem;
+    color: var(--ink-2);
+  }
+
+  .busnote {
+    margin-top: 1.25rem;
+    max-width: 62ch;
+  }
+
+  .info__text {
+    margin: 1rem 0 1.25rem;
+    max-width: 52ch;
+    color: var(--ink-2);
+  }
+</style>

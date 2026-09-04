@@ -1,0 +1,154 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import RecommendationCard from '@/components/RecommendationCard.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { guideCategories, recommendations, type GuideCategory } from '@/data/santander';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+
+/** Anclas (#…) de cada categoría, para compartir enlaces directos. */
+const anchors: Record<GuideCategory, string> = {
+  breakfast: 'desayunar',
+  lunch: 'comer',
+  rabas: 'rabas',
+  drinks: 'tomar-algo',
+  nightlife: 'salir',
+  beaches: 'playas',
+  walks: 'paseos',
+  sights: 'visitar',
+  extraDay: 'dia-extra',
+};
+---
+
+<Base page="santander" title={t.nav.santander}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.santander.eyebrow} title={t.santander.title} lead={t.santander.lead} />
+  </header>
+
+  <nav class="chips" aria-label={t.santander.categoriesLabel}>
+    <ul class="container chips__list">
+      {
+        guideCategories.map((category) => (
+          <li>
+            <a class="chip" href={`#${anchors[category.id]}`}>
+              <Icon name={category.icon} />
+              {t.santander.categories[category.id]}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    guideCategories.map((category) => {
+      const items = recommendations.filter((item) => item.category === category.id);
+      return (
+        <section class="container section section--flush-top category" id={anchors[category.id]}>
+          <div class="category__head">
+            <Icon name={category.icon} class="category__icon" />
+            <h2 class="title-md">{t.santander.categories[category.id]}</h2>
+          </div>
+          {items.length > 0 ? (
+            <div class="grid grid--3 category__grid">
+              {items.map((item) => (
+                <RecommendationCard item={item} icon={category.icon} />
+              ))}
+            </div>
+          ) : (
+            <p class="muted category__empty">{t.santander.emptyCategory}</p>
+          )}
+        </section>
+      );
+    })
+  }
+</Base>
+
+<style>
+  .chips {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 30;
+    margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    padding-block: 0.6rem;
+    background: rgba(246, 243, 238, 0.92);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-block: 1px solid var(--line);
+  }
+
+  .chips__list {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    padding-block: 0.15rem;
+  }
+
+  .chips__list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+
+  .chip .icon {
+    width: 1rem;
+    height: 1rem;
+    color: var(--sea);
+  }
+
+  .chip:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .chip:hover .icon {
+    color: var(--paper);
+  }
+
+  .category {
+    scroll-margin-top: calc(var(--header-h) + 4.5rem);
+  }
+
+  .category__head {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .category__icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--sea);
+    stroke-width: 1.3;
+  }
+
+  .category__grid {
+    margin-top: 1.5rem;
+  }
+
+  .category__empty {
+    margin-top: 1.25rem;
+  }
+</style>

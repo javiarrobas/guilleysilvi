@@ -1,0 +1,156 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import VenueMap from '@/components/VenueMap.astro';
+import AccommodationCard from '@/components/AccommodationCard.astro';
+import SoonBadge from '@/components/SoonBadge.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+import { busLocation, stayZone } from '@/data/locations';
+import { accommodations, accommodationGroups } from '@/data/accommodations';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const grouped = accommodationGroups
+  .map((group) => ({ group, items: accommodations.filter((item) => item.group === group) }))
+  .filter(({ items }) => items.length > 0);
+---
+
+<Base page="stay" title={t.nav.stay}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.stay.eyebrow} title={t.stay.title} lead={t.stay.lead} />
+  </header>
+
+  <section class="container section section--flush-top">
+    <div class="zone">
+      <VenueMap locations={[busLocation]} zone={stayZone} zoneLabel={t.stay.zoneTitle} fit="zone" class="zone__map" />
+      <div class="zone__text">
+        <p class="eyebrow">{t.stay.zoneEyebrow}</p>
+        <h2 class="title-md">{t.stay.zoneTitle}</h2>
+        <p class="zone__desc">{t.stay.zoneText}</p>
+        <a class="btn btn--ghost btn--sm" href={busLocation.mapsUrl} target="_blank" rel="noopener noreferrer">
+          {busLocation.name}
+          <Icon name="external" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {
+    grouped.length === 0 ? (
+      <section class="container section section--flush-top">
+        <div class="soon">
+          <SoonBadge />
+          <h2 class="title-lg soon__title">{t.stay.soonTitle}</h2>
+          <p class="soon__text">{t.stay.soonText}</p>
+          <ul class="soon__groups">
+            {accommodationGroups.map((group) => (
+              <li>{t.stay.groups[group]}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ) : (
+      grouped.map(({ group, items }) => (
+        <section class="container section section--flush-top">
+          <SectionHead title={t.stay.groups[group]} size="md" />
+          <div class="grid grid--3 cards">
+            {items.map((item) => (
+              <AccommodationCard item={item} />
+            ))}
+          </div>
+        </section>
+      ))
+    )
+  }
+
+  <section class="container section section--flush-top">
+    <div class="tip">
+      <Icon name="compass" class="tip__icon" />
+      <div>
+        <p class="eyebrow eyebrow--ink">{t.stay.tipTitle}</p>
+        <p class="tip__text">{t.stay.tipText}</p>
+        <a class="arrow-link" href={href(locale, 'transport')}>{t.nav.transport}<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .zone {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .zone__desc {
+    margin: 1rem 0 1.25rem;
+    color: var(--ink-2);
+  }
+
+  .zone__text .title-md {
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 64em) {
+    .zone {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+
+  .soon {
+    padding: clamp(2rem, 6vw, 3.5rem);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+  }
+
+  .soon__title {
+    margin-top: 1rem;
+  }
+
+  .soon__text {
+    margin-top: 1rem;
+    color: var(--ink-2);
+  }
+
+  .soon__groups {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+  }
+
+  .soon__groups li {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 0.9375rem;
+  }
+
+  .cards {
+    margin-top: 1.5rem;
+  }
+
+  .tip {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    max-width: 62ch;
+  }
+
+  .tip__icon {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    color: var(--sea);
+    stroke-width: 1.2;
+  }
+
+  .tip__text {
+    margin: 0.5rem 0 0.9rem;
+    color: var(--ink-2);
+  }
+</style>

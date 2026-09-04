@@ -1,0 +1,39 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import Gallery from '@/components/Gallery.astro';
+import SoonBadge from '@/components/SoonBadge.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { gallery, galleryIsPlaceholder } from '@/data/gallery';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="photos" title={t.nav.photos}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.photos.eyebrow} title={t.photos.title} lead={t.photos.lead} />
+    {
+      galleryIsPlaceholder && (
+        <p class="placeholder-note">
+          <SoonBadge />
+          <span class="small muted">{t.photos.placeholderNote}</span>
+        </p>
+      )
+    }
+  </header>
+
+  <section class="container section section--flush-top">
+    <Gallery images={gallery} />
+  </section>
+</Base>
+
+<style>
+  .placeholder-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+</style>

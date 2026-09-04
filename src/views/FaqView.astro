@@ -1,0 +1,33 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import Faq from '@/components/Faq.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+import { faq } from '@/data/faq';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="faq" title={t.faq.eyebrow}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.faq.eyebrow} title={t.faq.title} lead={t.faq.lead} />
+  </header>
+
+  <section class="container container--narrow section section--flush-top">
+    <Faq items={faq} />
+    <p class="cta">
+      <a class="btn btn--primary" href={href(locale, 'rsvp')}>{t.common.rsvp}</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .container--narrow {
+    margin-inline: 0;
+  }
+  .cta {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+</style>

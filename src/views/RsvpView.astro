@@ -1,0 +1,127 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import SoonBadge from '@/components/SoonBadge.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const formUrl = siteConfig.rsvpFormUrl.trim();
+const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadline.es.trim();
+---
+
+<Base page="rsvp" title={t.nav.rsvp}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.rsvp.eyebrow} title={t.rsvp.title} lead={t.rsvp.lead} />
+  </header>
+
+  <section class="container section section--flush-top">
+    <div class="rsvp">
+      <div class="rsvp__action">
+        {
+          formUrl ? (
+            <a class="btn btn--primary btn--block" href={formUrl} target="_blank" rel="noopener noreferrer">
+              {t.rsvp.button}
+              <Icon name="external" />
+            </a>
+          ) : (
+            <>
+              <span class="btn btn--block" aria-disabled="true">
+                {t.rsvp.buttonSoon}
+              </span>
+              <p class="small muted rsvp__soon">
+                <SoonBadge />
+                {t.rsvp.soonText}
+              </p>
+            </>
+          )
+        }
+        <p class="rsvp__deadline">
+          <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
+          <span>{deadline || t.rsvp.deadlineSoon}</span>
+        </p>
+      </div>
+
+      <div class="rsvp__ask">
+        <h2 class="title-md">{t.rsvp.askTitle}</h2>
+        <ol class="rsvp__list">
+          {
+            t.rsvp.ask.map((item, i) => (
+              <li>
+                <span class="rsvp__num">{String(i + 1).padStart(2, '0')}</span>
+                <span>{item}</span>
+              </li>
+            ))
+          }
+        </ol>
+        <a class="arrow-link" href={href(locale, 'faq')}>{t.nav.faq}<Icon name="arrowRight" /></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rsvp {
+    display: grid;
+    gap: 3rem;
+  }
+
+  .rsvp__action {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .rsvp__soon {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .rsvp__deadline {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+  }
+
+  .rsvp__list {
+    margin: 1.25rem 0 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .rsvp__list li {
+    display: flex;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .rsvp__num {
+    flex: none;
+    width: 1.75rem;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--stone);
+    padding-top: 0.35rem;
+  }
+
+  @media (min-width: 64em) {
+    .rsvp {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+      gap: 5rem;
+      align-items: start;
+    }
+    .rsvp__action {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+    }
+  }
+</style>

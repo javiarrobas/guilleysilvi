@@ -1,0 +1,54 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import Timeline from '@/components/Timeline.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="day" title={t.nav.day}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.day.eyebrow} title={t.day.title} lead={t.day.lead} />
+  </header>
+
+  <section class="container section section--flush-top">
+    <Timeline />
+
+    <aside class="note">
+      <Icon name="clock" class="note__icon" />
+      <p class="small">{t.day.note}</p>
+    </aside>
+
+    <p class="cta">
+      <a class="btn btn--ghost" href={href(locale, 'transport')}>{t.day.mapCta}<Icon name="arrowRight" /></a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .note {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    max-width: 62ch;
+    margin-top: clamp(1rem, 3vw, 2rem);
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    color: var(--ink-2);
+    background: var(--white);
+  }
+
+  .note__icon {
+    margin-top: 0.15rem;
+    color: var(--sea);
+  }
+
+  .cta {
+    margin-top: clamp(2rem, 5vw, 3rem);
+  }
+</style>

@@ -1,0 +1,34 @@
+---
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="home" title={t.notFound.eyebrow}>
+  <section class="container page-head notfound">
+    <p class="eyebrow">{t.notFound.eyebrow}</p>
+    <h1 class="title-xl">{t.notFound.title}</h1>
+    <Icon name="waves" class="notfound__mark" />
+    <p class="lead">{t.notFound.text}</p>
+    <p><a class="btn btn--ghost" href={href(locale, 'home')}>{t.common.backHome}</a></p>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-bottom: clamp(4rem, 12vw, 8rem);
+  }
+  .notfound__mark {
+    width: 3rem;
+    height: 3rem;
+    color: var(--sea);
+    stroke-width: 1.2;
+  }
+</style>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+<defs>
+<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eceff0"/><stop offset="1" stop-color="#cbd9dd"/></linearGradient>
+<linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7d9ea8"/><stop offset="1" stop-color="#2f5f6e"/></linearGradient>
+</defs>
+<rect width="1000" height="1000" fill="url(#sky)"/>
+<rect y="680" width="1000" height="320" fill="url(#sea)"/>
+<circle cx="250" cy="430" r="55" fill="#f6f3ee" opacity="0.9"/>
+</svg>

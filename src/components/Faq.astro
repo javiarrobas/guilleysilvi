@@ -1,0 +1,105 @@
+---
+import { getDictionary, getLocale, l } from '@/i18n';
+import { href } from '@/i18n/routes';
+import type { FaqItem } from '@/data/faq';
+import Icon from './Icon.astro';
+import SoonBadge from './SoonBadge.astro';
+
+interface Props {
+  items: FaqItem[];
+}
+
+const { items } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<div class="faq">
+  {
+    items.map((item) => (
+      <details class="faq__item" id={item.id}>
+        <summary class="faq__question">
+          <span class="faq__question-text">{l(item.question, locale)}</span>
+          {item.soon && <SoonBadge class="faq__badge" />}
+          <Icon name="plus" class="faq__icon" />
+        </summary>
+        <div class="faq__answer">
+          <p>{item.answer ? l(item.answer, locale) : t.faq.soonAnswer}</p>
+          {item.links && (
+            <p class="faq__links">
+              {item.links.map((link) => (
+                <a class="arrow-link" href={href(locale, link.page)}>
+                  {l(link.label, locale)}
+                  <Icon name="arrowRight" />
+                </a>
+              ))}
+            </p>
+          )}
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .faq {
+    border-top: 1px solid var(--line);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq__question {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 0;
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 4vw, 1.625rem);
+    line-height: 1.2;
+  }
+
+  .faq__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__question-text {
+    flex: 1;
+  }
+
+  .faq__badge {
+    display: none;
+  }
+
+  .faq__icon {
+    color: var(--stone);
+    transition: transform 0.3s var(--ease);
+  }
+
+  .faq__item[open] .faq__icon {
+    transform: rotate(45deg);
+    color: var(--ink);
+  }
+
+  .faq__answer {
+    padding: 0 0 1.5rem;
+    max-width: 62ch;
+    color: var(--ink-2);
+  }
+
+  .faq__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 1.5rem;
+    margin-top: 1rem;
+  }
+
+  @media (min-width: 40em) {
+    .faq__badge {
+      display: inline-flex;
+    }
+  }
+</style>

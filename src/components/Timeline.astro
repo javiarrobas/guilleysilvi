@@ -1,0 +1,131 @@
+---
+import { getDictionary, getLocale, l } from '@/i18n';
+import { schedule } from '@/data/schedule';
+import { locations } from '@/data/locations';
+import Icon from './Icon.astro';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const byId = new Map(locations.map((loc) => [loc.id, loc]));
+---
+
+<ol class="timeline">
+  {
+    schedule.map((item) => {
+      const location = item.locationId ? byId.get(item.locationId) : undefined;
+      return (
+        <li class="timeline__item">
+          <time class="timeline__time tabular" datetime={item.time}>
+            {item.time}
+          </time>
+          <span class="timeline__marker" aria-hidden="true">
+            <Icon name={item.icon} />
+          </span>
+          <div class="timeline__body">
+            <h3 class="timeline__title">{l(item.title, locale)}</h3>
+            {item.place && <p class="timeline__place">{item.place}</p>}
+            {item.address && <address class="timeline__address small muted">{item.address.join(' · ')}</address>}
+            {item.text && <p class="timeline__text">{l(item.text, locale)}</p>}
+            {location && (
+              <a class="arrow-link timeline__link" href={location.mapsUrl} target="_blank" rel="noopener noreferrer">
+                {t.common.openInMaps}
+                <Icon name="external" />
+              </a>
+            )}
+          </div>
+        </li>
+      );
+    })
+  }
+</ol>
+
+<style>
+  .timeline {
+    --marker: 2.75rem;
+    --time-col: 3.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--time-col) var(--marker) minmax(0, 1fr);
+    column-gap: 1rem;
+    padding-bottom: clamp(2rem, 6vw, 3.25rem);
+  }
+
+  /* Línea vertical que une los marcadores */
+  .timeline__item::before {
+    content: '';
+    position: absolute;
+    top: var(--marker);
+    bottom: 0;
+    left: calc(var(--time-col) + 1rem + var(--marker) / 2);
+    width: 1px;
+    background: var(--line);
+    transform: translateX(-0.5px);
+  }
+
+  .timeline__item:last-child::before {
+    display: none;
+  }
+
+  .timeline__time {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+    line-height: var(--marker);
+    letter-spacing: -0.01em;
+  }
+
+  .timeline__marker {
+    display: grid;
+    place-items: center;
+    width: var(--marker);
+    height: var(--marker);
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .timeline__body {
+    padding-top: calc((var(--marker) - 1.6em) / 2);
+  }
+
+  .timeline__title {
+    font-size: clamp(1.5rem, 4.5vw, 2rem);
+    line-height: 1.1;
+  }
+
+  .timeline__place {
+    margin-top: 0.4rem;
+    font-weight: 500;
+  }
+
+  .timeline__address {
+    margin-top: 0.15rem;
+  }
+
+  .timeline__text {
+    margin-top: 0.6rem;
+    color: var(--ink-2);
+  }
+
+  .timeline__link {
+    margin-top: 0.9rem;
+  }
+
+  @media (min-width: 48em) {
+    .timeline {
+      --marker: 3.25rem;
+      --time-col: 6rem;
+    }
+    .timeline__item {
+      column-gap: 1.5rem;
+    }
+    .timeline__item::before {
+      left: calc(var(--time-col) + 1.5rem + var(--marker) / 2);
+    }
+  }
+</style>

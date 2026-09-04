@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import { getDictionary, getLocale, interpolate, l } from '@/i18n';
+import type { Accommodation } from '@/data/accommodations';
+import Icon from './Icon.astro';
+
+interface Props {
+  item: Accommodation;
+}
+
+const { item } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<article class="card stay-card">
+  {
+    item.image && (
+      <Image class="stay-card__img" src={item.image} alt={item.name} widths={[400, 800]} sizes="(min-width: 64em) 360px, 100vw" />
+    )
+  }
+  <div class="stay-card__body">
+    <div class="stay-card__meta">
+      <span class="badge">{t.stay.types[item.type]}</span>
+      <span class="small muted">{l(item.zone, locale)}</span>
+    </div>
+    <h3 class="stay-card__name title-sm">{item.name}</h3>
+    <ul class="stay-card__facts small">
+      <li>
+        <Icon name="walk" />
+        {interpolate(t.common.walking, { n: item.walkingMinutes })}
+      </li>
+      <li>
+        <Icon name="bed" />
+        {l(item.price, locale)} <span class="muted">{t.common.perNight}</span>
+      </li>
+    </ul>
+    <p class="stay-card__comment">{l(item.comment, locale)}</p>
+    <a class="btn btn--ghost btn--sm" href={item.url} target="_blank" rel="noopener noreferrer">
+      {t.common.viewAccommodation}
+      <Icon name="external" />
+    </a>
+  </div>
+</article>
+
+<style>
+  .stay-card {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stay-card__img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .stay-card__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .stay-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .stay-card__facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    color: var(--ink-2);
+  }
+
+  .stay-card__facts li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .stay-card__facts .icon {
+    width: 1.05rem;
+    height: 1.05rem;
+    color: var(--sea);
+  }
+
+  .stay-card__comment {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+
+  .stay-card .btn {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+</style>

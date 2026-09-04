@@ -1,0 +1,113 @@
+---
+import Base from '@/layouts/Base.astro';
+import SoonBadge from '@/components/SoonBadge.astro';
+import Icon from '@/components/Icon.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { href } from '@/i18n/routes';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="preboda" title={t.nav.preboda}>
+  <header class="container page-head">
+    <div class="preboda__top">
+      <p class="eyebrow">{t.preboda.eyebrow}</p>
+      <SoonBadge fill />
+    </div>
+    <h1 class="title-xl preboda__title">{t.preboda.title}</h1>
+  </header>
+
+  <section class="container section section--flush-top">
+    <div class="preboda__grid">
+      <div class="prose preboda__text">
+        {t.preboda.text.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+      <dl class="preboda__facts">
+        <div>
+          <dt class="eyebrow"><Icon name="clock" /></dt>
+          <dd>{t.preboda.when}</dd>
+        </div>
+        <div>
+          <dt class="eyebrow"><Icon name="pin" /></dt>
+          <dd>{t.preboda.where}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="preboda__note">
+      <Icon name="wine" class="preboda__icon" />
+      <p class="small muted">{t.preboda.formNote} <a href={href(locale, 'rsvp')}>{t.common.rsvp}</a>.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .preboda__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .preboda__title {
+    margin-top: 1rem;
+    max-width: 16ch;
+  }
+
+  .preboda__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .preboda__text {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4.5vw, 2.25rem);
+    line-height: 1.25;
+    max-width: 26ch;
+  }
+
+  .preboda__facts {
+    display: grid;
+    gap: 1.25rem;
+    align-content: start;
+  }
+
+  .preboda__facts div {
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .preboda__facts dt .icon {
+    color: var(--sea);
+  }
+
+  .preboda__facts dd {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .preboda__note {
+    display: flex;
+    gap: 0.9rem;
+    align-items: flex-start;
+    max-width: 62ch;
+    margin-top: clamp(2.5rem, 6vw, 4rem);
+  }
+
+  .preboda__icon {
+    flex: none;
+    color: var(--sea);
+    margin-top: 0.1rem;
+  }
+
+  @media (min-width: 48em) {
+    .preboda__grid {
+      grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      gap: 4rem;
+    }
+  }
+</style>
