@@ -9,13 +9,13 @@ GitHub Pages.
 
 ## Requisitos
 
-Node 20 (hay un `.nvmrc`): `nvm use` (o `nvm install 20` la primera vez).
+Node 22 LTS (hay un `.nvmrc`): `nvm use` (o `nvm install 22` la primera vez).
 
 ```bash
 npm install        # dependencias
 npm run dev        # http://localhost:4321 con recarga en caliente
 npm run build      # genera dist/
-npm run preview    # sirve dist/ tal y como se publicará
+npm run preview    # sirve dist/ en http://localhost:4321 tal y como lo hará GitHub Pages
 npm run check      # comprueba tipos y plantillas
 npm run test:e2e   # pruebas Playwright en móvil y escritorio (compila y sirve solo)
 npm run og         # regenera la imagen de vista previa (WhatsApp) desde la foto de portada
@@ -113,7 +113,7 @@ El prefijo `/guilleysilvi` se inyecta automáticamente en la compilación (varia
 exactamente lo que se publicará:
 
 ```bash
-BASE_PATH=/guilleysilvi npm run build && npm run preview
+BASE_PATH=/guilleysilvi npm run build && BASE_PATH=/guilleysilvi npm run preview
 ```
 
 ### Dominio propio (más adelante)

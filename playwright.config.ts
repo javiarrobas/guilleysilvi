@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 /**
  * Pruebas end-to-end con Playwright.
- *   npm run test:e2e            → compila, sirve (astro preview) y prueba en móvil y escritorio
+ *   npm run test:e2e            → compila, sirve dist/ y prueba en móvil y escritorio
  *   SCREENSHOTS=1 npm run test:e2e → además guarda capturas en tests/screenshots/
  */
 const PORT = 4321;
@@ -20,7 +20,7 @@ export default defineConfig({
     timezoneId: 'Europe/Madrid',
   },
   webServer: {
-    command: `npm run build && npm run preview -- --port ${PORT}`,
+    command: `npm run build && node scripts/serve.mjs dist ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
