@@ -1,0 +1,34 @@
+---
+/**
+ * Cabecera editorial de sección: etiqueta pequeña en mayúsculas,
+ * título grande en serif y, opcionalmente, una entradilla.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  as?: 'h1' | 'h2' | 'h3';
+  size?: 'xl' | 'lg' | 'md' | 'sm';
+  class?: string;
+  id?: string;
+}
+
+const { eyebrow, title, lead, as: Tag = 'h2', size = 'lg', class: className, id, ...rest } = Astro.props;
+---
+
+<div {...rest} class:list={['section-head', className]} id={id}>
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <Tag class:list={['section-head__title', `title-${size}`]}>{title}</Tag>
+  {lead && <p class="lead section-head__lead">{lead}</p>}
+  <slot />
+</div>
+
+<style>
+  .section-head__title {
+    margin-top: 0.85rem;
+  }
+  .section-head__lead {
+    margin-top: 1.25rem;
+    max-width: 60ch;
+  }
+</style>

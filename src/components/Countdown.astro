@@ -1,0 +1,143 @@
+---
+/**
+ * Cuenta atrás hasta la ceremonia. Se renderiza con los valores del momento
+ * de la compilación y el script la actualiza cada segundo en el navegador.
+ */
+import { getDictionary, getLocale } from '@/i18n';
+import { siteConfig } from '@/site.config';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className, ...rest } = Astro.props;
+const t = getDictionary(getLocale(Astro.currentLocale));
+
+const target = new Date(siteConfig.weddingDate);
+const diff = Math.max(0, target.getTime() - Date.now());
+const initial = {
+  days: Math.floor(diff / 86_400_000),
+  hours: Math.floor((diff / 3_600_000) % 24),
+  minutes: Math.floor((diff / 60_000) % 60),
+  seconds: Math.floor((diff / 1000) % 60),
+};
+const pad = (n: number) => String(n).padStart(2, '0');
+const units = [
+  { key: 'days', value: String(initial.days), label: t.countdown.days },
+  { key: 'hours', value: pad(initial.hours), label: t.countdown.hours },
+  { key: 'minutes', value: pad(initial.minutes), label: t.countdown.minutes },
+  { key: 'seconds', value: pad(initial.seconds), label: t.countdown.seconds },
+];
+---
+
+<div
+  {...rest}
+  class:list={['countdown', className]}
+  data-countdown
+  data-target={siteConfig.weddingDate}
+  data-today={t.countdown.today}
+  data-past={t.countdown.past}
+>
+  <p class="eyebrow countdown__label" data-countdown-label>{t.countdown.label}</p>
+  <div class="countdown__units" role="timer" data-countdown-units>
+    {
+      units.map((unit) => (
+        <div class="countdown__unit">
+          <span class="countdown__num tabular" data-unit={unit.key}>
+            {unit.value}
+          </span>
+          <span class="countdown__name">{unit.label}</span>
+        </div>
+      ))
+    }
+  </div>
+  <p class="countdown__message" hidden data-countdown-message></p>
+</div>
+
+<style>
+  .countdown__units {
+    display: flex;
+    gap: clamp(1rem, 4vw, 2.25rem);
+    margin-top: 0.75rem;
+  }
+
+  .countdown__unit {
+    display: flex;
+    flex-direction: column;
+    min-width: 2.2ch;
+  }
+
+  .countdown__num {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 9vw, 4.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .countdown__name {
+    margin-top: 0.4rem;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--stone);
+  }
+
+  .countdown__message {
+    margin-top: 0.5rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    line-height: 1.15;
+    color: var(--sea);
+  }
+</style>
+
+<script>
+  const roots = document.querySelectorAll<HTMLElement>('[data-countdown]');
+
+  roots.forEach((root) => {
+    const target = new Date(root.dataset.target ?? '').getTime();
+    if (Number.isNaN(target)) return;
+
+    const label = root.querySelector<HTMLElement>('[data-countdown-label]');
+    const units = root.querySelector<HTMLElement>('[data-countdown-units]');
+    const message = root.querySelector<HTMLElement>('[data-countdown-message]');
+    const fields = {
+      days: root.querySelector<HTMLElement>('[data-unit="days"]'),
+      hours: root.querySelector<HTMLElement>('[data-unit="hours"]'),
+      minutes: root.querySelector<HTMLElement>('[data-unit="minutes"]'),
+      seconds: root.querySelector<HTMLElement>('[data-unit="seconds"]'),
+    };
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const madridDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+    const weddingDay = madridDay.format(new Date(target));
+
+    const tick = () => {
+      const now = Date.now();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        const isToday = madridDay.format(new Date(now)) === weddingDay;
+        if (units) units.hidden = true;
+        if (label) label.hidden = true;
+        if (message) {
+          message.textContent = isToday ? root.dataset.today ?? '' : root.dataset.past ?? '';
+          message.hidden = false;
+        }
+        return false;
+      }
+
+      if (fields.days) fields.days.textContent = String(Math.floor(diff / 86_400_000));
+      if (fields.hours) fields.hours.textContent = pad(Math.floor((diff / 3_600_000) % 24));
+      if (fields.minutes) fields.minutes.textContent = pad(Math.floor((diff / 60_000) % 60));
+      if (fields.seconds) fields.seconds.textContent = pad(Math.floor((diff / 1000) % 60));
+      return true;
+    };
+
+    if (tick()) {
+      const timer = window.setInterval(() => {
+        if (!tick()) window.clearInterval(timer);
+      }, 1000);
+    }
+  });
+</script>

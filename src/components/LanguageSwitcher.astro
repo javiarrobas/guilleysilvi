@@ -1,0 +1,61 @@
+---
+/**
+ * Selector de idioma. Solo se muestra cuando hay más de un idioma publicado
+ * (siteConfig.enabledLocales). Enlaza a la misma página en el otro idioma.
+ */
+import { getDictionary, getLocale, type Locale } from '@/i18n';
+import { href, type PageKey } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
+
+interface Props {
+  current?: PageKey;
+  class?: string;
+}
+
+const { current = 'home', class: className, ...rest } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const enabled: Locale[] = siteConfig.enabledLocales;
+---
+
+{
+  enabled.length > 1 && (
+    <nav {...rest} class:list={['lang', className]} aria-label={t.common.language}>
+      <ul class="lang__list">
+        {enabled.map((code) => (
+          <li>
+            <a
+              href={href(code, current)}
+              hreflang={code}
+              lang={code}
+              aria-current={code === locale ? 'true' : undefined}
+              class="lang__link"
+            >
+              {getDictionary(code).label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
+
+<style>
+  .lang__list {
+    display: flex;
+    gap: 1rem;
+  }
+  .lang__link {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--stone);
+  }
+  .lang__link[aria-current='true'] {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 0.35em;
+  }
+</style>

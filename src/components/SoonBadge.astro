@@ -1,0 +1,24 @@
+---
+import { getDictionary, getLocale } from '@/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  class?: string;
+  fill?: boolean;
+}
+
+const { class: className, fill = false, ...rest } = Astro.props;
+const t = getDictionary(getLocale(Astro.currentLocale));
+---
+
+<span {...rest} class:list={['badge', fill ? 'badge--fill' : 'badge--sea', className]}>
+  <Icon name="clock" class="badge__icon" />
+  {t.common.soon}
+</span>
+
+<style>
+  .badge__icon {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+</style>

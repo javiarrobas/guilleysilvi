@@ -1,0 +1,113 @@
+---
+import { getDictionary, getLocale } from '@/i18n';
+import { href, type PageKey } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
+import Icon from './Icon.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  current?: PageKey;
+}
+
+const { current } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <hr class="rule" />
+    <div class="site-footer__inner">
+      <div class="site-footer__brand">
+        <p class="site-footer__names">
+          {siteConfig.couple.first} <span class="site-footer__amp">&amp;</span> {siteConfig.couple.second}
+        </p>
+        <p class="eyebrow">{t.common.dateDots} — {t.common.city}</p>
+      </div>
+
+      <Icon name="anchovy" class="site-footer__mark" />
+
+      <ul class="site-footer__links">
+        <li><a href={href(locale, 'faq')}>{t.nav.faq}</a></li>
+        <li><a href={href(locale, 'rsvp')}>{t.nav.rsvp}</a></li>
+        <li><a href="#top">{t.footer.top}</a></li>
+      </ul>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p class="small muted serif italic">{t.footer.tagline}</p>
+      <LanguageSwitcher current={current} />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    padding-block: 1rem clamp(2rem, 6vw, 4rem);
+    padding-bottom: max(clamp(2rem, 6vw, 4rem), env(safe-area-inset-bottom));
+  }
+
+  .site-footer__inner {
+    display: grid;
+    gap: 2rem;
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .site-footer__names {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    line-height: 1;
+    margin-bottom: 0.6rem;
+  }
+
+  .site-footer__amp {
+    font-style: italic;
+    color: var(--sea);
+  }
+
+  .site-footer__mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    color: var(--sea);
+    stroke-width: 1.2;
+  }
+
+  .site-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  .site-footer__links a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-2);
+  }
+
+  .site-footer__links a:hover {
+    color: var(--ink);
+    text-decoration: underline;
+  }
+
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 48em) {
+    .site-footer__inner {
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .site-footer__links {
+      justify-content: flex-end;
+    }
+  }
+</style>

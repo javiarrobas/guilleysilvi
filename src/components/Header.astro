@@ -1,0 +1,324 @@
+---
+import { getDictionary, getLocale } from '@/i18n';
+import { href, navKeys, type PageKey } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  current?: PageKey;
+}
+
+const { current } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<header class="site-header" data-header>
+  <div class="container site-header__inner">
+    <a class="brand" href={href(locale, 'home')} aria-label={t.meta.siteName}>
+      {siteConfig.couple.first} <span class="brand__amp">&amp;</span> {siteConfig.couple.second}
+    </a>
+
+    <nav class="nav-desktop" aria-label={t.common.menu}>
+      <ul class="nav-desktop__list">
+        {
+          navKeys.map((key) => (
+            <li>
+              <a href={href(locale, key)} aria-current={current === key ? 'page' : undefined}>
+                {t.nav[key]}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="site-header__actions">
+      <a class="btn btn--sm btn--primary site-header__cta" href={href(locale, 'rsvp')}>{t.nav.rsvp}</a>
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-menu"
+        aria-label={t.common.openMenu}
+        data-menu-toggle
+        data-label-open={t.common.openMenu}
+        data-label-close={t.common.closeMenu}
+      >
+        <span class="menu-toggle__bars" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+</header>
+
+<div class="site-menu" id="site-menu" hidden data-menu>
+  <div class="container site-menu__inner">
+    <nav aria-label={t.common.menu}>
+      <ol class="site-menu__list">
+        {
+          navKeys.map((key, i) => (
+            <li class="site-menu__item" style={`--i: ${i}`}>
+              <a href={href(locale, key)} aria-current={current === key ? 'page' : undefined}>
+                <span class="site-menu__num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="site-menu__label">{t.nav[key]}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+      <a class="btn btn--primary btn--block site-menu__cta" href={href(locale, 'rsvp')}>{t.nav.rsvp}</a>
+    </nav>
+    <div class="site-menu__foot">
+      <p class="eyebrow">{t.common.dateDots} — {t.common.city}</p>
+      <LanguageSwitcher current={current} />
+    </div>
+  </div>
+</div>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(246, 243, 238, 0.86);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--header-h);
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .brand__amp {
+    font-style: italic;
+    color: var(--sea);
+  }
+
+  .nav-desktop {
+    display: none;
+  }
+
+  .nav-desktop__list {
+    display: flex;
+    gap: clamp(1rem, 2vw, 1.75rem);
+  }
+
+  .nav-desktop a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-2);
+    padding-block: 0.25rem;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+
+  .nav-desktop a:hover,
+  .nav-desktop a[aria-current='page'] {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .site-header__cta {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-right: -0.5rem;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .menu-toggle__bars {
+    position: relative;
+    width: 1.375rem;
+    height: 0.75rem;
+  }
+
+  .menu-toggle__bars span {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.3s var(--ease), top 0.3s var(--ease);
+  }
+
+  .menu-toggle__bars span:first-child {
+    top: 0;
+  }
+
+  .menu-toggle__bars span:last-child {
+    top: calc(100% - 1.5px);
+  }
+
+  .site-header.is-open .menu-toggle__bars span {
+    top: calc(50% - 0.75px);
+  }
+
+  .site-header.is-open .menu-toggle__bars span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .site-header.is-open .menu-toggle__bars span:last-child {
+    transform: rotate(-45deg);
+  }
+
+  /* Menú a pantalla completa (móvil) */
+  .site-menu {
+    position: fixed;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 40;
+    overflow-y: auto;
+    background: var(--paper);
+  }
+
+  .site-menu__inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    min-height: 100%;
+    padding-block: clamp(1.5rem, 5vh, 3rem) clamp(1.5rem, 4vh, 2.5rem);
+    padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .site-menu__list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .site-menu__item {
+    border-top: 1px solid var(--line);
+    animation: menu-in 0.5s var(--ease) both;
+    animation-delay: calc(var(--i) * 40ms);
+  }
+
+  .site-menu__item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .site-menu__item a {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.9rem 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 6.5vw, 2.5rem);
+    line-height: 1.1;
+    text-decoration: none;
+  }
+
+  .site-menu__item a[aria-current='page'] .site-menu__label {
+    font-style: italic;
+    color: var(--sea);
+  }
+
+  .site-menu__num {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--stone);
+    min-width: 1.5rem;
+  }
+
+  .site-menu__cta {
+    margin-top: 1.5rem;
+  }
+
+  .site-menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  @keyframes menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .nav-desktop {
+      display: block;
+    }
+    .site-header__cta {
+      display: inline-flex;
+    }
+    .menu-toggle,
+    .site-menu {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (header && toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? toggle.dataset.labelClose ?? '' : toggle.dataset.labelOpen ?? '');
+      header.classList.toggle('is-open', open);
+      document.body.classList.toggle('menu-open', open);
+    };
+
+    toggle.addEventListener('click', () => setOpen(menu.hidden));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+
+    const desktop = window.matchMedia('(min-width: 64em)');
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>
