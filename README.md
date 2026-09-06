@@ -34,8 +34,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Alojamientos                               | `src/data/accommodations.ts`          |
 | Guía «Nuestro Santander»                   | `src/data/santander.ts`               |
 | Preguntas frecuentes                       | `src/data/faq.ts`                     |
-| Fotos de la galería                        | `src/assets/gallery/`                 |
-| Foto de portada                            | `src/assets/hero.jpg` (o png/webp)    |
+| Fotos (portada y galería)                  | `fotos/` + `npm run photos` (ver abajo) |
 | Colores, tipografías, espaciados           | `src/styles/global.css`               |
 | Iconos (olas, anchoa, rabas, faro…)        | `src/components/icons.ts`             |
 
@@ -45,14 +44,22 @@ si falta el catalán se muestra el castellano.
 
 ### Fotos
 
-1. **Portada:** guarda la foto como `src/assets/hero.jpg` (vertical o cuadrada queda mejor;
-   en escritorio se muestra a la derecha del texto y en móvil a todo el ancho) y borra `hero.svg`.
-   Después ejecuta `npm run og` para regenerar la imagen de vista previa de WhatsApp.
-2. **Galería:** deja entre 8 y 15 fotos en `src/assets/gallery/` con nombres que ordenen
-   (`01-somo.jpg`, `02-….jpg`…) y borra los `*-placeholder.svg`. El mosaico asigna las formas
-   (ancha, alta, grande) por posición. Los textos alternativos se añaden en `src/data/gallery.ts`.
-3. Astro optimiza y redimensiona las imágenes al compilar: se pueden subir en buena resolución
-   (2.000 px de lado largo es más que suficiente).
+Los originales se dejan en `fotos/` (carpeta ignorada por git: no se suben al repositorio) y
+se importan con:
+
+```bash
+npm run photos   # genera src/assets/hero.jpg, src/assets/gallery/*.jpg y src/data/gallery.json
+npm run og       # regenera la imagen de vista previa de WhatsApp a partir de la portada
+```
+
+El script `scripts/import-photos.mjs` corrige la orientación, elimina los metadatos (GPS
+incluido), redimensiona a 2.000 px y guarda JPEG optimizados. Al principio del script se elige
+la foto de portada (`HERO`) y la lista ordenada de la galería, con el texto alternativo de cada
+foto y cuáles van en grande (`featured`). Para añadir fotos: cópialas a `fotos/`, añádelas a
+la lista y vuelve a ejecutar `npm run photos`. Las HEIC del iPhone se convierten solas (macOS).
+
+El mosaico adapta cada celda a la orientación de la foto (retratos 3:4, paisajes 3:2) y completa
+siempre la última fila. Astro genera al compilar las versiones redimensionadas para cada pantalla.
 
 ### Formulario de confirmación
 
@@ -142,7 +149,9 @@ src/
 ├── pages/             rutas públicas (una línea cada una) → src/pages/ca/ para el catalán
 ├── layouts/Base.astro <head>, metadatos, cabecera y pie
 ├── styles/global.css  tokens de diseño y utilidades
-└── assets/            foto de portada y galería (optimizadas por Astro)
+└── assets/            foto de portada y galería (generadas por npm run photos)
+fotos/                 originales de las fotos (ignorados por git)
+scripts/               import-photos.mjs, og-image.mjs, serve.mjs
 ```
 
 ## Créditos

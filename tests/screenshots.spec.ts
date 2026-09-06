@@ -34,7 +34,20 @@ test.describe('capturas', () => {
         await page.locator('.leaflet-tile-loaded').first().waitFor({ timeout: 15_000 }).catch(() => {});
         await page.waitForTimeout(800);
       }
-      await page.evaluate(() => window.scrollTo(0, 0));
+      // Recorre la página para que carguen las imágenes con loading="lazy" y espera a todas.
+      await page.evaluate(async () => {
+        const step = window.innerHeight * 0.8;
+        for (let y = 0; y < document.body.scrollHeight; y += step) {
+          window.scrollTo(0, y);
+          await new Promise((r) => setTimeout(r, 120));
+        }
+        await Promise.all(
+          Array.from(document.images).map((img) =>
+            img.complete ? null : new Promise((r) => img.addEventListener('load', r, { once: true })),
+          ),
+        );
+        window.scrollTo(0, 0);
+      });
       await page.waitForTimeout(400);
       await page.screenshot({ path: `${dir}/${name}-${info.project.name}.png`, fullPage: true, animations: 'disabled' });
     });

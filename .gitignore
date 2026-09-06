@@ -25,3 +25,6 @@ pnpm-debug.log*
 tests/screenshots/
 test-results/
 playwright-report/
+
+# originales de las fotos (se importan optimizadas a src/assets con npm run photos)
+fotos/

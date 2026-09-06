@@ -17,21 +17,30 @@ const { images } = Astro.props;
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 
-type Shape = 'square' | 'wide' | 'tall' | 'big';
-const pattern: Shape[] = ['wide', 'tall', 'square', 'square', 'big', 'square', 'tall', 'wide', 'square', 'square'];
-const cells: Record<Shape, number> = { square: 1, wide: 2, tall: 2, big: 4 };
+type Shape = 'square' | 'wide' | 'big';
+const cells: Record<Shape, number> = { square: 1, wide: 2, big: 4 };
 
-// Asigna formas por posición y ajusta el final para que la última fila
-// (4 columnas en escritorio, 2 en móvil) quede completa, sin huecos.
-const shapes: Shape[] = images.map((_, i) => pattern[i % pattern.length]);
-for (let i = Math.max(0, shapes.length - 4); i < shapes.length; i++) {
-  if (shapes[i] === 'tall' || shapes[i] === 'big') shapes[i] = 'square';
-}
-let missing = (4 - (shapes.reduce((n, shape) => n + cells[shape], 0) % 4)) % 4;
-for (let i = shapes.length - 1; i >= 0 && missing > 0; i--) {
-  if (shapes[i] === 'square') {
-    shapes[i] = 'wide';
-    missing--;
+/**
+ * Las celdas del mosaico son 3:4 (la proporción de una foto de móvil), así que:
+ *   square → 1×1 (retrato)   wide → 2×1 (paisaje, 3:2)   big → 2×2 (retrato destacado)
+ * La forma sale de la orientación de cada foto y de `featured`; después se
+ * promocionan algunos retratos a "big" para que la última fila quede completa
+ * (4 columnas en escritorio, 2 en móvil).
+ */
+const shapes: Shape[] = images.map((img) =>
+  img.src.width > img.src.height * 1.15 ? 'wide' : img.featured ? 'big' : 'square',
+);
+const total = () => shapes.reduce((n, shape) => n + cells[shape], 0);
+let missing = (4 - (total() % 4)) % 4;
+if (missing) {
+  // Cada promoción square→big suma 3 celdas (−1 módulo 4). Se eligen retratos
+  // repartidos por la primera mitad, nunca los últimos cuatro.
+  const candidates = shapes
+    .map((shape, i) => (shape === 'square' && i < shapes.length - 4 ? i : -1))
+    .filter((i) => i >= 0);
+  for (let k = 0; k < missing && candidates.length; k++) {
+    const pick = candidates.splice(Math.floor((candidates.length * (k + 1)) / (missing + 1)), 1)[0];
+    shapes[pick] = 'big';
   }
 }
 const shapeFor = (i: number) => shapes[i];
@@ -51,8 +60,8 @@ const shapeFor = (i: number) => shapes[i];
             class="gallery__img"
             src={img.src}
             alt={img.alt}
-            widths={[400, 800, 1200]}
-            sizes="(min-width: 64em) 33vw, 50vw"
+            widths={[400, 800, 1200, 1600]}
+            sizes="(min-width: 64em) 50vw, 100vw"
             loading={i < 4 ? 'eager' : 'lazy'}
           />
         </button>
@@ -83,18 +92,14 @@ const shapeFor = (i: number) => shapes[i];
     --cols: 2;
     display: grid;
     grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
-    /* Alto de fila = ancho de columna → las celdas son cuadradas */
-    grid-auto-rows: calc((min(100vw - 2 * var(--gutter), var(--container)) - (var(--cols) - 1) * var(--gap)) / var(--cols));
+    /* Alto de fila = ancho de columna × 4/3 → celdas 3:4, como una foto de móvil */
+    grid-auto-rows: calc((min(100vw - 2 * var(--gutter), var(--container)) - (var(--cols) - 1) * var(--gap)) / var(--cols) * 4 / 3);
     grid-auto-flow: dense;
     gap: var(--gap);
   }
 
   .gallery__item--wide {
     grid-column: span 2;
-  }
-
-  .gallery__item--tall {
-    grid-row: span 2;
   }
 
   .gallery__item--big {

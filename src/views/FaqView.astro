@@ -15,8 +15,10 @@ const t = getDictionary(locale);
     <SectionHead as="h1" size="xl" eyebrow={t.faq.eyebrow} title={t.faq.title} lead={t.faq.lead} />
   </header>
 
-  <section class="container container--narrow section section--flush-top">
-    <Faq items={faq} />
+  <section class="container section section--flush-top">
+    <div class="faq-wrap">
+      <Faq items={faq} />
+    </div>
     <p class="cta">
       <a class="btn btn--primary" href={href(locale, 'rsvp')}>{t.common.rsvp}</a>
     </p>
@@ -24,8 +26,8 @@ const t = getDictionary(locale);
 </Base>
 
 <style>
-  .container--narrow {
-    margin-inline: 0;
+  .faq-wrap {
+    max-width: 46rem;
   }
   .cta {
     margin-top: clamp(2rem, 5vw, 3rem);

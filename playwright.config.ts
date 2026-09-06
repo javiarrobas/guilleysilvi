@@ -5,7 +5,8 @@ import { defineConfig, devices } from '@playwright/test';
  *   npm run test:e2e            → compila, sirve dist/ y prueba en móvil y escritorio
  *   SCREENSHOTS=1 npm run test:e2e → además guarda capturas en tests/screenshots/
  */
-const PORT = 4321;
+// Puerto distinto del de `npm run dev` (4321) para no reutilizar por error el servidor de desarrollo.
+const PORT = 4173;
 
 export default defineConfig({
   testDir: './tests',
