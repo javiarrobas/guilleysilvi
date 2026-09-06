@@ -4,7 +4,8 @@
  *  - Corrige la orientación EXIF y elimina todos los metadatos (GPS incluido).
  *  - Redimensiona a 2.000 px de lado largo (2.400 la portada) y guarda JPEG optimizado.
  *  - Las HEIC se convierten con `sips` (macOS). En otros sistemas, conviértelas antes a JPEG.
- *  - Escribe src/data/gallery.json con el orden, los destacados y los textos alternativos.
+ *  - Escribe src/data/gallery.json con el orden, los destacados y los textos alternativos
+ *    (en castellano y catalán: { es, ca }).
  *
  * Para añadir o reordenar fotos: edita HERO y la lista `photos` y ejecuta `npm run photos`.
  * Los originales de fotos/ no se suben al repositorio (.gitignore).
@@ -16,27 +17,27 @@ import { tmpdir } from 'node:os';
 import sharp from 'sharp';
 
 const SOURCE = 'fotos';
-const HERO = { file: 'IMG_1725.HEIC', alt: 'Silvia y Guille en la costa cantábrica, entre las rocas y el mar' };
+const HERO = { file: 'IMG_1725.HEIC', alt: { es: 'Silvia y Guille en la costa cantábrica, entre las rocas y el mar', ca: 'La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar' } };
 
 /** Orden de la galería. `featured: true` la muestra en grande. */
 const photos = [
-  { file: 'IMG_8506.jpeg', alt: 'Silvia y Guille en un puerto, con los barcos al fondo', featured: true },
-  { file: '38e0f166-a5d7-4eed-b978-21cefca58838.jpg', alt: 'Silvia y Guille sobre los acantilados de una playa' },
-  { file: 'IMG_0567.jpeg', alt: 'Silvia y Guille de celebración' },
-  { file: 'IMG_2839.HEIC', alt: 'Silvia y Guille en Navidad, en una plaza iluminada' },
-  { file: 'IMG_7604.jpeg', alt: 'Silvia y Guille en un prado al atardecer, con la ría al fondo', featured: true },
-  { file: 'IMG_0665.jpeg', alt: 'Silvia y Guille delante de una casa de rayas' },
-  { file: 'IMG_1862.jpeg', alt: 'Silvia y Guille en los acantilados, con el mar detrás' },
-  { file: 'IMG_20230221_152928.jpg', alt: 'Silvia y Guille esquiando' },
-  { file: 'IMG_9154.jpeg', alt: 'Silvia y Guille delante de una iglesia románica', featured: true },
-  { file: '222f457c-e250-4489-89e8-b7a135080b52.jpg', alt: 'Silvia y Guille con cascos de moto' },
-  { file: 'IMG_7183.jpeg', alt: 'Silvia y Guille en el mar' },
-  { file: 'IMG_7499.jpeg', alt: 'Silvia y Guille en un prado junto al mar' },
-  { file: 'IMG_3971.HEIC', alt: 'Silvia y Guille en un partido' },
-  { file: 'IMG_2595.jpeg', alt: 'Silvia y Guille en un concierto' },
-  { file: 'IMG_9697.jpeg', alt: 'Silvia y Guille en un festival' },
-  { file: 'fb5fd5ec-73f9-4e2c-998a-91a75add7f22.jpg', alt: 'Silvia y Guille frente al mar, en la costa' },
-  { file: 'IMG-20230526-WA0022.jpg', alt: 'Silvia y Guille en un concierto' },
+  { file: 'IMG_8506.jpeg', alt: { es: 'Silvia y Guille en un puerto, con los barcos al fondo', ca: 'La Silvia i el Guille en un port, amb els vaixells al fons' }, featured: true },
+  { file: '38e0f166-a5d7-4eed-b978-21cefca58838.jpg', alt: { es: 'Silvia y Guille sobre los acantilados de una playa', ca: "La Silvia i el Guille sobre els penya-segats d'una platja" } },
+  { file: 'IMG_0567.jpeg', alt: { es: 'Silvia y Guille de celebración', ca: 'La Silvia i el Guille de celebració' } },
+  { file: 'IMG_2839.HEIC', alt: { es: 'Silvia y Guille en Navidad, en una plaza iluminada', ca: 'La Silvia i el Guille per Nadal, en una plaça il·luminada' } },
+  { file: 'IMG_7604.jpeg', alt: { es: 'Silvia y Guille en un prado al atardecer, con la ría al fondo', ca: 'La Silvia i el Guille en un prat al vespre, amb la ria al fons' }, featured: true },
+  { file: 'IMG_0665.jpeg', alt: { es: 'Silvia y Guille delante de una casa de rayas', ca: "La Silvia i el Guille davant d'una casa de ratlles" } },
+  { file: 'IMG_1862.jpeg', alt: { es: 'Silvia y Guille en los acantilados, con el mar detrás', ca: 'La Silvia i el Guille als penya-segats, amb el mar al darrere' } },
+  { file: 'IMG_20230221_152928.jpg', alt: { es: 'Silvia y Guille esquiando', ca: 'La Silvia i el Guille esquiant' } },
+  { file: 'IMG_9154.jpeg', alt: { es: 'Silvia y Guille delante de una iglesia románica', ca: "La Silvia i el Guille davant d'una església romànica" }, featured: true },
+  { file: '222f457c-e250-4489-89e8-b7a135080b52.jpg', alt: { es: 'Silvia y Guille con cascos de moto', ca: 'La Silvia i el Guille amb cascos de moto' } },
+  { file: 'IMG_7183.jpeg', alt: { es: 'Silvia y Guille en el mar', ca: 'La Silvia i el Guille al mar' } },
+  { file: 'IMG_7499.jpeg', alt: { es: 'Silvia y Guille en un prado junto al mar', ca: 'La Silvia i el Guille en un prat vora el mar' } },
+  { file: 'IMG_3971.HEIC', alt: { es: 'Silvia y Guille en un partido', ca: 'La Silvia i el Guille en un partit' } },
+  { file: 'IMG_2595.jpeg', alt: { es: 'Silvia y Guille en un concierto', ca: 'La Silvia i el Guille en un concert' } },
+  { file: 'IMG_9697.jpeg', alt: { es: 'Silvia y Guille en un festival', ca: 'La Silvia i el Guille en un festival' } },
+  { file: 'fb5fd5ec-73f9-4e2c-998a-91a75add7f22.jpg', alt: { es: 'Silvia y Guille frente al mar, en la costa', ca: 'La Silvia i el Guille davant del mar, a la costa' } },
+  { file: 'IMG-20230526-WA0022.jpg', alt: { es: 'Silvia y Guille en un concierto', ca: 'La Silvia i el Guille en un concert' } },
   // Sin usar (casi idéntica a IMG_7499): 'IMG_7498.jpeg'
 ];
 

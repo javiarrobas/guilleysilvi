@@ -10,6 +10,15 @@ const pages = [
   { path: '/fotos/', h1: /Nosotros/ },
   { path: '/preguntas/', h1: /Dudas habituales/ },
   { path: '/confirmar/', h1: /Contamos contigo/ },
+  { path: '/ca/', h1: /Silvia/, lang: 'ca' },
+  { path: '/ca/el-gran-dia/', h1: /1 de maig de 2027/, lang: 'ca' },
+  { path: '/ca/transport/', h1: /Com arribar-hi/, lang: 'ca' },
+  { path: '/ca/allotjament/', h1: /On dormir/, lang: 'ca' },
+  { path: '/ca/santander/', h1: /guia molt personal/, lang: 'ca' },
+  { path: '/ca/preboda/', h1: /escalfar motors/, lang: 'ca' },
+  { path: '/ca/fotos/', h1: /Nosaltres/, lang: 'ca' },
+  { path: '/ca/preguntes/', h1: /Dubtes habituals/, lang: 'ca' },
+  { path: '/ca/confirmar/', h1: /Comptem amb tu/, lang: 'ca' },
 ];
 
 function collectErrors(page: Page) {
@@ -22,12 +31,13 @@ function collectErrors(page: Page) {
 }
 
 test.describe('todas las páginas', () => {
-  for (const { path, h1 } of pages) {
+  for (const { path, h1, lang = 'es' } of pages) {
     test(`${path} carga sin errores y sin scroll horizontal`, async ({ page }) => {
       const errors = collectErrors(page);
       const response = await page.goto(path);
       expect(response?.status()).toBe(200);
       await expect(page.locator('h1')).toContainText(h1);
+      await expect(page.locator('html')).toHaveAttribute('lang', lang);
 
       // Nada debe desbordar horizontalmente (prioridad móvil).
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -146,4 +156,26 @@ test('404 personalizada', async ({ page }) => {
   const response = await page.goto('/no-existe/');
   expect(response?.status()).toBe(404);
   await expect(page.locator('h1')).toContainText('playa');
+});
+
+test('idiomas: el selector lleva a la misma página en el otro idioma', async ({ page, isMobile }) => {
+  await page.goto('/alojamiento/');
+  if (isMobile) await page.locator('[data-menu-toggle]').click();
+  await page.getByRole('link', { name: 'Català' }).first().click();
+  await expect(page).toHaveURL(/\/ca\/allotjament\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ca');
+  await expect(page.locator('h1')).toContainText('On dormir');
+
+  if (isMobile) await page.locator('[data-menu-toggle]').click();
+  await page.getByRole('link', { name: 'Castellano' }).first().click();
+  await expect(page).toHaveURL(/\/alojamiento\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'es');
+});
+
+test('idiomas: hreflang en ambas versiones', async ({ page }) => {
+  await page.goto('/ca/transport/');
+  const alternates = page.locator('link[rel="alternate"][hreflang]');
+  await expect(alternates).toHaveCount(3); // es, ca, x-default
+  await expect(page.locator('link[hreflang="es"]')).toHaveAttribute('href', /\/transporte\/$/);
+  await expect(page.locator('link[hreflang="ca"]')).toHaveAttribute('href', /\/ca\/transport\/$/);
 });

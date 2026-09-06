@@ -35,7 +35,7 @@ export const siteConfig = {
    *   2. Crea las páginas en src/pages/ca/ (ver README).
    *   3. Añade 'ca' aquí → aparece el selector de idioma.
    */
-  enabledLocales: ['es'] as Locale[],
+  enabledLocales: ['es', 'ca'] as Locale[],
 
   /**
    * La web es privada (invitados): pedimos a los buscadores que no la indexen.

@@ -3,24 +3,38 @@ import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import RecommendationCard from '@/components/RecommendationCard.astro';
 import Icon from '@/components/Icon.astro';
-import { getDictionary, getLocale } from '@/i18n';
+import { getDictionary, getLocale, type Locale } from '@/i18n';
 import { guideCategories, recommendations, type GuideCategory } from '@/data/santander';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 
-/** Anclas (#…) de cada categoría, para compartir enlaces directos. */
-const anchors: Record<GuideCategory, string> = {
-  breakfast: 'desayunar',
-  lunch: 'comer',
-  rabas: 'rabas',
-  drinks: 'tomar-algo',
-  nightlife: 'salir',
-  beaches: 'playas',
-  walks: 'paseos',
-  sights: 'visitar',
-  extraDay: 'dia-extra',
+/** Anclas (#…) de cada categoría por idioma, para compartir enlaces directos. */
+const anchorsByLocale: Record<Locale, Record<GuideCategory, string>> = {
+  es: {
+    breakfast: 'desayunar',
+    lunch: 'comer',
+    rabas: 'rabas',
+    drinks: 'tomar-algo',
+    nightlife: 'salir',
+    beaches: 'playas',
+    walks: 'paseos',
+    sights: 'visitar',
+    extraDay: 'dia-extra',
+  },
+  ca: {
+    breakfast: 'esmorzar',
+    lunch: 'dinar',
+    rabas: 'rabas',
+    drinks: 'fer-un-beure',
+    nightlife: 'sortir',
+    beaches: 'platges',
+    walks: 'passejades',
+    sights: 'visitar',
+    extraDay: 'dia-extra',
+  },
 };
+const anchors = anchorsByLocale[locale];
 ---
 
 <Base page="santander" title={t.nav.santander}>

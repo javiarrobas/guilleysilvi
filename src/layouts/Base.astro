@@ -61,10 +61,14 @@ const ogLocale = locale === 'ca' ? 'ca_ES' : 'es_ES';
     <meta name="twitter:image" content={ogImageUrl} />
 
     {
-      siteConfig.enabledLocales.length > 1 &&
-        siteConfig.enabledLocales.map((code) => (
-          <link rel="alternate" hreflang={code} href={absoluteUrl(slugs[code][page], Astro.site)} />
-        ))
+      siteConfig.enabledLocales.length > 1 && (
+        <>
+          {siteConfig.enabledLocales.map((code) => (
+            <link rel="alternate" hreflang={code} href={absoluteUrl(slugs[code][page], Astro.site)} />
+          ))}
+          <link rel="alternate" hreflang="x-default" href={absoluteUrl(slugs.es[page], Astro.site)} />
+        </>
+      )
     }
   </head>
   <body id="top">

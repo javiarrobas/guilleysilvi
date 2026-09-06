@@ -2,6 +2,7 @@
 /**
  * Selector de idioma. Solo se muestra cuando hay más de un idioma publicado
  * (siteConfig.enabledLocales). Enlaza a la misma página en el otro idioma.
+ * `compact` muestra los códigos (ES · CA) en lugar de los nombres.
  */
 import { getDictionary, getLocale, type Locale } from '@/i18n';
 import { href, type PageKey } from '@/i18n/routes';
@@ -9,10 +10,11 @@ import { siteConfig } from '@/site.config';
 
 interface Props {
   current?: PageKey;
+  compact?: boolean;
   class?: string;
 }
 
-const { current = 'home', class: className, ...rest } = Astro.props;
+const { current = 'home', compact = false, class: className, ...rest } = Astro.props;
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 const enabled: Locale[] = siteConfig.enabledLocales;
@@ -20,7 +22,7 @@ const enabled: Locale[] = siteConfig.enabledLocales;
 
 {
   enabled.length > 1 && (
-    <nav {...rest} class:list={['lang', className]} aria-label={t.common.language}>
+    <nav {...rest} class:list={['lang', { 'lang--compact': compact }, className]} aria-label={t.common.language}>
       <ul class="lang__list">
         {enabled.map((code) => (
           <li>
@@ -29,9 +31,11 @@ const enabled: Locale[] = siteConfig.enabledLocales;
               hreflang={code}
               lang={code}
               aria-current={code === locale ? 'true' : undefined}
+              aria-label={compact ? getDictionary(code).label : undefined}
+              title={compact ? getDictionary(code).label : undefined}
               class="lang__link"
             >
-              {getDictionary(code).label}
+              {compact ? code.toUpperCase() : getDictionary(code).label}
             </a>
           </li>
         ))}
@@ -43,8 +47,20 @@ const enabled: Locale[] = siteConfig.enabledLocales;
 <style>
   .lang__list {
     display: flex;
+    align-items: center;
     gap: 1rem;
   }
+
+  .lang--compact .lang__list {
+    gap: 0.35rem;
+  }
+
+  .lang--compact li + li::before {
+    content: '·';
+    margin-right: 0.35rem;
+    color: var(--line-strong);
+  }
+
   .lang__link {
     font-size: 0.75rem;
     font-weight: 500;
@@ -52,10 +68,17 @@ const enabled: Locale[] = siteConfig.enabledLocales;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--stone);
+    padding-block: 0.25rem;
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
   }
+
+  .lang__link:hover {
+    color: var(--ink);
+  }
+
   .lang__link[aria-current='true'] {
     color: var(--ink);
-    text-decoration: underline;
-    text-underline-offset: 0.35em;
+    border-color: var(--ink);
   }
 </style>

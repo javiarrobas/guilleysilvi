@@ -4,7 +4,7 @@ import Base from '@/layouts/Base.astro';
 import Countdown from '@/components/Countdown.astro';
 import Icon from '@/components/Icon.astro';
 import SectionHead from '@/components/SectionHead.astro';
-import { getDictionary, getLocale } from '@/i18n';
+import { getDictionary, getLocale, l } from '@/i18n';
 import { href, pageKeys } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
 import { heroAlt, heroImage, heroIsPlaceholder } from '@/data/gallery';
@@ -31,7 +31,7 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
             <Image
               class="hero__img"
               src={heroImage}
-              alt={heroIsPlaceholder ? '' : heroAlt || t.hero.photoAlt}
+              alt={heroIsPlaceholder ? '' : l(heroAlt, locale) || t.hero.photoAlt}
               widths={[640, 960, 1400]}
               sizes="(min-width: 64em) 44vw, 100vw"
               loading="eager"

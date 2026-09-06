@@ -1,78 +1,132 @@
 {
   "hero": {
-    "alt": "Silvia y Guille en la costa cantábrica, entre las rocas y el mar"
+    "alt": {
+      "es": "Silvia y Guille en la costa cantábrica, entre las rocas y el mar",
+      "ca": "La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar"
+    }
   },
   "images": [
     {
       "id": "01-img-8506",
-      "alt": "Silvia y Guille en un puerto, con los barcos al fondo",
+      "alt": {
+        "es": "Silvia y Guille en un puerto, con los barcos al fondo",
+        "ca": "La Silvia i el Guille en un port, amb els vaixells al fons"
+      },
       "featured": true
     },
     {
       "id": "02-38e0f166-a5d7-4eed-b978-21cefca58838",
-      "alt": "Silvia y Guille sobre los acantilados de una playa"
+      "alt": {
+        "es": "Silvia y Guille sobre los acantilados de una playa",
+        "ca": "La Silvia i el Guille sobre els penya-segats d'una platja"
+      }
     },
     {
       "id": "03-img-0567",
-      "alt": "Silvia y Guille de celebración"
+      "alt": {
+        "es": "Silvia y Guille de celebración",
+        "ca": "La Silvia i el Guille de celebració"
+      }
     },
     {
       "id": "04-img-2839",
-      "alt": "Silvia y Guille en Navidad, en una plaza iluminada"
+      "alt": {
+        "es": "Silvia y Guille en Navidad, en una plaza iluminada",
+        "ca": "La Silvia i el Guille per Nadal, en una plaça il·luminada"
+      }
     },
     {
       "id": "05-img-7604",
-      "alt": "Silvia y Guille en un prado al atardecer, con la ría al fondo",
+      "alt": {
+        "es": "Silvia y Guille en un prado al atardecer, con la ría al fondo",
+        "ca": "La Silvia i el Guille en un prat al vespre, amb la ria al fons"
+      },
       "featured": true
     },
     {
       "id": "06-img-0665",
-      "alt": "Silvia y Guille delante de una casa de rayas"
+      "alt": {
+        "es": "Silvia y Guille delante de una casa de rayas",
+        "ca": "La Silvia i el Guille davant d'una casa de ratlles"
+      }
     },
     {
       "id": "07-img-1862",
-      "alt": "Silvia y Guille en los acantilados, con el mar detrás"
+      "alt": {
+        "es": "Silvia y Guille en los acantilados, con el mar detrás",
+        "ca": "La Silvia i el Guille als penya-segats, amb el mar al darrere"
+      }
     },
     {
       "id": "08-img-20230221-152928",
-      "alt": "Silvia y Guille esquiando"
+      "alt": {
+        "es": "Silvia y Guille esquiando",
+        "ca": "La Silvia i el Guille esquiant"
+      }
     },
     {
       "id": "09-img-9154",
-      "alt": "Silvia y Guille delante de una iglesia románica",
+      "alt": {
+        "es": "Silvia y Guille delante de una iglesia románica",
+        "ca": "La Silvia i el Guille davant d'una església romànica"
+      },
       "featured": true
     },
     {
       "id": "10-222f457c-e250-4489-89e8-b7a135080b52",
-      "alt": "Silvia y Guille con cascos de moto"
+      "alt": {
+        "es": "Silvia y Guille con cascos de moto",
+        "ca": "La Silvia i el Guille amb cascos de moto"
+      }
     },
     {
       "id": "11-img-7183",
-      "alt": "Silvia y Guille en el mar"
+      "alt": {
+        "es": "Silvia y Guille en el mar",
+        "ca": "La Silvia i el Guille al mar"
+      }
     },
     {
       "id": "12-img-7499",
-      "alt": "Silvia y Guille en un prado junto al mar"
+      "alt": {
+        "es": "Silvia y Guille en un prado junto al mar",
+        "ca": "La Silvia i el Guille en un prat vora el mar"
+      }
     },
     {
       "id": "13-img-3971",
-      "alt": "Silvia y Guille en un partido"
+      "alt": {
+        "es": "Silvia y Guille en un partido",
+        "ca": "La Silvia i el Guille en un partit"
+      }
     },
     {
       "id": "14-img-2595",
-      "alt": "Silvia y Guille en un concierto"
+      "alt": {
+        "es": "Silvia y Guille en un concierto",
+        "ca": "La Silvia i el Guille en un concert"
+      }
     },
     {
       "id": "15-img-9697",
-      "alt": "Silvia y Guille en un festival"
+      "alt": {
+        "es": "Silvia y Guille en un festival",
+        "ca": "La Silvia i el Guille en un festival"
+      }
     },
     {
       "id": "16-fb5fd5ec-73f9-4e2c-998a-91a75add7f22",
-      "alt": "Silvia y Guille frente al mar, en la costa"
+      "alt": {
+        "es": "Silvia y Guille frente al mar, en la costa",
+        "ca": "La Silvia i el Guille davant del mar, a la costa"
+      }
     },
     {
       "id": "17-img-20230526-wa0022",
-      "alt": "Silvia y Guille en un concierto"
+      "alt": {
+        "es": "Silvia y Guille en un concierto",
+        "ca": "La Silvia i el Guille en un concert"
+      }
     }
   ]
 }

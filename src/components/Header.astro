@@ -34,6 +34,7 @@ const t = getDictionary(locale);
     </nav>
 
     <div class="site-header__actions">
+      <LanguageSwitcher current={current} compact class="site-header__lang" />
       <a class="btn btn--sm btn--primary site-header__cta" href={href(locale, 'rsvp')}>{t.nav.rsvp}</a>
       <button
         class="menu-toggle"
@@ -114,11 +115,12 @@ const t = getDictionary(locale);
 
   .nav-desktop__list {
     display: flex;
-    gap: clamp(1rem, 2vw, 1.75rem);
+    gap: clamp(0.75rem, 1.4vw, 1.75rem);
   }
 
   .nav-desktop a {
-    font-size: 0.8125rem;
+    white-space: nowrap;
+    font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -141,8 +143,10 @@ const t = getDictionary(locale);
     gap: 0.75rem;
   }
 
-  .site-header__cta {
+  .site-header__cta,
+  .site-header__lang {
     display: none;
+    white-space: nowrap;
   }
 
   .menu-toggle {
@@ -281,12 +285,25 @@ const t = getDictionary(locale);
     .nav-desktop {
       display: block;
     }
-    .site-header__cta {
-      display: inline-flex;
+    .site-header__lang {
+      display: block;
     }
     .menu-toggle,
     .site-menu {
       display: none;
+    }
+  }
+
+  /* Con espacio de sobra: botón de confirmar también en la cabecera */
+  @media (min-width: 80em) {
+    .nav-desktop a {
+      font-size: 0.8125rem;
+    }
+    .site-header__lang {
+      margin-right: 0.5rem;
+    }
+    .site-header__cta {
+      display: inline-flex;
     }
   }
 </style>

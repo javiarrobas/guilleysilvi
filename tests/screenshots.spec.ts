@@ -18,6 +18,8 @@ const routes: Record<string, string> = {
   fotos: '/fotos/',
   preguntas: '/preguntas/',
   confirmar: '/confirmar/',
+  'ca-home': '/ca/',
+  'ca-santander': '/ca/santander/',
 };
 
 test.describe('capturas', () => {

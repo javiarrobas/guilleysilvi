@@ -5,7 +5,7 @@ la abrirán desde WhatsApp). Hecha con [Astro](https://astro.build) y publicada 
 GitHub Pages.
 
 - **Producción:** https://javiarrobas.github.io/guilleysilvi/ (hasta que haya dominio propio)
-- **Idiomas:** castellano publicado; catalán preparado (ver [Catalán](#catalán)).
+- **Idiomas:** castellano (por defecto) y catalán en `/ca/` (ver [Catalán](#catalán)).
 
 ## Requisitos
 
@@ -90,24 +90,18 @@ Google Maps» buscan el lugar por nombre y dirección para que salga su ficha co
 
 ## Catalán
 
-Todo está preparado para publicar la web en catalán además de castellano:
+La web está publicada en castellano (por defecto, en la raíz) y en catalán (bajo `/ca/`).
+El idioma se detecta por la URL; Astro rellena `Astro.currentLocale` y las vistas lo leen.
+El selector de idioma aparece en la cabecera (escritorio), en el menú (móvil) y en el pie.
 
-1. Revisa `src/i18n/ca.ts` (la interfaz ya está traducida) y añade los campos `ca` que falten
-   en `src/data/*` (horarios, FAQ, guía, alojamientos).
-2. Crea las páginas en `src/pages/ca/` con los nombres de `src/i18n/routes.ts` (`slugs.ca`).
-   Cada página es una línea; por ejemplo `src/pages/ca/allotjament.astro`:
-   ```astro
-   ---
-   import StayView from '@/views/StayView.astro';
-   ---
-
-   <StayView />
-   ```
-3. Añade `'ca'` a `enabledLocales` en `src/site.config.ts`. Aparecerá el selector de idioma
-   en el menú y el pie, y las etiquetas `hreflang`.
-
-La detección de idioma se hace por URL (`/ca/...`); Astro rellena `Astro.currentLocale` y
-las vistas lo leen automáticamente.
+- Textos de la interfaz: `src/i18n/es.ts` y `src/i18n/ca.ts` (TypeScript avisa si falta una clave).
+- Contenidos: los campos traducibles de `src/data/*` se escriben como `{ es: '…', ca: '…' }`.
+  Si falta el catalán se muestra el castellano, así que se puede traducir poco a poco.
+- Rutas: `src/i18n/routes.ts` (`slugs`). Cada página de `src/pages/ca/` es una línea que reutiliza
+  la vista correspondiente; para añadir una sección nueva hay que crear el fichero en los dos idiomas.
+- Textos alternativos de las fotos: en la lista de `scripts/import-photos.mjs`, también `{ es, ca }`.
+- La página 404 se sirve en castellano para cualquier ruta inexistente (GitHub Pages usa un único
+  `404.html`).
 
 ## Publicación en GitHub Pages
 
@@ -146,7 +140,7 @@ src/
 ├── data/              contenidos: horarios, lugares, alojamientos, guía, FAQ, galería
 ├── components/        cabecera, pie, cuenta atrás, mapa, tarjetas, galería, FAQ, iconos
 ├── views/             una vista por sección (reutilizables en cualquier idioma)
-├── pages/             rutas públicas (una línea cada una) → src/pages/ca/ para el catalán
+├── pages/             rutas públicas (una línea cada una); src/pages/ca/ para el catalán
 ├── layouts/Base.astro <head>, metadatos, cabecera y pie
 ├── styles/global.css  tokens de diseño y utilidades
 └── assets/            foto de portada y galería (generadas por npm run photos)

@@ -1,4 +1,5 @@
 import type { ImageMetadata } from 'astro';
+import type { Localized } from '@/i18n';
 import manifest from './gallery.json';
 
 /**
@@ -20,7 +21,7 @@ const byId = new Map(
 export interface GalleryImage {
   id: string;
   src: ImageMetadata;
-  alt: string;
+  alt: Localized;
   /** Se muestra en grande dentro del mosaico. */
   featured?: boolean;
 }
@@ -46,4 +47,4 @@ const heroFiles = import.meta.glob<{ default: ImageMetadata }>('../assets/hero.{
 });
 export const heroImage: ImageMetadata | undefined = Object.values(heroFiles)[0]?.default;
 export const heroIsPlaceholder = !heroImage || heroImage.format === 'svg';
-export const heroAlt: string = manifest.hero?.alt ?? '';
+export const heroAlt: Localized = manifest.hero?.alt ?? '';

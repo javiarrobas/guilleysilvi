@@ -5,7 +5,7 @@
  * Al tocar una foto se abre en un visor (<dialog>) con navegación.
  */
 import { Image } from 'astro:assets';
-import { getDictionary, getLocale, interpolate } from '@/i18n';
+import { getDictionary, getLocale, interpolate, l } from '@/i18n';
 import type { GalleryImage } from '@/data/gallery';
 import Icon from './Icon.astro';
 
@@ -59,7 +59,7 @@ const shapeFor = (i: number) => shapes[i];
           <Image
             class="gallery__img"
             src={img.src}
-            alt={img.alt}
+            alt={l(img.alt, locale)}
             widths={[400, 800, 1200, 1600]}
             sizes="(min-width: 64em) 50vw, 100vw"
             loading={i < 4 ? 'eager' : 'lazy'}
