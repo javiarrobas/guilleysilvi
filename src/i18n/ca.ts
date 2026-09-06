@@ -194,17 +194,6 @@ export const ca: Dictionary = {
     button: 'Anar al formulari',
     buttonSoon: 'Formulari disponible properament',
     soonText: "Estem acabant el formulari. Tan bon punt estigui llest, el botó s'activarà i us avisarem.",
-    askTitle: 'Què us preguntarem',
-    ask: [
-      'Les vostres dades de contacte.',
-      'Si vindreu acompanyats i amb qui.',
-      'Al·lèrgies, intoleràncies o necessitats alimentàries.',
-      "Si fareu servir l'autobús d'anada i el de tornada.",
-      'Si veniu amb nens: quants, edats i al·lèrgies.',
-      'Si us apunteu a la preboda del divendres.',
-      'La cançó que no pot faltar a la festa.',
-      'Qualsevol altra cosa que hàgim de saber.',
-    ],
   },
   faq: {
     eyebrow: 'Preguntes freqüents',

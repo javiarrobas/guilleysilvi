@@ -43,30 +43,16 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
           <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
           <span>{deadline || t.rsvp.deadlineSoon}</span>
         </p>
-      </div>
-
-      <div class="rsvp__ask">
-        <h2 class="title-md">{t.rsvp.askTitle}</h2>
-        <ol class="rsvp__list">
-          {
-            t.rsvp.ask.map((item, i) => (
-              <li>
-                <span class="rsvp__num">{String(i + 1).padStart(2, '0')}</span>
-                <span>{item}</span>
-              </li>
-            ))
-          }
-        </ol>
         <a class="arrow-link" href={href(locale, 'faq')}>{t.nav.faq}<Icon name="arrowRight" /></a>
       </div>
+
     </div>
   </section>
 </Base>
 
 <style>
   .rsvp {
-    display: grid;
-    gap: 3rem;
+    max-width: 34rem;
   }
 
   .rsvp__action {
@@ -91,37 +77,7 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
     color: var(--ink-2);
   }
 
-  .rsvp__list {
-    margin: 1.25rem 0 1.5rem;
-    border-top: 1px solid var(--line);
-  }
-
-  .rsvp__list li {
-    display: flex;
-    gap: 1rem;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .rsvp__num {
-    flex: none;
-    width: 1.75rem;
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--stone);
-    padding-top: 0.35rem;
-  }
-
-  @media (min-width: 64em) {
-    .rsvp {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
-      gap: 5rem;
-      align-items: start;
-    }
-    .rsvp__action {
-      position: sticky;
-      top: calc(var(--header-h) + 1.5rem);
-    }
+  .rsvp__action .arrow-link {
+    margin-top: 0.5rem;
   }
 </style>

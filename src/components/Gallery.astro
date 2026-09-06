@@ -2,7 +2,7 @@
 /**
  * Galería en mosaico editorial. Las formas (ancha / alta / grande) se asignan
  * por posición para que el conjunto respire sin parecer un carrusel.
- * Al tocar una foto se abre en un visor (<dialog>) con navegación.
+ * Al tocar una foto se abre en un visor (<dialog>) con navegación, sin pies de foto.
  */
 import { Image } from 'astro:assets';
 import { getDictionary, getLocale, interpolate, l } from '@/i18n';
@@ -79,7 +79,6 @@ const shapeFor = (i: number) => shapes[i];
   </button>
   <figure class="lightbox__figure">
     <img class="lightbox__img" alt="" data-lightbox-img />
-    <figcaption class="lightbox__caption small" data-lightbox-caption></figcaption>
   </figure>
   <button class="lightbox__nav lightbox__nav--next" type="button" data-lightbox-next aria-label={t.common.next}>
     <Icon name="arrowRight" />
@@ -177,15 +176,6 @@ const shapeFor = (i: number) => shapes[i];
     object-fit: contain;
   }
 
-  .lightbox__caption {
-    color: rgba(246, 243, 238, 0.7);
-    text-align: center;
-  }
-
-  .lightbox__caption:empty {
-    display: none;
-  }
-
   .lightbox__close,
   .lightbox__nav {
     display: grid;
@@ -237,7 +227,6 @@ const shapeFor = (i: number) => shapes[i];
   if (root && dialog && typeof dialog.showModal === 'function') {
     const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-gallery-open]'));
     const img = dialog.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
-    const caption = dialog.querySelector<HTMLElement>('[data-lightbox-caption]')!;
     let current = 0;
 
     const show = (index: number) => {
@@ -251,7 +240,6 @@ const shapeFor = (i: number) => shapes[i];
         .filter(Boolean);
       img.src = candidates[candidates.length - 1] ?? source.currentSrc ?? source.src;
       img.alt = source.alt;
-      caption.textContent = source.alt;
     };
 
     buttons.forEach((button, index) =>

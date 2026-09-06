@@ -194,17 +194,6 @@ export const es = {
     button: 'Ir al formulario',
     buttonSoon: 'Formulario disponible próximamente',
     soonText: 'Estamos terminando el formulario. En cuanto esté listo, el botón se activará y os avisaremos.',
-    askTitle: 'Qué os preguntaremos',
-    ask: [
-      'Vuestros datos de contacto.',
-      'Si vendréis acompañados y con quién.',
-      'Alergias, intolerancias o necesidades alimentarias.',
-      'Si usaréis el autobús de ida y el de vuelta.',
-      'Si venís con niños: cuántos, edades y alergias.',
-      'Si os apuntáis a la preboda del viernes.',
-      'La canción que no puede faltar en la fiesta.',
-      'Cualquier otra cosa que debamos saber.',
-    ],
   },
   faq: {
     eyebrow: 'Preguntas frecuentes',

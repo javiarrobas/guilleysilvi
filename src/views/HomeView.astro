@@ -80,10 +80,9 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
       <SectionHead eyebrow={t.home.indexEyebrow} title={t.home.indexTitle} />
       <ol class="index">
         {
-          indexPages.map((key, i) => (
+          indexPages.map((key) => (
             <li>
               <a class="index__link" href={href(locale, key)}>
-                <span class="index__num">{String(i + 1).padStart(2, '0')}</span>
                 <span class="index__text">
                   <span class="index__title">{t.nav[key]}</span>
                   <span class="index__desc">{t.home.index[key]}</span>
@@ -265,19 +264,12 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
 
   .index__link {
     display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) 1.5rem;
+    grid-template-columns: minmax(0, 1fr) 1.5rem;
     align-items: center;
     gap: 1rem;
     padding: 1.1rem 0;
     border-bottom: 1px solid var(--line);
     text-decoration: none;
-  }
-
-  .index__num {
-    font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    color: var(--stone);
   }
 
   .index__text {
