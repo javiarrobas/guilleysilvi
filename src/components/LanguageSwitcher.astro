@@ -77,10 +77,12 @@ const show = enabled.length > 1;
 
 <style>
   /* ---------- Lista en línea ---------- */
+  /* Con cuatro idiomas la fila no cabe en pantallas de 320 px: que se parta. */
   .lang__list {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem 1rem;
   }
 
   .lang__link {

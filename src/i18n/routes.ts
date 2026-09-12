@@ -56,6 +56,18 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     faq: '/en/faq/',
     rsvp: '/en/rsvp/',
   },
+  // Sin caracteres propios del turco en las URL: se comparten por WhatsApp.
+  tr: {
+    home: '/tr/',
+    day: '/tr/buyuk-gun/',
+    transport: '/tr/ulasim/',
+    stay: '/tr/konaklama/',
+    santander: '/tr/santander/',
+    preboda: '/tr/dugun-oncesi/',
+    photos: '/tr/fotograflar/',
+    faq: '/tr/sss/',
+    rsvp: '/tr/katilim/',
+  },
 };
 
 /** URL final (con el prefijo de GitHub Pages si hace falta) de una página en un idioma. */

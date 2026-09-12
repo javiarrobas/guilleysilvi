@@ -1,0 +1,214 @@
+import type { Dictionary } from './es';
+
+/**
+ * Textos de la interfaz en turco. Debe tener las mismas claves que es.ts
+ * (TypeScript avisa si falta alguna). Se publica cuando 'tr' esté en
+ * siteConfig.enabledLocales y existan las páginas en src/pages/tr/.
+ */
+export const tr: Dictionary = {
+  code: 'tr',
+  label: 'Türkçe',
+  meta: {
+    siteName: 'Silvia & Guille',
+    homeTitle: 'Silvia & Guille · 1 Mayıs 2027 · Santander',
+    description:
+      "Kuzeye gidiyoruz. Silvia ve Guille 1 Mayıs 2027'de Santander'da evleniyor. Program, ulaşım, konaklama, bizim Santander'imiz ve katılım bildirimi.",
+  },
+  common: {
+    soon: 'Çok yakında',
+    openInMaps: "Google Haritalar'da aç",
+    viewOnMap: 'Haritada gör',
+    viewAccommodation: 'Konaklamayı gör',
+    rsvp: 'Katılımını bildir',
+    skipToContent: 'İçeriğe geç',
+    menu: 'Menü',
+    openMenu: 'Menüyü aç',
+    closeMenu: 'Menüyü kapat',
+    close: 'Kapat',
+    language: 'Dil',
+    backHome: 'Ana sayfaya dön',
+    dateShort: '01.05.2027',
+    dateDots: '01 · 05 · 2027',
+    dateLong: '1 Mayıs 2027 Cumartesi',
+    city: 'Santander',
+    walking: '{n} dk yürüme',
+    approx: 'yaklaşık',
+    perNight: 'gecelik',
+    newTab: '(yeni sekmede açılır)',
+    previous: 'Önceki',
+    next: 'Sonraki',
+    photoOf: 'Fotoğraf {n} / {total}',
+  },
+  nav: {
+    home: 'Ana sayfa',
+    day: 'Büyük gün',
+    transport: 'Ulaşım',
+    stay: 'Konaklama',
+    santander: 'Santander',
+    preboda: 'Düğün öncesi',
+    photos: 'Fotoğraflar',
+    faq: 'SSS',
+    rsvp: 'Katılım bildirimi',
+  },
+  hero: {
+    eyebrow: '01 · 05 · 2027 — Santander',
+    tagline: 'Kuzeye gidiyoruz. Ve bunu sizinle kutlamak istiyoruz.',
+    photoAlt: 'Silvia ve Guille',
+  },
+  countdown: {
+    label: 'Geri sayım',
+    days: 'gün',
+    hours: 'saat',
+    minutes: 'dakika',
+    seconds: 'saniye',
+    today: 'Bugün o gün!',
+    past: 'Evlendik! Bizimle kutladığınız için teşekkürler.',
+  },
+  home: {
+    essentialsEyebrow: 'Temel bilgiler',
+    essentials: [
+      { label: 'Tören', title: 'Santuario de Nuestra Señora de Latas', detail: '12:30 · Loredo', page: 'day' },
+      { label: 'Kutlama', title: 'Huerta de Cubas', detail: '14:00 · Kokteyl, yemek ve dans', page: 'day' },
+      { label: 'Otobüsler', title: "Centro Botín'ten, Santander", detail: '11:45 gidiş · 00:00 dönüş', page: 'transport' },
+    ],
+    indexEyebrow: 'Site',
+    indexTitle: 'Bilmeniz gereken her şey',
+    index: {
+      day: 'Cumartesinin programı ve mekânları.',
+      transport: 'Otobüsler, harita ve nasıl gidilir.',
+      stay: "Santander'da nerede kalınır.",
+      santander: 'Bizim Santander: nerede kahvaltı edilir, yemek yenir, rabas atıştırılır ve ne görülür.',
+      preboda: 'Cuma gününün ısınma turu.',
+      photos: 'İkimiz, fotoğraflarla.',
+      faq: 'Sık sorulanlar, yanıtlarıyla.',
+      rsvp: 'Geliyor musun, söyle. Sadece iki dakikanı alır.',
+    },
+    rsvpEyebrow: 'Geliyor musun?',
+    rsvpTitle: 'Katılımını bildir',
+    rsvpText:
+      'Kaç kişi olacağımızı, otobüsü kimin kullanacağını ve dikkate almamız gereken bir alerji ya da beslenme ihtiyacı olup olmadığını bilmek bize çok yardımcı oluyor.',
+  },
+  day: {
+    eyebrow: 'Büyük gün',
+    title: '1 Mayıs 2027 Cumartesi',
+    lead:
+      "Tören Santuario de Latas'ta, kutlama ise Santander'a çeyrek saat mesafedeki Huerta de Cubas'ta. Planlanan program şöyle.",
+    note: 'Saatlerde küçük değişiklikler olabilir. Kesinleşen tüm bilgileri düğün yaklaştığında paylaşacağız.',
+    mapCta: 'Mekânları ve ulaşımı gör',
+  },
+  transport: {
+    eyebrow: 'Mekânlar ve ulaşım',
+    title: 'Nasıl gidilir',
+    lead:
+      "Santander'dan törene ve ardından kutlamaya otobüs olacak; bu yüzden önerimiz Santander'da kalmanız ve arabayı unutmanız.",
+    busEyebrow: 'Otobüsler',
+    busTitle: 'Merkezden gidiş ve dönüş',
+    busOut: {
+      time: '11:45',
+      title: 'Törene hareket',
+      text: "Santander merkezden, Centro Botín bölgesinden. Törenden sonra otobüs sizi Huerta de Cubas'a götürecek.",
+    },
+    busBack: {
+      time: '00:00',
+      title: "Santander'a dönüş",
+      text: "Huerta de Cubas'tan aynı noktaya: Santander merkez / Centro Botín.",
+    },
+    busNote:
+      'Katılım formunda gidiş ve dönüş otobüsünü kullanıp kullanmayacağınızı soruyoruz, koltuk sayısını ona göre ayarlamak için.',
+    locationsEyebrow: 'Üç nokta',
+    locationsTitle: 'Nerede olacağız',
+    mapLegendBus: 'Otobüsün kalkış ve varış noktası',
+    mapLegendZone: 'Konaklama için önerilen bölge (yaklaşık 15 dk yürüme)',
+    zoneTitle: 'Konaklama için önerilen bölge',
+    zoneText:
+      'Haritada gölgeli olan bölge, otobüsün kalkış noktasına yaklaşık 15 dakika yürüme mesafesinde. İçindeki her otel ya da daireden yürüyerek gelebilirsiniz.',
+    byCarTitle: 'Arabayla gelirsem?',
+    byCarText:
+      "Doğrudan gelebilirsiniz: her mekândaki düğme Google Haritalar'ı açıyor. Ama Santander'da kalıyorsanız, özellikle dönüşte en rahatı otobüs.",
+    mapLoading: 'Harita yükleniyor…',
+  },
+  stay: {
+    eyebrow: 'Konaklama',
+    title: 'Nerede kalınır',
+    lead:
+      'Beğendiğimiz otelleri ve daireleri buraya ekleyeceğiz; hepsi otobüse yürüme mesafesinde. O zamana kadar, aramanın mantıklı olduğu bölge bu.',
+    soonTitle: 'Listeyi hazırlıyoruz',
+    soonText: 'Önerilerimizi yakında burada bulacaksınız, şöyle gruplanmış:',
+    groups: {
+      near: 'Otobüse yakın',
+      center: 'Santander merkez',
+      groups: 'Gruplar için daireler',
+      budget: 'Ekonomik seçenekler',
+    },
+    types: { hotel: 'Otel', apartment: 'Daire' },
+    ourComment: 'Bizim yorumumuz',
+    zoneEyebrow: 'Harita',
+    zoneTitle: 'Önerdiğimiz bölge',
+    zoneText:
+      "Çemberin içinde kalan her yer, Centro Botín'deki otobüs kalkış noktasına yaklaşık 15 dakika yürüme mesafesinde.",
+    tipTitle: 'Bir tavsiye',
+    tipText: "1 Mayıs resmî tatil ve Santander'da uzun bir hafta sonu: rezervasyonunuzu erkenden yapın.",
+  },
+  santander: {
+    eyebrow: 'Bizim Santander',
+    title: 'Çok kişisel bir rehber',
+    lead:
+      'Dışarıdan gelenler için: her zamanki mekânlarımız, gittiğimiz plajlar ve bir gününüz artarsa diye birkaç öneri. Bu bir turist rehberi değil; bizim Santander.',
+    categoriesLabel: 'Kategoriler',
+    emptyCategory: 'Burada ne önereceğimize hâlâ karar veriyoruz.',
+    categories: {
+      breakfast: 'Kahvaltı',
+      lunch: 'Yemek',
+      rabas: 'Rabas ve atıştırmalık',
+      drinks: 'Bir şeyler içmek',
+      nightlife: 'Gece hayatı',
+      beaches: 'Plajlar',
+      walks: 'Yürüyüşler',
+      sights: 'Gezilecek yerler',
+      extraDay: 'Fazladan bir gününüz varsa',
+    },
+  },
+  preboda: {
+    eyebrow: 'Ön kutlama',
+    title: 'Cuma günü ısınmaya başlıyoruz',
+    text: [
+      "Şehirde olan herkes için Santander'da küçük bir düğün öncesi buluşma hazırlıyoruz.",
+      'Nerede, ne zaman ve nasıl olacağını çok yakında anlatacağız.',
+    ],
+    formNote: 'Katılım formunda düğün öncesi buluşmaya gelmeyi düşünüp düşünmediğinizi bize söyleyebilirsiniz.',
+    when: '30 Nisan 2027 Cuma',
+    where: 'Santander · yer daha sonra belli olacak',
+  },
+  photos: {
+    eyebrow: 'Fotoğraflar',
+    title: 'Biz',
+    lead: 'Bizden birkaç fotoğraf. Yakında daha fazlası olacak.',
+    placeholderNote: 'Fotoğrafları seçiyoruz. Çok yakında burada.',
+  },
+  rsvp: {
+    eyebrow: 'Katılım bildirimi',
+    title: 'Sana güvenebilir miyiz?',
+    lead:
+      'Gelmeni çok isteriz. Bildirmek sadece birkaç dakikanı alır ve her şeyi düzenlememize yardımcı olur: otobüsler, menüler ve masalar.',
+    deadlineLabel: 'Son tarih',
+    deadlineSoon: 'Son tarihi yakında bildireceğiz. Ne kadar erken bildirirseniz o kadar iyi.',
+    button: 'Forma git',
+    buttonSoon: 'Form yakında hazır olacak',
+    soonText: 'Formu bitiriyoruz. Hazır olur olmaz düğme etkinleşecek ve size haber vereceğiz.',
+  },
+  faq: {
+    eyebrow: 'Sık sorulan sorular',
+    title: 'Merak edilenler',
+    lead: 'Siz sordukça bu listeyi genişleteceğiz.',
+    soonAnswer: 'Çok yakında. Kesinleşir kesinleşmez bu yanıtı güncelleyeceğiz.',
+  },
+  notFound: {
+    eyebrow: '404',
+    title: 'Bu sayfa plaja gitti',
+    text: 'Aradığınızı bulamadık. Ana sayfadan deneyin.',
+  },
+  footer: {
+    tagline: 'Kuzeye gidiyoruz.',
+    top: 'Yukarı dön',
+  },
+};

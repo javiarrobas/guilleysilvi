@@ -5,7 +5,7 @@ la abrirán desde WhatsApp). Hecha con [Astro](https://astro.build) y publicada 
 GitHub Pages.
 
 - **Producción:** https://javiarrobas.github.io/guilleysilvi/ (hasta que haya dominio propio)
-- **Idiomas:** castellano (por defecto), catalán en `/ca/` e inglés en `/en/` (ver [Idiomas](#idiomas)).
+- **Idiomas:** castellano (por defecto), catalán en `/ca/`, inglés en `/en/` y turco en `/tr/` (ver [Idiomas](#idiomas)).
 
 ## Requisitos
 
@@ -28,7 +28,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
 | Nombres, fecha, URL del formulario, idiomas | `src/site.config.ts`                  |
-| Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts` y `en.ts`   |
+| Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts`, `en.ts`, `tr.ts` |
 | Horarios del gran día                      | `src/data/schedule.ts`                |
 | Los tres puntos del mapa (coordenadas, direcciones) y la zona recomendada | `src/data/locations.ts` |
 | Alojamientos                               | `src/data/accommodations.ts`          |
@@ -39,7 +39,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Iconos (olas, anchoa, rabas, faro…)        | `src/components/icons.ts`             |
 
 Todos los ficheros de `src/data/` están comentados con ejemplos: basta copiar un
-bloque y rellenarlo. Los textos traducibles se escriben como `{ es: '…', ca: '…', en: '…' }`;
+bloque y rellenarlo. Los textos traducibles se escriben como `{ es: '…', ca: '…', … }`, una clave por idioma;
 si falta un idioma se muestra el castellano.
 
 ### Fotos
@@ -91,20 +91,23 @@ Google Maps» buscan el lugar por nombre y dirección para que salga su ficha co
 
 ## Idiomas
 
-La web está publicada en castellano (por defecto, en la raíz), en catalán (bajo `/ca/`) y en
-inglés (bajo `/en/`). El idioma se detecta por la URL; Astro rellena `Astro.currentLocale` y las
+La web está publicada en castellano (por defecto, en la raíz), en catalán (`/ca/`), inglés
+(`/en/`) y turco (`/tr/`). El idioma se detecta por la URL; Astro rellena `Astro.currentLocale` y las
 vistas lo leen. El selector aparece en la cabecera (escritorio, como desplegable), en el menú
 (móvil) y en el pie; se controla con el prop `variant` de `src/components/LanguageSwitcher.astro`.
 
-- Textos de la interfaz: `src/i18n/es.ts`, `ca.ts` y `en.ts`. El castellano es el diccionario de
+- Textos de la interfaz: un fichero por idioma en `src/i18n/`. El castellano es el diccionario de
   referencia: TypeScript avisa si a los otros les falta una clave.
-- Contenidos: los campos traducibles de `src/data/*` se escriben como `{ es: '…', ca: '…', en: '…' }`.
+- Contenidos: los campos traducibles de `src/data/*` llevan una clave por idioma: `{ es, ca, en, tr }`.
   Si falta un idioma se muestra el castellano, así que se puede traducir poco a poco.
-- Rutas: `src/i18n/routes.ts` (`slugs`). Cada página de `src/pages/ca/` y `src/pages/en/` es una
-  línea que reutiliza la vista correspondiente; para añadir una sección nueva hay que crear el
-  fichero en los tres idiomas.
+- Rutas: `src/i18n/routes.ts` (`slugs`). Cada página de `src/pages/<idioma>/` es una línea que
+  reutiliza la vista correspondiente; para añadir una sección nueva hay que crear el fichero en
+  todos los idiomas. Las URL van sin caracteres especiales (el turco usa `/tr/buyuk-gun/`).
+- Añadir un idioma: diccionario en `src/i18n/`, entrada en `locales` (`src/i18n/index.ts`) y en
+  `astro.config.mjs`, rutas en `routes.ts`, anclas en `SantanderView.astro`, páginas en
+  `src/pages/<idioma>/`, `og:locale` en `Base.astro` y la clave en los campos de `src/data/*`.
 - Anclas de la guía de Santander (`#desayunar`, `#breakfast`…): `src/views/SantanderView.astro`.
-- Textos alternativos de las fotos: en la lista de `scripts/import-photos.mjs`, `{ es, ca, en }`.
+- Textos alternativos de las fotos: en la lista de `scripts/import-photos.mjs`, `{ es, ca, en, tr }`.
 - Para dejar de publicar un idioma basta con quitarlo de `enabledLocales` (`src/site.config.ts`):
   desaparece del selector, aunque sus páginas sigan existiendo.
 - La página 404 se sirve en castellano para cualquier ruta inexistente (GitHub Pages usa un único
@@ -143,11 +146,11 @@ terceros salvo las teselas del mapa (OpenStreetMap) y los enlaces a Google Maps.
 ```
 src/
 ├── site.config.ts     configuración general
-├── i18n/              diccionarios (es, ca, en), rutas por idioma, helpers
+├── i18n/              diccionarios (es, ca, en, tr), rutas por idioma, helpers
 ├── data/              contenidos: horarios, lugares, alojamientos, guía, FAQ, galería
 ├── components/        cabecera, pie, cuenta atrás, mapa, tarjetas, galería, FAQ, iconos
 ├── views/             una vista por sección (reutilizables en cualquier idioma)
-├── pages/             rutas públicas (una línea cada una); ca/ y en/ para los otros idiomas
+├── pages/             rutas públicas (una línea cada una); ca/, en/ y tr/ para los otros idiomas
 ├── layouts/Base.astro <head>, metadatos, cabecera y pie
 ├── styles/global.css  tokens de diseño y utilidades
 └── assets/            foto de portada y galería (generadas por npm run photos)

@@ -22,6 +22,8 @@ const routes: Record<string, string> = {
   'ca-santander': '/ca/santander/',
   'en-home': '/en/',
   'en-santander': '/en/santander/',
+  'tr-home': '/tr/',
+  'tr-santander': '/tr/santander/',
 };
 
 test.describe('capturas', () => {

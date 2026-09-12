@@ -28,6 +28,15 @@ const pages = [
   { path: '/en/photos/', h1: /Us/, lang: 'en' },
   { path: '/en/faq/', h1: /Common questions/, lang: 'en' },
   { path: '/en/rsvp/', h1: /count on you/, lang: 'en' },
+  { path: '/tr/', h1: /Silvia/, lang: 'tr' },
+  { path: '/tr/buyuk-gun/', h1: /1 Mayıs 2027/, lang: 'tr' },
+  { path: '/tr/ulasim/', h1: /Nasıl gidilir/, lang: 'tr' },
+  { path: '/tr/konaklama/', h1: /Nerede kalınır/, lang: 'tr' },
+  { path: '/tr/santander/', h1: /kişisel bir rehber/, lang: 'tr' },
+  { path: '/tr/dugun-oncesi/', h1: /ısınmaya başlıyoruz/, lang: 'tr' },
+  { path: '/tr/fotograflar/', h1: /Biz/, lang: 'tr' },
+  { path: '/tr/sss/', h1: /Merak edilenler/, lang: 'tr' },
+  { path: '/tr/katilim/', h1: /güvenebilir miyiz/, lang: 'tr' },
 ];
 
 function collectErrors(page: Page) {
@@ -61,6 +70,19 @@ test.describe('todas las páginas', () => {
 
       expect(errors).toEqual([]);
     });
+  }
+});
+
+// El selector de idioma del pie crece con cada idioma: vigilamos la pantalla más estrecha.
+test('móvil estrecho (320 px): nada desborda', async ({ page, isMobile }) => {
+  test.skip(!isMobile, 'solo en móvil');
+  await page.setViewportSize({ width: 320, height: 800 });
+  for (const path of ['/tr/', '/tr/ulasim/', '/tr/santander/']) {
+    await page.goto(path);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `desborda en ${path}`).toBeLessThanOrEqual(0);
   }
 });
 
@@ -186,6 +208,12 @@ test('idiomas: el selector lleva a la misma página en los otros idiomas', async
   await expect(page.locator('h1')).toContainText('Where to sleep');
 
   await openSwitcher();
+  await page.getByRole('link', { name: 'Türkçe' }).first().click();
+  await expect(page).toHaveURL(/\/tr\/konaklama\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
+  await expect(page.locator('h1')).toContainText('Nerede kalınır');
+
+  await openSwitcher();
   await page.getByRole('link', { name: 'Castellano' }).first().click();
   await expect(page).toHaveURL(/\/alojamiento\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
@@ -201,7 +229,7 @@ test('escritorio: el desplegable de idioma abre, marca el actual y cierra', asyn
 
   await trigger.click();
   await expect(menu).toHaveAttribute('open', '');
-  await expect(menu.getByRole('link')).toHaveCount(3);
+  await expect(menu.getByRole('link')).toHaveCount(4);
   await expect(menu.locator('a[aria-current="true"] .lang-menu__name')).toHaveText('English');
   await expect(menu.locator('svg')).toHaveCount(0); // sin flechas
 
@@ -215,11 +243,12 @@ test('escritorio: el desplegable de idioma abre, marca el actual y cierra', asyn
   await expect(menu).not.toHaveAttribute('open', '');
 });
 
-test('idiomas: hreflang en las tres versiones', async ({ page }) => {
+test('idiomas: hreflang en todas las versiones', async ({ page }) => {
   await page.goto('/ca/transport/');
   const alternates = page.locator('link[rel="alternate"][hreflang]');
-  await expect(alternates).toHaveCount(4); // es, ca, en, x-default
+  await expect(alternates).toHaveCount(5); // es, ca, en, tr, x-default
   await expect(page.locator('link[hreflang="es"]')).toHaveAttribute('href', /\/transporte\/$/);
   await expect(page.locator('link[hreflang="ca"]')).toHaveAttribute('href', /\/ca\/transport\/$/);
   await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', /\/en\/getting-there\/$/);
+  await expect(page.locator('link[hreflang="tr"]')).toHaveAttribute('href', /\/tr\/ulasim\/$/);
 });

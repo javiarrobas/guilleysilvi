@@ -29,7 +29,7 @@ const fullTitle = title ? `${title} · ${t.meta.siteName}` : t.meta.homeTitle;
 const metaDescription = description ?? t.meta.description;
 const canonical = absoluteUrl(slugs[locale][page], Astro.site);
 const ogImageUrl = absoluteUrl(ogImage ?? siteConfig.ogImage, Astro.site);
-const ogLocale = { es: 'es_ES', ca: 'ca_ES', en: 'en_GB' }[locale];
+const ogLocale = { es: 'es_ES', ca: 'ca_ES', en: 'en_GB', tr: 'tr_TR' }[locale];
 ---
 
 <!doctype html>
