@@ -20,7 +20,7 @@ export default defineConfig({
   build: { format: 'directory' },
   i18n: {
     defaultLocale: 'es',
-    locales: ['es', 'ca'],
+    locales: ['es', 'ca', 'en'],
     routing: { prefixDefaultLocale: false },
   },
   devToolbar: { enabled: false },

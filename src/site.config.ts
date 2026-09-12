@@ -25,17 +25,17 @@ export const siteConfig = {
 
   /**
    * Fecha límite para confirmar (texto libre, por idioma). Vacío = "Próximamente".
-   * Ejemplo: { es: '31 de marzo de 2027', ca: '31 de març de 2027' }
+   * Ejemplo: { es: '31 de marzo de 2027', ca: '31 de març de 2027', en: '31 March 2027' }
    */
-  rsvpDeadline: { es: '', ca: '' } as Record<Locale, string>,
+  rsvpDeadline: { es: '', ca: '', en: '' } as Record<Locale, string>,
 
   /**
-   * Idiomas publicados. Para activar el catalán:
-   *   1. Traduce lo que falte en src/i18n/ca.ts y los campos `ca` de src/data/*.
-   *   2. Crea las páginas en src/pages/ca/ (ver README).
-   *   3. Añade 'ca' aquí → aparece el selector de idioma.
+   * Idiomas publicados. Para activar (o desactivar) uno:
+   *   1. Traduce lo que falte en src/i18n/<idioma>.ts y los campos de ese idioma en src/data/*.
+   *   2. Crea las páginas en src/pages/<idioma>/ (ver README).
+   *   3. Añade el código aquí → aparece en el selector de idioma.
    */
-  enabledLocales: ['es', 'ca'] as Locale[],
+  enabledLocales: ['es', 'ca', 'en'] as Locale[],
 
   /**
    * La web es privada (invitados): pedimos a los buscadores que no la indexen.

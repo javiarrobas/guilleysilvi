@@ -2,7 +2,11 @@
 /**
  * Selector de idioma. Solo se muestra cuando hay más de un idioma publicado
  * (siteConfig.enabledLocales). Enlaza a la misma página en el otro idioma.
- * `compact` muestra los códigos (ES · CA) en lugar de los nombres.
+ *
+ *  - variant="list" (por defecto): los nombres en línea. Se usa donde hay sitio
+ *    de sobra: el menú de móvil y el pie.
+ *  - variant="dropdown": un desplegable con el código del idioma actual. Se usa
+ *    en la cabecera de escritorio, donde el espacio va justo.
  */
 import { getDictionary, getLocale, type Locale } from '@/i18n';
 import { href, type PageKey } from '@/i18n/routes';
@@ -10,19 +14,48 @@ import { siteConfig } from '@/site.config';
 
 interface Props {
   current?: PageKey;
-  compact?: boolean;
+  variant?: 'list' | 'dropdown';
   class?: string;
 }
 
-const { current = 'home', compact = false, class: className, ...rest } = Astro.props;
+const { current = 'home', variant = 'list', class: className, ...rest } = Astro.props;
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 const enabled: Locale[] = siteConfig.enabledLocales;
+const show = enabled.length > 1;
 ---
 
 {
-  enabled.length > 1 && (
-    <nav {...rest} class:list={['lang', { 'lang--compact': compact }, className]} aria-label={t.common.language}>
+  show && variant === 'dropdown' && (
+    <details {...rest} class:list={['lang-menu', className]} data-lang-menu>
+      <summary class="lang-menu__trigger" aria-label={`${t.common.language}: ${t.label}`}>
+        {locale.toUpperCase()}
+      </summary>
+      <div class="lang-menu__panel">
+        <ul>
+          {enabled.map((code) => (
+            <li>
+              <a
+                href={href(code, current)}
+                hreflang={code}
+                lang={code}
+                aria-current={code === locale ? 'true' : undefined}
+                class="lang-menu__link"
+              >
+                <span class="lang-menu__name">{getDictionary(code).label}</span>
+                <span class="lang-menu__code" aria-hidden="true">{code.toUpperCase()}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </details>
+  )
+}
+
+{
+  show && variant === 'list' && (
+    <nav {...rest} class:list={['lang', className]} aria-label={t.common.language}>
       <ul class="lang__list">
         {enabled.map((code) => (
           <li>
@@ -31,11 +64,9 @@ const enabled: Locale[] = siteConfig.enabledLocales;
               hreflang={code}
               lang={code}
               aria-current={code === locale ? 'true' : undefined}
-              aria-label={compact ? getDictionary(code).label : undefined}
-              title={compact ? getDictionary(code).label : undefined}
               class="lang__link"
             >
-              {compact ? code.toUpperCase() : getDictionary(code).label}
+              {getDictionary(code).label}
             </a>
           </li>
         ))}
@@ -45,20 +76,11 @@ const enabled: Locale[] = siteConfig.enabledLocales;
 }
 
 <style>
+  /* ---------- Lista en línea ---------- */
   .lang__list {
     display: flex;
     align-items: center;
     gap: 1rem;
-  }
-
-  .lang--compact .lang__list {
-    gap: 0.35rem;
-  }
-
-  .lang--compact li + li::before {
-    content: '·';
-    margin-right: 0.35rem;
-    color: var(--line-strong);
   }
 
   .lang__link {
@@ -81,4 +103,136 @@ const enabled: Locale[] = siteConfig.enabledLocales;
     color: var(--ink);
     border-color: var(--ink);
   }
+
+  /* ---------- Desplegable ---------- */
+  .lang-menu {
+    position: relative;
+  }
+
+  /* Se lee como un elemento más de la navegación: el código del idioma actual. */
+  .lang-menu__trigger {
+    display: inline-flex;
+    align-items: center;
+    padding-block: 0.25rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    border-bottom: 1px solid transparent;
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+
+  /* Sin marcador nativo: ni el triángulo de Chrome/Safari ni el de Firefox. */
+  .lang-menu__trigger {
+    list-style: none;
+  }
+
+  .lang-menu__trigger::-webkit-details-marker {
+    display: none;
+  }
+
+  .lang-menu__trigger::marker {
+    content: '';
+  }
+
+  .lang-menu__trigger:hover,
+  .lang-menu[open] .lang-menu__trigger {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .lang-menu__panel {
+    position: absolute;
+    top: calc(100% + 0.85rem);
+    right: -0.4rem;
+    z-index: 20;
+    padding: 0.4rem;
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    animation: lang-menu-in 0.18s var(--ease) both;
+  }
+
+  .lang-menu__link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--ink-2);
+    transition: color 0.2s var(--ease), background-color 0.2s var(--ease);
+  }
+
+  .lang-menu__name {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    line-height: 1.4;
+  }
+
+  .lang-menu__code {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--stone);
+    transition: color 0.2s var(--ease);
+  }
+
+  .lang-menu__link:hover {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+
+  /* El idioma actual, con la misma marca que la página actual del menú. */
+  .lang-menu__link[aria-current='true'] {
+    color: var(--sea);
+  }
+
+  .lang-menu__link[aria-current='true'] .lang-menu__name {
+    font-style: italic;
+  }
+
+  .lang-menu__link[aria-current='true'] .lang-menu__code {
+    color: var(--sea);
+  }
+
+  @keyframes lang-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lang-menu__panel {
+      animation: none;
+    }
+  }
+
 </style>
+
+<script>
+  /* Cierra el desplegable al pulsar fuera o con Escape. Sin JS sigue funcionando:
+     <details> abre y cierra solo, y los enlaces son enlaces normales. */
+  document.querySelectorAll<HTMLDetailsElement>('[data-lang-menu]').forEach((menu) => {
+    document.addEventListener('click', (event) => {
+      if (menu.open && !menu.contains(event.target as Node)) menu.open = false;
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && menu.open) {
+        menu.open = false;
+        menu.querySelector('summary')?.focus();
+      }
+    });
+  });
+</script>

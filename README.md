@@ -5,7 +5,7 @@ la abrirán desde WhatsApp). Hecha con [Astro](https://astro.build) y publicada 
 GitHub Pages.
 
 - **Producción:** https://javiarrobas.github.io/guilleysilvi/ (hasta que haya dominio propio)
-- **Idiomas:** castellano (por defecto) y catalán en `/ca/` (ver [Catalán](#catalán)).
+- **Idiomas:** castellano (por defecto), catalán en `/ca/` e inglés en `/en/` (ver [Idiomas](#idiomas)).
 
 ## Requisitos
 
@@ -28,7 +28,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
 | Nombres, fecha, URL del formulario, idiomas | `src/site.config.ts`                  |
-| Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts` y `src/i18n/ca.ts`   |
+| Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts` y `en.ts`   |
 | Horarios del gran día                      | `src/data/schedule.ts`                |
 | Los tres puntos del mapa (coordenadas, direcciones) y la zona recomendada | `src/data/locations.ts` |
 | Alojamientos                               | `src/data/accommodations.ts`          |
@@ -39,8 +39,8 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Iconos (olas, anchoa, rabas, faro…)        | `src/components/icons.ts`             |
 
 Todos los ficheros de `src/data/` están comentados con ejemplos: basta copiar un
-bloque y rellenarlo. Los textos traducibles se escriben como `{ es: '…', ca: '…' }`;
-si falta el catalán se muestra el castellano.
+bloque y rellenarlo. Los textos traducibles se escriben como `{ es: '…', ca: '…', en: '…' }`;
+si falta un idioma se muestra el castellano.
 
 ### Fotos
 
@@ -55,8 +55,9 @@ npm run og       # regenera la imagen de vista previa de WhatsApp a partir de la
 El script `scripts/import-photos.mjs` corrige la orientación, elimina los metadatos (GPS
 incluido), redimensiona a 2.000 px y guarda JPEG optimizados. Al principio del script se elige
 la foto de portada (`HERO`) y la lista ordenada de la galería, con el texto alternativo de cada
-foto y cuáles van en grande (`featured`). Para añadir fotos: cópialas a `fotos/`, añádelas a
-la lista y vuelve a ejecutar `npm run photos`. Las HEIC del iPhone se convierten solas (macOS).
+foto (en los tres idiomas) y cuáles van en grande (`featured`). Para añadir fotos: cópialas a
+`fotos/`, añádelas a la lista y vuelve a ejecutar `npm run photos`. Las HEIC del iPhone se
+convierten solas (macOS).
 
 El mosaico adapta cada celda a la orientación de la foto (retratos 3:4, paisajes 3:2) y completa
 siempre la última fila. Astro genera al compilar las versiones redimensionadas para cada pantalla.
@@ -88,18 +89,24 @@ desatura para integrarlas con la paleta). Las coordenadas de los tres puntos y e
 15 min andando desde el Centro Botín) están en `src/data/locations.ts`. Los botones «Abrir en
 Google Maps» buscan el lugar por nombre y dirección para que salga su ficha completa.
 
-## Catalán
+## Idiomas
 
-La web está publicada en castellano (por defecto, en la raíz) y en catalán (bajo `/ca/`).
-El idioma se detecta por la URL; Astro rellena `Astro.currentLocale` y las vistas lo leen.
-El selector de idioma aparece en la cabecera (escritorio), en el menú (móvil) y en el pie.
+La web está publicada en castellano (por defecto, en la raíz), en catalán (bajo `/ca/`) y en
+inglés (bajo `/en/`). El idioma se detecta por la URL; Astro rellena `Astro.currentLocale` y las
+vistas lo leen. El selector aparece en la cabecera (escritorio, como desplegable), en el menú
+(móvil) y en el pie; se controla con el prop `variant` de `src/components/LanguageSwitcher.astro`.
 
-- Textos de la interfaz: `src/i18n/es.ts` y `src/i18n/ca.ts` (TypeScript avisa si falta una clave).
-- Contenidos: los campos traducibles de `src/data/*` se escriben como `{ es: '…', ca: '…' }`.
-  Si falta el catalán se muestra el castellano, así que se puede traducir poco a poco.
-- Rutas: `src/i18n/routes.ts` (`slugs`). Cada página de `src/pages/ca/` es una línea que reutiliza
-  la vista correspondiente; para añadir una sección nueva hay que crear el fichero en los dos idiomas.
-- Textos alternativos de las fotos: en la lista de `scripts/import-photos.mjs`, también `{ es, ca }`.
+- Textos de la interfaz: `src/i18n/es.ts`, `ca.ts` y `en.ts`. El castellano es el diccionario de
+  referencia: TypeScript avisa si a los otros les falta una clave.
+- Contenidos: los campos traducibles de `src/data/*` se escriben como `{ es: '…', ca: '…', en: '…' }`.
+  Si falta un idioma se muestra el castellano, así que se puede traducir poco a poco.
+- Rutas: `src/i18n/routes.ts` (`slugs`). Cada página de `src/pages/ca/` y `src/pages/en/` es una
+  línea que reutiliza la vista correspondiente; para añadir una sección nueva hay que crear el
+  fichero en los tres idiomas.
+- Anclas de la guía de Santander (`#desayunar`, `#breakfast`…): `src/views/SantanderView.astro`.
+- Textos alternativos de las fotos: en la lista de `scripts/import-photos.mjs`, `{ es, ca, en }`.
+- Para dejar de publicar un idioma basta con quitarlo de `enabledLocales` (`src/site.config.ts`):
+  desaparece del selector, aunque sus páginas sigan existiendo.
 - La página 404 se sirve en castellano para cualquier ruta inexistente (GitHub Pages usa un único
   `404.html`).
 
@@ -136,11 +143,11 @@ terceros salvo las teselas del mapa (OpenStreetMap) y los enlaces a Google Maps.
 ```
 src/
 ├── site.config.ts     configuración general
-├── i18n/              diccionarios (es, ca), rutas por idioma, helpers
+├── i18n/              diccionarios (es, ca, en), rutas por idioma, helpers
 ├── data/              contenidos: horarios, lugares, alojamientos, guía, FAQ, galería
 ├── components/        cabecera, pie, cuenta atrás, mapa, tarjetas, galería, FAQ, iconos
 ├── views/             una vista por sección (reutilizables en cualquier idioma)
-├── pages/             rutas públicas (una línea cada una); src/pages/ca/ para el catalán
+├── pages/             rutas públicas (una línea cada una); ca/ y en/ para los otros idiomas
 ├── layouts/Base.astro <head>, metadatos, cabecera y pie
 ├── styles/global.css  tokens de diseño y utilidades
 └── assets/            foto de portada y galería (generadas por npm run photos)

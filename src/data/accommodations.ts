@@ -12,12 +12,13 @@ import type { Localized } from '@/i18n';
  *     name: 'Hotel Ejemplo',
  *     type: 'hotel',                       // 'hotel' | 'apartment'
  *     group: 'near',                       // 'near' | 'center' | 'groups' | 'budget'
- *     zone: { es: 'Puertochico', ca: 'Puertochico' },
+ *     zone: { es: 'Puertochico', ca: 'Puertochico', en: 'Puertochico' },
  *     walkingMinutes: 8,                   // hasta el autobús (Centro Botín)
- *     price: { es: '120-150 €', ca: '120-150 €' },
+ *     price: { es: '120-150 €', ca: '120-150 €', en: '€120-150' },
  *     comment: {
  *       es: 'Nos gusta porque…',
  *       ca: 'Ens agrada perquè…',
+ *       en: 'We like it because…',
  *     },
  *     url: 'https://…',                    // botón "Ver alojamiento"
  *     // image: hotelEjemplo,              // import hotelEjemplo from '@/assets/alojamiento/hotel-ejemplo.jpg'

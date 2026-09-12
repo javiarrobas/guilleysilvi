@@ -1,11 +1,12 @@
 import { es, type Dictionary } from './es';
 import { ca } from './ca';
+import { en } from './en';
 
-export const locales = ['es', 'ca'] as const;
+export const locales = ['es', 'ca', 'en'] as const;
 export type Locale = (typeof locales)[number];
 export const defaultLocale: Locale = 'es';
 
-const dictionaries: Record<Locale, Dictionary> = { es, ca };
+const dictionaries: Record<Locale, Dictionary> = { es, ca, en };
 
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (locales as readonly string[]).includes(value);
@@ -23,7 +24,7 @@ export function getDictionary(locale: Locale): Dictionary {
 /**
  * Campo de texto traducible en los ficheros de datos (src/data/*).
  * Se puede escribir como string (vale para todos los idiomas) o como
- * objeto { es: '...', ca: '...' }. Si falta un idioma, se usa el castellano.
+ * objeto { es: '...', ca: '...', en: '...' }. Si falta un idioma, se usa el castellano.
  */
 export type Localized = string | ({ es: string } & Partial<Record<Locale, string>>);
 

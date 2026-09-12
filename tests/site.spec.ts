@@ -19,6 +19,15 @@ const pages = [
   { path: '/ca/fotos/', h1: /Nosaltres/, lang: 'ca' },
   { path: '/ca/preguntes/', h1: /Dubtes habituals/, lang: 'ca' },
   { path: '/ca/confirmar/', h1: /Comptem amb tu/, lang: 'ca' },
+  { path: '/en/', h1: /Silvia/, lang: 'en' },
+  { path: '/en/the-big-day/', h1: /1 May 2027/, lang: 'en' },
+  { path: '/en/getting-there/', h1: /How to get there/, lang: 'en' },
+  { path: '/en/where-to-stay/', h1: /Where to sleep/, lang: 'en' },
+  { path: '/en/santander/', h1: /very personal guide/, lang: 'en' },
+  { path: '/en/pre-wedding/', h1: /warming up/, lang: 'en' },
+  { path: '/en/photos/', h1: /Us/, lang: 'en' },
+  { path: '/en/faq/', h1: /Common questions/, lang: 'en' },
+  { path: '/en/rsvp/', h1: /count on you/, lang: 'en' },
 ];
 
 function collectErrors(page: Page) {
@@ -115,7 +124,7 @@ test('alojamiento: mapa centrado en la zona recomendada', async ({ page }) => {
 
 test('preguntas: los desplegables abren y cierran', async ({ page }) => {
   await page.goto('/preguntas/');
-  const item = page.locator('details').first();
+  const item = page.locator('.faq__item').first(); // hay otro <details> en la cabecera: el selector de idioma
   await expect(item).not.toHaveAttribute('open', '');
   await item.locator('summary').click();
   await expect(item).toHaveAttribute('open', '');
@@ -158,24 +167,59 @@ test('404 personalizada', async ({ page }) => {
   await expect(page.locator('h1')).toContainText('playa');
 });
 
-test('idiomas: el selector lleva a la misma página en el otro idioma', async ({ page, isMobile }) => {
+test('idiomas: el selector lleva a la misma página en los otros idiomas', async ({ page, isMobile }) => {
   await page.goto('/alojamiento/');
-  if (isMobile) await page.locator('[data-menu-toggle]').click();
+  // En escritorio el selector es un desplegable en la cabecera; en móvil, la lista del menú.
+  const openSwitcher = () =>
+    page.locator(isMobile ? '[data-menu-toggle]' : '.site-header [data-lang-menu] summary').click();
+
+  await openSwitcher();
   await page.getByRole('link', { name: 'Català' }).first().click();
   await expect(page).toHaveURL(/\/ca\/allotjament\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'ca');
   await expect(page.locator('h1')).toContainText('On dormir');
 
-  if (isMobile) await page.locator('[data-menu-toggle]').click();
+  await openSwitcher();
+  await page.getByRole('link', { name: 'English' }).first().click();
+  await expect(page).toHaveURL(/\/en\/where-to-stay\/$/);
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('h1')).toContainText('Where to sleep');
+
+  await openSwitcher();
   await page.getByRole('link', { name: 'Castellano' }).first().click();
   await expect(page).toHaveURL(/\/alojamiento\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
 });
 
-test('idiomas: hreflang en ambas versiones', async ({ page }) => {
+test('escritorio: el desplegable de idioma abre, marca el actual y cierra', async ({ page, isMobile }) => {
+  test.skip(isMobile, 'solo en escritorio');
+  await page.goto('/en/where-to-stay/');
+  const menu = page.locator('.site-header [data-lang-menu]');
+  const trigger = menu.locator('summary');
+  await expect(trigger).toContainText('EN');
+  await expect(menu).not.toHaveAttribute('open', '');
+
+  await trigger.click();
+  await expect(menu).toHaveAttribute('open', '');
+  await expect(menu.getByRole('link')).toHaveCount(3);
+  await expect(menu.locator('a[aria-current="true"] .lang-menu__name')).toHaveText('English');
+  await expect(menu.locator('svg')).toHaveCount(0); // sin flechas
+
+  await page.keyboard.press('Escape');
+  await expect(menu).not.toHaveAttribute('open', '');
+
+  // También se cierra al pulsar fuera.
+  await trigger.click();
+  await expect(menu).toHaveAttribute('open', '');
+  await page.locator('h1').click();
+  await expect(menu).not.toHaveAttribute('open', '');
+});
+
+test('idiomas: hreflang en las tres versiones', async ({ page }) => {
   await page.goto('/ca/transport/');
   const alternates = page.locator('link[rel="alternate"][hreflang]');
-  await expect(alternates).toHaveCount(3); // es, ca, x-default
+  await expect(alternates).toHaveCount(4); // es, ca, en, x-default
   await expect(page.locator('link[hreflang="es"]')).toHaveAttribute('href', /\/transporte\/$/);
   await expect(page.locator('link[hreflang="ca"]')).toHaveAttribute('href', /\/ca\/transport\/$/);
+  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute('href', /\/en\/getting-there\/$/);
 });

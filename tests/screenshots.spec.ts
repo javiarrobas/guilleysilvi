@@ -20,6 +20,8 @@ const routes: Record<string, string> = {
   confirmar: '/confirmar/',
   'ca-home': '/ca/',
   'ca-santander': '/ca/santander/',
+  'en-home': '/en/',
+  'en-santander': '/en/santander/',
 };
 
 test.describe('capturas', () => {

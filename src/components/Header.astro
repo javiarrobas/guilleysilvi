@@ -34,7 +34,7 @@ const t = getDictionary(locale);
     </nav>
 
     <div class="site-header__actions">
-      <LanguageSwitcher current={current} compact class="site-header__lang" />
+      <LanguageSwitcher current={current} variant="dropdown" class="site-header__lang" />
       <a class="btn btn--sm btn--primary site-header__cta" href={href(locale, 'rsvp')}>{t.nav.rsvp}</a>
       <button
         class="menu-toggle"

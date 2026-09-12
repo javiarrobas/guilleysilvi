@@ -19,8 +19,8 @@ export type PageKey = (typeof pageKeys)[number];
 export const navKeys: PageKey[] = ['day', 'transport', 'stay', 'santander', 'preboda', 'photos', 'faq'];
 
 /**
- * Rutas (slugs) por idioma. Las rutas en catalán solo funcionan cuando existan
- * los ficheros correspondientes en src/pages/ca/.
+ * Rutas (slugs) por idioma. Las rutas de cada idioma solo funcionan cuando existan
+ * los ficheros correspondientes en src/pages/<idioma>/.
  */
 export const slugs: Record<Locale, Record<PageKey, string>> = {
   es: {
@@ -44,6 +44,17 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     photos: '/ca/fotos/',
     faq: '/ca/preguntes/',
     rsvp: '/ca/confirmar/',
+  },
+  en: {
+    home: '/en/',
+    day: '/en/the-big-day/',
+    transport: '/en/getting-there/',
+    stay: '/en/where-to-stay/',
+    santander: '/en/santander/',
+    preboda: '/en/pre-wedding/',
+    photos: '/en/photos/',
+    faq: '/en/faq/',
+    rsvp: '/en/rsvp/',
   },
 };
 
