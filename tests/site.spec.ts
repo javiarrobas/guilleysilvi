@@ -178,9 +178,11 @@ test('santander: las categorías enlazan a sus secciones', async ({ page }) => {
   }
 });
 
-test('confirmar: sin URL de formulario muestra "próximamente"', async ({ page }) => {
+test('confirmar: muestra el formulario propio (sin botón de "próximamente")', async ({ page }) => {
+  // La web se compila apuntando al emulador, así que el formulario propio está activo.
   await page.goto('/confirmar/');
-  await expect(page.locator('.rsvp__action .btn')).toHaveAttribute('aria-disabled', 'true');
+  await expect(page.locator('[data-rsvp-form]')).toBeVisible();
+  await expect(page.locator('.rsvp__action')).toHaveCount(0);
 });
 
 test('404 personalizada', async ({ page }) => {

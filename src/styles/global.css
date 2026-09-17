@@ -87,6 +87,11 @@ video {
   max-width: 100%;
 }
 
+/* Un elemento oculto lo está aunque su clase fije display (grid, flex…). */
+[hidden] {
+  display: none !important;
+}
+
 img {
   height: auto;
 }

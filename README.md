@@ -27,7 +27,8 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
-| Nombres, fecha, URL del formulario, idiomas | `src/site.config.ts`                  |
+| Nombres, fecha, fecha límite, idiomas       | `src/site.config.ts`                  |
+| Conexión con Firebase (formulario)         | `src/firebase.config.json`            |
 | Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts`, `en.ts`, `tr.ts` |
 | Horarios del gran día                      | `src/data/schedule.ts`                |
 | Los tres puntos del mapa (coordenadas, direcciones) y la zona recomendada | `src/data/locations.ts` |
@@ -64,9 +65,26 @@ siempre la última fila. Astro genera al compilar las versiones redimensionadas 
 
 ### Formulario de confirmación
 
-Cuando exista el Google Forms, pega su URL en `rsvpFormUrl` (`src/site.config.ts`). Hasta
-entonces la página muestra «Formulario disponible próximamente». La fecha límite se indica
-en `rsvpDeadline`.
+El formulario es propio de la web (`src/components/RsvpForm.astro` + `src/scripts/rsvp.ts`):
+los invitados lo rellenan sin ninguna cuenta y las respuestas se guardan en Firestore, en el
+proyecto compartido **youwebit-platform** (repo `wedoco/youwebit-platform`), bajo
+`sites/guilleysilvi/rsvps`. Tres capas de protección: reglas de Firestore (solo crear, campos
+y tamaños validados, nadie lee desde el navegador), App Check con reCAPTCHA Enterprise
+(invisible) y un campo trampa para bots.
+
+- **Activarlo**: rellena `src/firebase.config.json` con `terraform output -json sites` de la
+  plataforma (`web_config` + `recaptcha_site_key`). Son identificadores públicos, no secretos.
+  Mientras esté vacío, la página muestra «Próximamente». Si algún día se prefiere un formulario
+  externo, basta poner su URL en `rsvpFormUrl` (`src/site.config.ts`).
+- **Las respuestas**: los novios reciben un enlace privado que descarga un CSV actualizado
+  (`terraform output -json export_urls` en la plataforma). Un invitado que quiera corregir algo
+  vuelve a enviar el formulario; el CSV marca la última respuesta de cada email.
+- **Fecha límite**: texto en `rsvpDeadline` (`src/site.config.ts`).
+- **Desarrollo local contra el proyecto real**: exporta `PUBLIC_APPCHECK_DEBUG_TOKEN` con el
+  token de `terraform output -json app_check_debug_tokens` antes de `npm run dev`. Nunca lo
+  incluyas en un build que se publique.
+- **Pruebas**: `npm run test:e2e` arranca el emulador de Firestore con una copia de las reglas
+  reales (`tests/emulator/`, ver su README) y compila la web apuntando a él, sin App Check.
 
 ### Alojamientos
 
@@ -113,33 +131,43 @@ vistas lo leen. El selector aparece en la cabecera (escritorio, como desplegable
 - La página 404 se sirve en castellano para cualquier ruta inexistente (GitHub Pages usa un único
   `404.html`).
 
-## Publicación en GitHub Pages
+## Publicación
 
-El workflow `.github/workflows/deploy.yml` compila y publica en cada `push` a `main`.
-Una sola vez, en el repositorio de GitHub: **Settings → Pages → Build and deployment →
-Source: GitHub Actions**. La web quedará en `https://javiarrobas.github.io/guilleysilvi/`.
+La web se publica en **Firebase Hosting** (proyecto youwebit-platform) con el workflow
+`.github/workflows/deploy-firebase.yml`, en cada push a `main`. El workflow se autentica sin
+claves (Workload Identity Federation) y se activa cuando existen estas variables del repositorio
+(Settings → Secrets and variables → Actions → Variables), que salen de `infra/tf output` en la
+plataforma:
 
-El prefijo `/guilleysilvi` se inyecta automáticamente en la compilación (variables
-`SITE_URL` y `BASE_PATH`); en local la web se sirve en la raíz. Para probar en local
-exactamente lo que se publicará:
+| Variable | Valor |
+| --- | --- |
+| `GCP_WORKLOAD_IDENTITY_PROVIDER` | output `workload_identity_provider` |
+| `GCP_DEPLOY_SERVICE_ACCOUNT` | output `sites.guilleysilvi.deploy_service_account` |
+| `SITE_URL` (opcional) | `https://guilleysilvi.web.app` o el dominio definitivo |
+
+URL por defecto: `https://guilleysilvi.web.app`. El subdominio `guilleysilvi.youwebit.com` y,
+más adelante, el dominio propio de la boda se conectan desde la plataforma (`custom_domain`),
+sin tocar nada aquí salvo `SITE_URL`.
+
+En Firebase la web vive en la raíz, así que el workflow compila con `BASE_PATH=/`. El workflow
+antiguo de GitHub Pages (`deploy.yml`) sigue publicando en
+`https://javiarrobas.github.io/guilleysilvi/` hasta que se retire; GitHub Pages no permite
+alojar webs de un servicio comercial, por eso el cambio.
+
+Para probar en local exactamente lo que se publicará:
 
 ```bash
-BASE_PATH=/guilleysilvi npm run build && BASE_PATH=/guilleysilvi npm run preview
+npm run build && npm run preview
 ```
-
-### Dominio propio (más adelante)
-
-1. En el registrador del dominio, crea un `CNAME` de `www` → `javiarrobas.github.io` (y, si se
-   quiere el dominio sin `www`, registros `A` a las IPs de GitHub Pages).
-2. En **Settings → Pages → Custom domain** escribe el dominio y activa *Enforce HTTPS*.
-3. Nada más: el siguiente despliegue detecta el dominio, `BASE_PATH` pasa a estar vacío y
-   todos los enlaces se generan sin prefijo.
 
 ## Privacidad
 
 La web lleva `noindex` (no se indexa en buscadores; no afecta a las vistas previas de
-WhatsApp). Se cambia en `src/site.config.ts`. No hay cookies, analíticas ni peticiones a
-terceros salvo las teselas del mapa (OpenStreetMap) y los enlaces a Google Maps.
+WhatsApp). Se cambia en `src/site.config.ts`. No hay cookies ni analíticas. Peticiones a
+terceros: las teselas del mapa (OpenStreetMap), los enlaces a Google Maps y, en la página de
+confirmación, Firestore y reCAPTCHA Enterprise (Google) para guardar las respuestas. Las
+respuestas contienen datos personales y de salud (alergias): la base de datos está en la UE,
+nadie puede leerlas desde la web, y conviene borrarlas después de la boda.
 
 ## Estructura
 
@@ -148,7 +176,9 @@ src/
 ├── site.config.ts     configuración general
 ├── i18n/              diccionarios (es, ca, en, tr), rutas por idioma, helpers
 ├── data/              contenidos: horarios, lugares, alojamientos, guía, FAQ, galería
-├── components/        cabecera, pie, cuenta atrás, mapa, tarjetas, galería, FAQ, iconos
+├── components/        cabecera, pie, cuenta atrás, mapa, tarjetas, galería, FAQ, formulario, iconos
+├── scripts/rsvp.ts    lógica del formulario de confirmación (Firestore)
+├── lib/firebase.ts    configuración de Firebase (lee src/firebase.config.json)
 ├── views/             una vista por sección (reutilizables en cualquier idioma)
 ├── pages/             rutas públicas (una línea cada una); ca/, en/ y tr/ para los otros idiomas
 ├── layouts/Base.astro <head>, metadatos, cabecera y pie

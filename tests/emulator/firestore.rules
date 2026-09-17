@@ -1,0 +1,81 @@
+// Firestore security rules for the Youwebit platform.
+//
+// Guests never sign in. A site's form creates ONE document per submission under
+// sites/{siteId}/rsvps and can do nothing else: no reads (the data is personal —
+// names, emails, dietary/health notes), no updates, no deletes. Corrections are a
+// new submission; the export marks the latest one per email.
+//
+// Validation is structural: an allow-list of fields, types and maximum lengths,
+// so a script cannot dump arbitrary payloads into the database. App Check
+// (enforced project-wide, see main.tf) is what keeps that script out in the
+// first place; these rules are the second line.
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function siteExists(siteId) {
+      return exists(/databases/$(database)/documents/sites/$(siteId));
+    }
+
+    function str(field, max) {
+      return field is string && field.size() <= max;
+    }
+
+    function optStr(data, key, max) {
+      return !(key in data) || str(data[key], max);
+    }
+
+    function optBool(data, key) {
+      return !(key in data) || data[key] is bool;
+    }
+
+    function validRsvp(data) {
+      return data.keys().hasOnly([
+          'locale', 'firstName', 'lastName', 'email', 'phone', 'attending',
+          'plusOne', 'plusOneFirstName', 'plusOneLastName', 'plusOneDiet',
+          'diet', 'busOut', 'busBack', 'children', 'preboda', 'song', 'artist',
+          'comments', 'createdAt'
+        ])
+        && data.keys().hasAll(['locale', 'firstName', 'lastName', 'email', 'attending', 'createdAt'])
+        && data.locale in ['es', 'ca', 'en', 'tr']
+        && str(data.firstName, 80) && data.firstName.size() >= 1
+        && str(data.lastName, 120) && data.lastName.size() >= 1
+        && str(data.email, 160) && data.email.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$')
+        && optStr(data, 'phone', 40)
+        && data.attending is bool
+        && optBool(data, 'plusOne')
+        && optStr(data, 'plusOneFirstName', 80)
+        && optStr(data, 'plusOneLastName', 120)
+        && optStr(data, 'plusOneDiet', 500)
+        && optStr(data, 'diet', 500)
+        && optBool(data, 'busOut')
+        && optBool(data, 'busBack')
+        // Rules cannot iterate a list; the size is bounded here and each child
+        // is sanitised again by the export. A child is {name, age, diet}.
+        && (!('children' in data) || (data.children is list && data.children.size() <= 10))
+        && (!('preboda' in data) || data.preboda in ['yes', 'no', 'maybe'])
+        && optStr(data, 'song', 120)
+        && optStr(data, 'artist', 120)
+        && optStr(data, 'comments', 1000)
+        // Server time, so nobody backdates or forges a submission time.
+        && data.createdAt == request.time;
+    }
+
+    match /sites/{siteId}/rsvps/{rsvpId} {
+      allow create: if siteExists(siteId) && validRsvp(request.resource.data);
+      allow read, update, delete: if false;
+    }
+
+    // Site configuration (name, export token hash…) is written by Terraform and
+    // read by the export function with admin credentials. Clients see nothing.
+    match /sites/{siteId} {
+      allow read, write: if false;
+    }
+
+    // Anything not named above is closed. Adding a collection is a deliberate act.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

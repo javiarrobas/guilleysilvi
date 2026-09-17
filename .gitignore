@@ -28,3 +28,9 @@ playwright-report/
 
 # originales de las fotos (se importan optimizadas a src/assets con npm run photos)
 fotos/
+
+# Firebase CLI
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

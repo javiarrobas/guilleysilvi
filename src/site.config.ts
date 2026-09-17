@@ -17,9 +17,18 @@ export const siteConfig = {
   city: 'Santander',
 
   /**
-   * URL del formulario de Google Forms para confirmar asistencia.
-   * Mientras esté vacía, el botón muestra "Próximamente".
-   * Ejemplo: 'https://forms.gle/xxxxxxxx'
+   * Identificador de esta web en la plataforma Youwebit (proyecto Firebase
+   * youwebit-platform). Las respuestas se guardan en sites/<siteId>/rsvps.
+   */
+  siteId: 'guilleysilvi',
+
+  /**
+   * Formulario de confirmación:
+   *  - Por defecto es el formulario propio de la web, que guarda las respuestas en
+   *    Firestore. Se activa cuando src/firebase.config.json tiene valores
+   *    (`terraform output -json sites` en youwebit-platform).
+   *  - Si se indica una URL aquí (p. ej. un Google Forms), el botón enlaza a ella.
+   *  - Sin lo uno ni lo otro, la página muestra "Próximamente".
    */
   rsvpFormUrl: '',
 

@@ -6,11 +6,15 @@ import Icon from '@/components/Icon.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
+import { firebaseConfigured } from '@/lib/firebase';
+import RsvpForm from '@/components/RsvpForm.astro';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 const formUrl = siteConfig.rsvpFormUrl.trim();
 const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadline.es.trim();
+/** 'embedded' (formulario propio) · 'external' (enlace) · 'soon' */
+const mode = formUrl ? 'external' : firebaseConfigured ? 'embedded' : 'soon';
 ---
 
 <Base page="rsvp" title={t.nav.rsvp}>
@@ -20,9 +24,17 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
 
   <section class="container section section--flush-top">
     <div class="rsvp">
-      <div class="rsvp__action">
-        {
-          formUrl ? (
+      <p class="rsvp__deadline rsvp__deadline--top">
+        <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
+        <span>{deadline || t.rsvp.deadlineSoon}</span>
+      </p>
+
+      {mode === 'embedded' && <RsvpForm />}
+
+      {
+        mode !== 'embedded' && (
+          <div class="rsvp__action">
+            {mode === 'external' ? (
             <a class="btn btn--primary btn--block" href={formUrl} target="_blank" rel="noopener noreferrer">
               {t.rsvp.button}
               <Icon name="external" />
@@ -37,14 +49,14 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
                 {t.rsvp.soonText}
               </p>
             </>
-          )
-        }
-        <p class="rsvp__deadline">
-          <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
-          <span>{deadline || t.rsvp.deadlineSoon}</span>
-        </p>
+          )}
+          </div>
+        )
+      }
+
+      <p class="rsvp__faq">
         <a class="arrow-link" href={href(locale, 'faq')}>{t.nav.faq}<Icon name="arrowRight" /></a>
-      </div>
+      </p>
 
     </div>
   </section>
@@ -52,7 +64,18 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
 
 <style>
   .rsvp {
+    max-width: 44rem;
+  }
+
+  .rsvp__deadline--top {
     max-width: 34rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .rsvp__faq {
+    margin-top: clamp(2rem, 5vw, 3rem);
   }
 
   .rsvp__action {
@@ -77,7 +100,4 @@ const deadline = siteConfig.rsvpDeadline[locale]?.trim() || siteConfig.rsvpDeadl
     color: var(--ink-2);
   }
 
-  .rsvp__action .arrow-link {
-    margin-top: 0.5rem;
-  }
 </style>

@@ -1,0 +1,542 @@
+---
+/**
+ * Formulario de confirmación de asistencia, nativo de la web.
+ * Guarda las respuestas en Firestore (plataforma Youwebit) sin inicio de sesión.
+ * La lógica (secciones condicionales, validación, envío) está en src/scripts/rsvp.ts.
+ */
+import { getDictionary, getLocale } from '@/i18n';
+import { siteConfig } from '@/site.config';
+import Icon from './Icon.astro';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const f = t.rsvp.form;
+
+const messages = {
+  required: f.required,
+  invalidEmail: f.invalidEmail,
+  fixErrors: f.fixErrors,
+  alreadyAnswered: f.alreadyAnswered,
+  child: f.child,
+  sending: f.sending,
+  submit: f.submit,
+};
+
+const yesNo = [
+  { value: 'yes', label: f.yes },
+  { value: 'no', label: f.no },
+];
+---
+
+<div class="rsvp-form" data-rsvp data-site={siteConfig.siteId} data-locale={locale} data-messages={JSON.stringify(messages)}>
+  <p class="notice small" data-already hidden></p>
+
+  <div data-panel="form">
+    <form data-rsvp-form novalidate autocomplete="on">
+      <!-- Tus datos -->
+      <fieldset class="section">
+        <legend class="section__title">{f.sections.contact}</legend>
+        <div class="grid grid--2">
+          <div class="field">
+            <label for="firstName">{f.firstName}</label>
+            <input id="firstName" name="firstName" type="text" required maxlength="80" autocomplete="given-name" />
+            <p class="error" data-error></p>
+          </div>
+          <div class="field">
+            <label for="lastName">{f.lastName}</label>
+            <input id="lastName" name="lastName" type="text" required maxlength="120" autocomplete="family-name" />
+            <p class="error" data-error></p>
+          </div>
+          <div class="field">
+            <label for="email">{f.email}</label>
+            <input id="email" name="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" />
+            <p class="error" data-error></p>
+          </div>
+          <div class="field">
+            <label for="phone">{f.phone} <span class="muted">({f.optional})</span></label>
+            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" />
+            <p class="error" data-error></p>
+          </div>
+        </div>
+        <!-- Honeypot: invisible para personas; un bot que lo rellena no guarda nada. -->
+        <div class="hp" aria-hidden="true">
+          <label for="website">Website</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+      </fieldset>
+
+      <!-- Asistencia -->
+      <fieldset class="section">
+        <legend class="section__title">{f.sections.attendance}</legend>
+        <div class="choice" role="radiogroup" aria-labelledby="attending-label">
+          <p class="choice__label" id="attending-label">{f.attending}</p>
+          <div class="pills">
+            {yesNo.map((o) => (
+              <label class="pill">
+                <input type="radio" name="attending" value={o.value} required />
+                <span>{o.label}</span>
+              </label>
+            ))}
+          </div>
+          <p class="error" data-error></p>
+        </div>
+      </fieldset>
+
+      <div data-when="attending=yes" hidden>
+        <!-- Acompañante -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.plusOne}</legend>
+          <div class="choice">
+            <p class="choice__label" id="plusOne-label">{f.plusOne}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="plusOne-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="plusOne" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+          <div class="grid grid--2 sub" data-when="plusOne=yes" hidden>
+            <div class="field">
+              <label for="plusOneFirstName">{f.plusOneFirstName}</label>
+              <input id="plusOneFirstName" name="plusOneFirstName" type="text" required maxlength="80" />
+              <p class="error" data-error></p>
+            </div>
+            <div class="field">
+              <label for="plusOneLastName">{f.plusOneLastName}</label>
+              <input id="plusOneLastName" name="plusOneLastName" type="text" required maxlength="120" />
+              <p class="error" data-error></p>
+            </div>
+            <div class="field field--full">
+              <label for="plusOneDiet">{f.plusOneDiet} <span class="muted">({f.optional})</span></label>
+              <textarea id="plusOneDiet" name="plusOneDiet" rows="2" maxlength="500"></textarea>
+              <p class="error" data-error></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Alimentación -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.diet}</legend>
+          <div class="choice">
+            <p class="choice__label" id="hasDiet-label">{f.hasDiet}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="hasDiet-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="hasDiet" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+          <div class="sub" data-when="hasDiet=yes" hidden>
+            <div class="field">
+              <label for="diet">{f.diet}</label>
+              <textarea id="diet" name="diet" rows="2" required maxlength="500"></textarea>
+              <p class="error" data-error></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Autobús -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.bus}</legend>
+          <div class="choice">
+            <p class="choice__label" id="busOut-label">{f.busOut}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="busOut-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="busOut" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+          <div class="choice">
+            <p class="choice__label" id="busBack-label">{f.busBack}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="busBack-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="busBack" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+        </fieldset>
+
+        <!-- Niños -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.children}</legend>
+          <div class="choice">
+            <p class="choice__label" id="hasChildren-label">{f.hasChildren}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="hasChildren-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="hasChildren" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+          <div class="sub" data-when="hasChildren=yes" hidden>
+            <div class="field field--narrow">
+              <label for="childrenCount">{f.childrenCount}</label>
+              <select id="childrenCount" name="childrenCount">
+                {[1, 2, 3, 4, 5, 6].map((n) => <option value={n}>{n}</option>)}
+              </select>
+            </div>
+            <div class="children" data-children></div>
+            <template data-child-template>
+              <div class="child" data-child-row>
+                <p class="child__title" data-child-title></p>
+                <div class="grid grid--2">
+                  <div class="field">
+                    <label>{f.childName}</label>
+                    <input type="text" required maxlength="80" data-child="name" />
+                    <p class="error" data-error></p>
+                  </div>
+                  <div class="field field--narrow">
+                    <label>{f.childAge}</label>
+                    <input type="number" min="0" max="17" inputmode="numeric" required data-child="age" />
+                    <p class="error" data-error></p>
+                  </div>
+                  <div class="field field--full">
+                    <label>{f.childDiet} <span class="muted">({f.optional})</span></label>
+                    <input type="text" maxlength="300" data-child="diet" />
+                    <p class="error" data-error></p>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </div>
+        </fieldset>
+
+        <!-- Preboda -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.preboda}</legend>
+          <div class="choice">
+            <p class="choice__label" id="preboda-label">{f.preboda}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="preboda-label">
+              {[...yesNo, { value: 'maybe', label: f.maybe }].map((o) => (
+                <label class="pill">
+                  <input type="radio" name="preboda" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+        </fieldset>
+
+        <!-- Música -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.music}</legend>
+          <p class="choice__label">{f.song} <span class="muted">({f.optional})</span></p>
+          <div class="grid grid--2">
+            <div class="field">
+              <label for="song">{f.songTitle}</label>
+              <input id="song" name="song" type="text" maxlength="120" />
+              <p class="error" data-error></p>
+            </div>
+            <div class="field">
+              <label for="artist">{f.artist}</label>
+              <input id="artist" name="artist" type="text" maxlength="120" />
+              <p class="error" data-error></p>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Comentarios -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.comments}</legend>
+          <div class="field">
+            <label for="comments">{f.comments} <span class="muted">({f.optional})</span></label>
+            <textarea id="comments" name="comments" rows="3" maxlength="1000"></textarea>
+            <p class="error" data-error></p>
+          </div>
+        </fieldset>
+      </div>
+
+      <p class="error error--form" data-form-error hidden role="alert"></p>
+      <div class="actions">
+        <button class="btn btn--primary btn--block" type="submit">{f.submit}</button>
+        <p class="small muted privacy">{f.privacy}</p>
+      </div>
+    </form>
+  </div>
+
+  <div class="panel" data-panel="success" hidden tabindex="-1">
+    <Icon name="waves" class="panel__icon" />
+    <h2 class="title-md">{f.successTitle}</h2>
+    <p class="panel__text">{f.successText}</p>
+    <button class="btn btn--ghost btn--sm" type="button" data-again>{f.again}</button>
+  </div>
+
+  <div class="panel" data-panel="success-no" hidden tabindex="-1">
+    <Icon name="north" class="panel__icon" />
+    <h2 class="title-md">{f.successNoTitle}</h2>
+    <p class="panel__text">{f.successNoText}</p>
+    <button class="btn btn--ghost btn--sm" type="button" data-again>{f.again}</button>
+  </div>
+
+  <div class="panel panel--error" data-panel="error" hidden tabindex="-1" role="alert">
+    <h2 class="title-md">{f.errorTitle}</h2>
+    <p class="panel__text">{f.errorText}</p>
+    <button class="btn btn--sm" type="button" data-retry>{f.retry}</button>
+  </div>
+</div>
+
+<style>
+  .rsvp-form {
+    max-width: 44rem;
+  }
+
+  .notice {
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--sea-2);
+    border-radius: var(--radius-lg);
+    background: var(--sea-3);
+    color: var(--sea-dark);
+  }
+
+  .section {
+    margin: 0 0 clamp(1.75rem, 4vw, 2.5rem);
+    padding: 0;
+    border: 0;
+    min-inline-size: 0;
+  }
+
+  .section__title {
+    padding: 0 0 0.9rem;
+    margin-bottom: 1.1rem;
+    width: 100%;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 4vw, 1.875rem);
+    line-height: 1.1;
+  }
+
+  .sub {
+    margin-top: 1rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--sea-2);
+  }
+
+  .grid {
+    --grid-gap: 1rem 1.25rem;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  .field--full {
+    grid-column: 1 / -1;
+  }
+
+  .field--narrow {
+    max-width: 10rem;
+  }
+
+  .field label,
+  .choice__label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .choice__label {
+    margin-bottom: 0.6rem;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='number'],
+  select,
+  textarea {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+
+  textarea {
+    resize: vertical;
+  }
+
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--sea);
+    box-shadow: 0 0 0 3px rgba(47, 95, 110, 0.15);
+  }
+
+  .is-invalid input,
+  .is-invalid select,
+  .is-invalid textarea {
+    border-color: #a5432f;
+  }
+
+  .choice {
+    margin-bottom: 1.25rem;
+  }
+
+  .choice:last-child {
+    margin-bottom: 0;
+  }
+
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pill {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .pill input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .pill span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: background-color 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+  }
+
+  .pill input:checked + span {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .pill input:focus-visible + span {
+    outline: 2px solid var(--sea);
+    outline-offset: 3px;
+  }
+
+  .is-invalid .pill span {
+    border-color: #a5432f;
+  }
+
+  .error {
+    min-height: 0;
+    font-size: 0.85rem;
+    color: #a5432f;
+  }
+
+  .error:empty {
+    display: none;
+  }
+
+  .error--form {
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+
+  .hp {
+    position: absolute;
+    left: -10000px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  .children {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+  }
+
+  .child__title {
+    margin-bottom: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .privacy {
+    max-width: 50ch;
+  }
+
+  .panel {
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+  }
+
+  .panel:focus {
+    outline: none;
+  }
+
+  .panel__icon {
+    width: 2rem;
+    height: 2rem;
+    margin-bottom: 1rem;
+    color: var(--sea);
+    stroke-width: 1.2;
+  }
+
+  .panel__text {
+    margin: 0.9rem 0 1.5rem;
+    color: var(--ink-2);
+  }
+
+  .panel--error {
+    border-color: #a5432f;
+  }
+
+  @media (min-width: 40em) {
+    .actions .btn--block {
+      width: auto;
+      align-self: flex-start;
+    }
+  }
+</style>
+
+<script>
+  import { setupRsvpForm } from '@/scripts/rsvp';
+
+  document.querySelectorAll<HTMLElement>('[data-rsvp]').forEach(setupRsvpForm);
+</script>

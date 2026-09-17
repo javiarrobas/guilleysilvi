@@ -1,0 +1,51 @@
+# Publica la web en Firebase Hosting (proyecto youwebit-platform) en cada push a main.
+#
+# Se activa cuando existen estas variables del repositorio (Settings → Secrets and
+# variables → Actions → Variables), que salen de `infra/tf output` en youwebit-platform:
+#   GCP_WORKLOAD_IDENTITY_PROVIDER   ← output workload_identity_provider
+#   GCP_DEPLOY_SERVICE_ACCOUNT       ← output sites.guilleysilvi.deploy_service_account
+#   SITE_URL (opcional)              ← https://guilleysilvi.web.app o el dominio definitivo
+# Sin claves ni secretos: el token OIDC del workflow se cambia por una credencial
+# temporal, y solo este repositorio puede usar esa cuenta de servicio.
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: firebase-hosting
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: vars.GCP_DEPLOY_SERVICE_ACCOUNT != ''
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # En Firebase Hosting la web vive en la raíz: sin prefijo /guilleysilvi.
+      - run: npm run build
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://guilleysilvi.web.app' }}
+          BASE_PATH: /
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Deploy
+        run: npx firebase-tools@15 deploy --only hosting:guilleysilvi --project youwebit-platform --non-interactive
