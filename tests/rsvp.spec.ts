@@ -1,4 +1,5 @@
 import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
+import { createHash } from 'node:crypto';
 
 /**
  * Formulario de confirmación contra el emulador de Firestore (reglas reales).
@@ -32,6 +33,13 @@ async function docsByEmail(request: APIRequestContext, email: string): Promise<R
   const res = await request.get(`${DOCS}/sites/guilleysilvi/rsvps?pageSize=300`, { headers: OWNER });
   const body = (await res.json()) as { documents?: { fields: Record<string, Field> }[] };
   return (body.documents ?? []).map((d) => d.fields).filter((d) => d.email?.stringValue === email);
+}
+
+const sha256 = (text: string) => createHash('sha256').update(text.trim().toLowerCase(), 'utf8').digest('hex');
+
+async function emailLookup(request: APIRequestContext, email: string) {
+  const res = await request.get(`${DOCS}/sites/guilleysilvi/emails/${sha256(email)}`, { headers: OWNER });
+  return res.ok() ? ((await res.json()) as { fields: Record<string, Field> }).fields : null;
 }
 
 const uniqueEmail = (tag: string, info: { project: { name: string } }) =>
@@ -112,9 +120,31 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   expect(d.createdAt?.timestampValue).toBeTruthy();
   expect(d).not.toHaveProperty('website');
 
-  // Al recargar, la web recuerda que ya se respondió (solo aviso)
+  // Se guardó también el documento de consulta por email (hash + fecha)
+  const lookup = await emailLookup(request, email);
+  expect(lookup?.lastAt?.timestampValue).toBeTruthy();
+
+  // En una visita nueva, al escribir ese email y salir del campo, avisa de la respuesta anterior
   await page.reload();
-  await expect(page.locator('[data-already]')).toBeVisible();
+  await expect(page.locator('[data-email-hint]')).toBeHidden();
+  await page.locator('#email').fill(email);
+  await page.locator('#firstName').click(); // blur del email
+  await expect(page.locator('[data-email-hint]')).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('[data-email-hint]')).toContainText('Ya enviaste una respuesta');
+  // Un email desconocido no muestra aviso
+  await page.locator('#email').fill(`otro-${email}`);
+  await page.locator('#firstName').click();
+  await page.waitForTimeout(800);
+  await expect(page.locator('[data-email-hint]')).toBeHidden();
+});
+
+test('orden del formulario: email primero, alimentación antes que acompañante', async ({ page }) => {
+  await page.goto('/confirmar/');
+  const firstInput = page.locator('form[data-rsvp-form] input:not([type="hidden"])').first();
+  await expect(firstInput).toHaveAttribute('id', 'email');
+  const legends = await page.locator('form[data-rsvp-form] legend').allTextContents();
+  expect(legends.indexOf('Alimentación')).toBeLessThan(legends.indexOf('Acompañante'));
+  await expect(page.getByText('Usaremos estos datos')).toHaveCount(0);
 });
 
 test('respuesta "no": solo los datos de contacto', async ({ page, request }, info) => {

@@ -249,7 +249,6 @@ export const tr: Dictionary = {
       errorTitle: 'Yanıtını gönderemedik',
       errorText: 'Birkaç saniye sonra tekrar dene. Sorun devam ederse bize yaz, biz not alalım.',
       retry: 'Tekrar dene',
-      privacy: 'Bu bilgileri yalnızca düğünü düzenlemek için kullanacağız ve sonrasında sileceğiz.',
     },
   },
   faq: {

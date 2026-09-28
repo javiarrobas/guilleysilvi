@@ -29,14 +29,18 @@ const yesNo = [
 ---
 
 <div class="rsvp-form" data-rsvp data-site={siteConfig.siteId} data-locale={locale} data-messages={JSON.stringify(messages)}>
-  <p class="notice small" data-already hidden></p>
-
   <div data-panel="form">
     <form data-rsvp-form novalidate autocomplete="on">
       <!-- Tus datos -->
       <fieldset class="section">
         <legend class="section__title">{f.sections.contact}</legend>
         <div class="grid grid--2">
+          <div class="field field--full">
+            <label for="email">{f.email}</label>
+            <input id="email" name="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" />
+            <p class="error" data-error></p>
+            <p class="hint" data-email-hint hidden role="status"></p>
+          </div>
           <div class="field">
             <label for="firstName">{f.firstName}</label>
             <input id="firstName" name="firstName" type="text" required maxlength="80" autocomplete="given-name" />
@@ -45,11 +49,6 @@ const yesNo = [
           <div class="field">
             <label for="lastName">{f.lastName}</label>
             <input id="lastName" name="lastName" type="text" required maxlength="120" autocomplete="family-name" />
-            <p class="error" data-error></p>
-          </div>
-          <div class="field">
-            <label for="email">{f.email}</label>
-            <input id="email" name="email" type="email" required maxlength="160" autocomplete="email" inputmode="email" />
             <p class="error" data-error></p>
           </div>
           <div class="field">
@@ -83,6 +82,30 @@ const yesNo = [
       </fieldset>
 
       <div data-when="attending=yes" hidden>
+        <!-- Alimentación -->
+        <fieldset class="section">
+          <legend class="section__title">{f.sections.diet}</legend>
+          <div class="choice">
+            <p class="choice__label" id="hasDiet-label">{f.hasDiet}</p>
+            <div class="pills" role="radiogroup" aria-labelledby="hasDiet-label">
+              {yesNo.map((o) => (
+                <label class="pill">
+                  <input type="radio" name="hasDiet" value={o.value} required />
+                  <span>{o.label}</span>
+                </label>
+              ))}
+            </div>
+            <p class="error" data-error></p>
+          </div>
+          <div class="sub" data-when="hasDiet=yes" hidden>
+            <div class="field">
+              <label for="diet">{f.diet}</label>
+              <textarea id="diet" name="diet" rows="2" required maxlength="500"></textarea>
+              <p class="error" data-error></p>
+            </div>
+          </div>
+        </fieldset>
+
         <!-- Acompañante -->
         <fieldset class="section">
           <legend class="section__title">{f.sections.plusOne}</legend>
@@ -112,30 +135,6 @@ const yesNo = [
             <div class="field field--full">
               <label for="plusOneDiet">{f.plusOneDiet} <span class="muted">({f.optional})</span></label>
               <textarea id="plusOneDiet" name="plusOneDiet" rows="2" maxlength="500"></textarea>
-              <p class="error" data-error></p>
-            </div>
-          </div>
-        </fieldset>
-
-        <!-- Alimentación -->
-        <fieldset class="section">
-          <legend class="section__title">{f.sections.diet}</legend>
-          <div class="choice">
-            <p class="choice__label" id="hasDiet-label">{f.hasDiet}</p>
-            <div class="pills" role="radiogroup" aria-labelledby="hasDiet-label">
-              {yesNo.map((o) => (
-                <label class="pill">
-                  <input type="radio" name="hasDiet" value={o.value} required />
-                  <span>{o.label}</span>
-                </label>
-              ))}
-            </div>
-            <p class="error" data-error></p>
-          </div>
-          <div class="sub" data-when="hasDiet=yes" hidden>
-            <div class="field">
-              <label for="diet">{f.diet}</label>
-              <textarea id="diet" name="diet" rows="2" required maxlength="500"></textarea>
               <p class="error" data-error></p>
             </div>
           </div>
@@ -267,7 +266,6 @@ const yesNo = [
       <p class="error error--form" data-form-error hidden role="alert"></p>
       <div class="actions">
         <button class="btn btn--primary btn--block" type="submit">{f.submit}</button>
-        <p class="small muted privacy">{f.privacy}</p>
       </div>
     </form>
   </div>
@@ -298,13 +296,14 @@ const yesNo = [
     max-width: 44rem;
   }
 
-  .notice {
-    padding: 0.9rem 1.1rem;
-    margin-bottom: 1.5rem;
+  .hint {
+    margin-top: 0.15rem;
+    padding: 0.7rem 0.9rem;
     border: 1px solid var(--sea-2);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius);
     background: var(--sea-3);
     color: var(--sea-dark);
+    font-size: 0.9rem;
   }
 
   .section {
@@ -493,10 +492,6 @@ const yesNo = [
     flex-direction: column;
     gap: 1rem;
     margin-top: 1rem;
-  }
-
-  .privacy {
-    max-width: 50ch;
   }
 
   .panel {

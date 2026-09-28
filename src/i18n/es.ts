@@ -248,7 +248,6 @@ export const es = {
       errorTitle: 'No hemos podido enviar tu respuesta',
       errorText: 'Inténtalo de nuevo en unos segundos. Si sigue fallando, escríbenos y lo apuntamos nosotros.',
       retry: 'Reintentar',
-      privacy: 'Usaremos estos datos solo para organizar la boda y los borraremos después.',
     },
   },
   faq: {

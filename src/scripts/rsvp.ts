@@ -3,11 +3,15 @@
  *  - muestra u oculta secciones según las respuestas (asistencia, acompañante, niños…)
  *  - valida con los mensajes del idioma de la página
  *  - guarda la respuesta en Firestore (sites/<siteId>/rsvps) sin ningún inicio de sesión
- *  - recuerda en este navegador que ya se respondió (solo para avisar; se puede reenviar)
+ *  - al salir del campo de email, avisa si ese email ya respondió (se puede reenviar)
+ *
+ * Los invitados no pueden leer respuestas. Para el aviso se guarda, junto a cada
+ * respuesta, un documento sites/<siteId>/emails/<sha256(email)> con la fecha; solo
+ * ese documento es consultable, y solo por su hash.
  */
 import { initializeApp } from 'firebase/app';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
-import { addDoc, collection, connectFirestoreEmulator, getFirestore, serverTimestamp } from 'firebase/firestore/lite';
+import { collection, connectFirestoreEmulator, doc, getDoc, getFirestore, serverTimestamp, writeBatch } from 'firebase/firestore/lite';
 import { appCheckDebugToken, emulatorHost, firebaseConfig } from '@/lib/firebase';
 import { isLocale, type Locale } from '@/i18n';
 
@@ -44,6 +48,13 @@ type Rsvp = {
 };
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+/** sha256 hex del email normalizado (minúsculas, sin espacios). */
+async function emailHash(email: string): Promise<string> {
+  const bytes = new TextEncoder().encode(email.trim().toLowerCase());
+  const digest = await crypto.subtle.digest('SHA-256', bytes);
+  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
+}
 
 declare global {
   interface Window {
@@ -141,7 +152,6 @@ export function setupRsvpForm(root: HTMLElement) {
   const messages = JSON.parse(root.dataset.messages ?? '{}') as Messages;
   const locale: Locale = isLocale(root.dataset.locale) ? root.dataset.locale : 'es';
   const siteId = root.dataset.site ?? '';
-  const storageKey = `rsvp:${siteId}`;
 
   const panels = {
     form: root.querySelector<HTMLElement>('[data-panel="form"]')!,
@@ -151,25 +161,46 @@ export function setupRsvpForm(root: HTMLElement) {
   };
   const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]')!;
   const formError = form.querySelector<HTMLElement>('[data-form-error]')!;
-  const notice = root.querySelector<HTMLElement>('[data-already]');
 
   const show = (panel: keyof typeof panels) => {
     Object.entries(panels).forEach(([key, el]) => (el.hidden = key !== panel));
     panels[panel].focus?.();
     panels[panel].scrollIntoView?.({ block: 'start', behavior: 'smooth' });
   };
-
-  // Aviso de respuesta anterior en este navegador (informativo, no bloquea).
-  try {
-    const previous = JSON.parse(localStorage.getItem(storageKey) ?? 'null') as { at?: string } | null;
-    if (previous?.at && notice) {
-      const date = new Date(previous.at).toLocaleDateString(locale, { day: 'numeric', month: 'long' });
-      notice.textContent = messages.alreadyAnswered.replace('{date}', date);
-      notice.hidden = false;
+  // --- Aviso de respuesta anterior: al salir del campo de email ---
+  const emailField = form.querySelector<HTMLInputElement>('#email');
+  const emailHint = form.querySelector<HTMLElement>('[data-email-hint]');
+  let lastChecked = '';
+  const checkEmail = async () => {
+    if (!emailField || !emailHint) return;
+    const email = emailField.value.trim();
+    if (!EMAIL.test(email)) {
+      emailHint.hidden = true;
+      return;
     }
-  } catch {
-    /* sin almacenamiento: nada que avisar */
-  }
+    const key = email.toLowerCase();
+    if (key === lastChecked) return;
+    lastChecked = key;
+    try {
+      const snap = await getDoc(doc(await db(), `sites/${siteId}/emails/${await emailHash(key)}`));
+      if (emailField.value.trim().toLowerCase() !== key) return; // el campo cambió mientras tanto
+      const at = snap.exists() ? (snap.get('lastAt') as { toDate?: () => Date } | undefined) : undefined;
+      if (at?.toDate) {
+        const date = at.toDate().toLocaleDateString(locale, { day: 'numeric', month: 'long' });
+        emailHint.textContent = messages.alreadyAnswered.replace('{date}', date);
+        emailHint.hidden = false;
+      } else {
+        emailHint.hidden = true;
+      }
+    } catch (error) {
+      console.warn('rsvp: no se pudo comprobar el email', error);
+      emailHint.hidden = true;
+    }
+  };
+  emailField?.addEventListener('blur', () => void checkEmail());
+  emailField?.addEventListener('input', () => {
+    if (emailField.value.trim().toLowerCase() !== lastChecked && emailHint) emailHint.hidden = true;
+  });
 
   // --- Secciones condicionales: data-when="campo=valor" ---
   const conditionals = Array.from(form.querySelectorAll<HTMLElement>('[data-when]'));
@@ -286,12 +317,14 @@ export function setupRsvpForm(root: HTMLElement) {
     try {
       // Honeypot: un bot que rellena el campo oculto ve un "gracias" y no guarda nada.
       const honeypot = (form.elements.namedItem('website') as HTMLInputElement | null)?.value;
-      if (!honeypot) await addDoc(collection(await db(), `sites/${siteId}/rsvps`), data);
-      try {
-        localStorage.setItem(storageKey, JSON.stringify({ at: new Date().toISOString(), attending: data.attending }));
-      } catch {
-        /* sin almacenamiento */
+      if (!honeypot) {
+        const firestore = await db();
+        const batch = writeBatch(firestore);
+        batch.set(doc(collection(firestore, `sites/${siteId}/rsvps`)), data);
+        batch.set(doc(firestore, `sites/${siteId}/emails/${await emailHash(data.email)}`), { lastAt: serverTimestamp() });
+        await batch.commit();
       }
+      lastChecked = ''; // la próxima vez que se escriba este email, el aviso será correcto
       show(data.attending ? 'success' : 'successNo');
     } catch (error) {
       console.error('rsvp: no se pudo guardar la respuesta', error);

@@ -248,7 +248,6 @@ export const ca: Dictionary = {
       errorTitle: 'No hem pogut enviar la teva resposta',
       errorText: "Torna-ho a provar en uns segons. Si continua fallant, escriu-nos i ho apuntem nosaltres.",
       retry: 'Tornar-ho a provar',
-      privacy: 'Farem servir aquestes dades només per organitzar el casament i les esborrarem després.',
     },
   },
   faq: {

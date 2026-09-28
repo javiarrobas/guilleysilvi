@@ -248,7 +248,6 @@ export const en: Dictionary = {
       errorTitle: 'We could not send your reply',
       errorText: 'Please try again in a few seconds. If it keeps failing, write to us and we will note it down for you.',
       retry: 'Try again',
-      privacy: 'We will only use this information to organise the wedding and will delete it afterwards.',
     },
   },
   faq: {

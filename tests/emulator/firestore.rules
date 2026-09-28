@@ -67,6 +67,21 @@ service cloud.firestore {
       allow read, update, delete: if false;
     }
 
+    // "Has this email already answered?" — the only thing a form may look up.
+    // Keyed by sha256(email), holding just the time of the last response, written
+    // in the same batch as the response. Readable one document at a time by hash
+    // (no listing), so nothing about who answered is enumerable without knowing
+    // the email; App Check keeps scripts out.
+    match /sites/{siteId}/emails/{emailHash} {
+      allow get: if siteExists(siteId);
+      allow list: if false;
+      allow create, update: if siteExists(siteId)
+        && emailHash.matches('^[a-f0-9]{64}$')
+        && request.resource.data.keys().hasOnly(['lastAt'])
+        && request.resource.data.lastAt == request.time;
+      allow delete: if false;
+    }
+
     // Site configuration (name, export token hash…) is written by Terraform and
     // read by the export function with admin credentials. Clients see nothing.
     match /sites/{siteId} {
