@@ -1,0 +1,24 @@
+---
+import Base from '@/layouts/Base.astro';
+import SectionHead from '@/components/SectionHead.astro';
+import QuizGame from '@/components/QuizGame.astro';
+import SoonBadge from '@/components/SoonBadge.astro';
+import { getDictionary, getLocale } from '@/i18n';
+import { quizConfigured } from '@/lib/firebase';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+---
+
+<Base page="quiz" title={t.nav.quiz}>
+  <header class="container page-head">
+    <SectionHead as="h1" size="xl" eyebrow={t.quiz.eyebrow} title={t.quiz.title} lead={t.quiz.lead} />
+  </header>
+  <section class="container section section--flush-top">
+    {quizConfigured ? <QuizGame /> : <p class="soon"><SoonBadge /> <span class="muted">{t.quiz.notReady}</span></p>}
+  </section>
+</Base>
+
+<style>
+  .soon { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+</style>

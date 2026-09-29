@@ -12,6 +12,8 @@ export const pageKeys = [
   'photos',
   'faq',
   'rsvp',
+  'quiz',
+  'ranking',
 ] as const;
 export type PageKey = (typeof pageKeys)[number];
 
@@ -33,6 +35,8 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     photos: '/fotos/',
     faq: '/preguntas/',
     rsvp: '/confirmar/',
+    quiz: '/juego/',
+    ranking: '/ranking/',
   },
   ca: {
     home: '/ca/',
@@ -44,6 +48,8 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     photos: '/ca/fotos/',
     faq: '/ca/preguntes/',
     rsvp: '/ca/confirmar/',
+    quiz: '/ca/joc/',
+    ranking: '/ca/ranquing/',
   },
   en: {
     home: '/en/',
@@ -55,6 +61,8 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     photos: '/en/photos/',
     faq: '/en/faq/',
     rsvp: '/en/rsvp/',
+    quiz: '/en/quiz/',
+    ranking: '/en/ranking/',
   },
   // Sin caracteres propios del turco en las URL: se comparten por WhatsApp.
   tr: {
@@ -67,6 +75,8 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     photos: '/tr/fotograflar/',
     faq: '/tr/sss/',
     rsvp: '/tr/katilim/',
+    quiz: '/tr/oyun/',
+    ranking: '/tr/siralama/',
   },
 };
 

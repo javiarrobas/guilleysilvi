@@ -1,0 +1,86 @@
+{
+  "_comment": "PLACEHOLDER QUESTIONS — replace with the real ones. Keep each question's `id` stable and the option order in sync with quiz.answers.json (the answer key, gitignored, published with `npm run quiz:publish`). Up to 10 options per question. Texts in the four languages of the site.",
+  "id": "guilleysilvi-v1",
+  "questions": [
+    {
+      "id": "q1",
+      "text": { "es": "¿Dónde se conocieron Silvia y Guille?", "ca": "On es van conèixer la Silvia i el Guille?", "en": "Where did Silvia and Guille meet?", "tr": "Silvia ve Guille nerede tanıştı?" },
+      "options": [
+        { "es": "En la universidad", "ca": "A la universitat", "en": "At university", "tr": "Üniversitede" },
+        { "es": "En un concierto", "ca": "En un concert", "en": "At a concert", "tr": "Bir konserde" },
+        { "es": "En la boda de unos amigos", "ca": "Al casament d'uns amics", "en": "At a friends' wedding", "tr": "Arkadaşlarının düğününde" },
+        { "es": "En una app", "ca": "En una app", "en": "On an app", "tr": "Bir uygulamada" }
+      ]
+    },
+    {
+      "id": "q2",
+      "text": { "es": "¿Quién dio el primer paso?", "ca": "Qui va fer el primer pas?", "en": "Who made the first move?", "tr": "İlk adımı kim attı?" },
+      "options": [
+        { "es": "Silvia", "ca": "La Silvia", "en": "Silvia", "tr": "Silvia" },
+        { "es": "Guille", "ca": "El Guille", "en": "Guille", "tr": "Guille" },
+        { "es": "Fue mutuo", "ca": "Va ser mutu", "en": "It was mutual", "tr": "Karşılıklıydı" },
+        { "es": "Un amigo en común", "ca": "Un amic en comú", "en": "A mutual friend", "tr": "Ortak bir arkadaş" }
+      ]
+    },
+    {
+      "id": "q3",
+      "text": { "es": "¿Cuál es su destino de viaje favorito?", "ca": "Quina és la seva destinació de viatge preferida?", "en": "What is their favourite travel destination?", "tr": "En sevdikleri seyahat rotası hangisi?" },
+      "options": [
+        { "es": "Lisboa", "ca": "Lisboa", "en": "Lisbon", "tr": "Lizbon" },
+        { "es": "Roma", "ca": "Roma", "en": "Rome", "tr": "Roma" },
+        { "es": "Tokio", "ca": "Tòquio", "en": "Tokyo", "tr": "Tokyo" },
+        { "es": "Cualquier playa del norte", "ca": "Qualsevol platja del nord", "en": "Any beach up north", "tr": "Kuzeydeki herhangi bir plaj" }
+      ]
+    },
+    {
+      "id": "q4",
+      "text": { "es": "¿Qué pide siempre Guille en un bar de Santander?", "ca": "Què demana sempre el Guille en un bar de Santander?", "en": "What does Guille always order in a bar in Santander?", "tr": "Guille Santander'da bir barda hep ne sipariş eder?" },
+      "options": [
+        { "es": "Rabas", "ca": "Rabas", "en": "Rabas (fried squid)", "tr": "Rabas (kızarmış kalamar)" },
+        { "es": "Anchoas", "ca": "Anxoves", "en": "Anchovies", "tr": "Hamsi" },
+        { "es": "Un sobao", "ca": "Un sobao", "en": "A sobao", "tr": "Bir sobao" },
+        { "es": "Cocido montañés", "ca": "Cocido montañés", "en": "Cocido montañés", "tr": "Cocido montañés" }
+      ]
+    },
+    {
+      "id": "q5",
+      "text": { "es": "¿Qué serie han visto juntos más veces?", "ca": "Quina sèrie han vist junts més vegades?", "en": "Which series have they watched together most often?", "tr": "Birlikte en çok hangi diziyi izlediler?" },
+      "options": [
+        { "es": "Friends", "ca": "Friends", "en": "Friends", "tr": "Friends" },
+        { "es": "The Office", "ca": "The Office", "en": "The Office", "tr": "The Office" },
+        { "es": "Los Soprano", "ca": "Els Soprano", "en": "The Sopranos", "tr": "The Sopranos" },
+        { "es": "Juego de tronos", "ca": "Joc de trons", "en": "Game of Thrones", "tr": "Game of Thrones" }
+      ]
+    },
+    {
+      "id": "q6",
+      "text": { "es": "¿Dónde fue la pedida?", "ca": "On va ser la petició de mà?", "en": "Where did the proposal happen?", "tr": "Evlilik teklifi nerede yapıldı?" },
+      "options": [
+        { "es": "En la playa", "ca": "A la platja", "en": "On the beach", "tr": "Plajda" },
+        { "es": "En un restaurante", "ca": "En un restaurant", "en": "In a restaurant", "tr": "Bir restoranda" },
+        { "es": "En casa, en pijama", "ca": "A casa, en pijama", "en": "At home, in pyjamas", "tr": "Evde, pijamayla" },
+        { "es": "De viaje", "ca": "De viatge", "en": "While travelling", "tr": "Seyahatte" }
+      ]
+    },
+    {
+      "id": "q7",
+      "text": { "es": "¿Cuántos años llevan juntos?", "ca": "Quants anys fa que estan junts?", "en": "How many years have they been together?", "tr": "Kaç yıldır birlikteler?" },
+      "options": [
+        { "es": "3", "ca": "3", "en": "3", "tr": "3" },
+        { "es": "5", "ca": "5", "en": "5", "tr": "5" },
+        { "es": "7", "ca": "7", "en": "7", "tr": "7" },
+        { "es": "10", "ca": "10", "en": "10", "tr": "10" }
+      ]
+    },
+    {
+      "id": "q8",
+      "text": { "es": "¿Quién de los dos es más puntual?", "ca": "Qui dels dos és més puntual?", "en": "Which of the two is more punctual?", "tr": "İkisinden hangisi daha dakik?" },
+      "options": [
+        { "es": "Silvia", "ca": "La Silvia", "en": "Silvia", "tr": "Silvia" },
+        { "es": "Guille", "ca": "El Guille", "en": "Guille", "tr": "Guille" },
+        { "es": "Ninguno", "ca": "Cap dels dos", "en": "Neither", "tr": "Hiçbiri" },
+        { "es": "Los dos, siempre", "ca": "Tots dos, sempre", "en": "Both, always", "tr": "İkisi de, her zaman" }
+      ]
+    }
+  ]
+}

@@ -28,7 +28,8 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
 | Nombres, fecha, fecha límite, idiomas       | `src/site.config.ts`                  |
-| Conexión con Firebase (formulario)         | `src/firebase.config.json`            |
+| Conexión con Firebase (formulario, juego)  | `src/firebase.config.json`            |
+| Preguntas del juego / clave de respuestas  | `src/data/quiz.json` / `quiz.answers.json` (local) |
 | Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts`, `en.ts`, `tr.ts` |
 | Horarios del gran día                      | `src/data/schedule.ts`                |
 | Los tres puntos del mapa (coordenadas, direcciones) y la zona recomendada | `src/data/locations.ts` |
@@ -85,6 +86,24 @@ y tamaños validados, nadie lee desde el navegador), App Check con reCAPTCHA Ent
   incluyas en un build que se publique.
 - **Pruebas**: `npm run test:e2e` arranca el emulador de Firestore con una copia de las reglas
   reales (`tests/emulator/`, ver su README) y compila la web apuntando a él, sin App Check.
+
+### El juego («¿Cuánto sabes de Silvia y Guille?»)
+
+Un cuestionario tipo Kahoot en `/juego/` (y `/ca/joc/`, `/en/quiz/`, `/tr/oyun/`): avatar,
+nombre y email, preguntas de una en una, resultado con las respuestas correctas y la opción
+de publicar la puntuación en el ranking (`/ranking/`). Un intento por email.
+
+- **Preguntas**: `src/data/quiz.json`, en los cuatro idiomas. Las actuales son de ejemplo;
+  sustitúyelas manteniendo los `id` estables. No contiene las respuestas.
+- **Respuestas correctas**: `src/data/quiz.answers.json` (copia de `quiz.answers.example.json`,
+  **ignorado por git** porque el repo es público). Índice 0-based de la opción correcta por
+  pregunta. Se publican en Firestore con `npm run quiz:publish` (usa tu cuenta wedoco.io de
+  gcloud), donde solo las lee la función que puntúa: nunca viajan al navegador.
+- **Corrección y ranking**: la función `quiz` de youwebit-platform puntúa, guarda al jugador y,
+  si acepta, su entrada pública (emoji, nombre, puntuación; sin email). Su URL está en
+  `quizUrl` de `src/firebase.config.json`.
+- **Pruebas**: `tests/quiz.spec.ts` simula la función con `page.route` y lee el ranking real del
+  emulador; la función se prueba en su repo (`functions/quiz/test`).
 
 ### Alojamientos
 

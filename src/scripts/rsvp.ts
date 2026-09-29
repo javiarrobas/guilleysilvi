@@ -9,11 +9,9 @@
  * respuesta, un documento sites/<siteId>/emails/<sha256(email)> con la fecha; solo
  * ese documento es consultable, y solo por su hash.
  */
-import { initializeApp } from 'firebase/app';
-import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'firebase/app-check';
-import { collection, connectFirestoreEmulator, doc, getDoc, getFirestore, serverTimestamp, writeBatch } from 'firebase/firestore/lite';
-import { appCheckDebugToken, emulatorHost, firebaseConfig } from '@/lib/firebase';
+import { collection, doc, getDoc, serverTimestamp, writeBatch } from 'firebase/firestore/lite';
 import { isLocale, type Locale } from '@/i18n';
+import { emailHash, getDb } from './firebase-client';
 
 type Messages = {
   required: string;
@@ -49,47 +47,6 @@ type Rsvp = {
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
-/** sha256 hex del email normalizado (minúsculas, sin espacios). */
-async function emailHash(email: string): Promise<string> {
-  const bytes = new TextEncoder().encode(email.trim().toLowerCase());
-  const digest = await crypto.subtle.digest('SHA-256', bytes);
-  return Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('');
-}
-
-declare global {
-  interface Window {
-    FIREBASE_APPCHECK_DEBUG_TOKEN?: string | boolean;
-  }
-}
-
-let dbPromise: Promise<ReturnType<typeof getFirestore>> | null = null;
-
-function db() {
-  if (!dbPromise) {
-    dbPromise = (async () => {
-      const app = initializeApp({
-        projectId: firebaseConfig.projectId,
-        apiKey: firebaseConfig.apiKey,
-        appId: firebaseConfig.appId,
-        authDomain: firebaseConfig.authDomain || undefined,
-      });
-      if (!emulatorHost) {
-        if (appCheckDebugToken) window.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckDebugToken;
-        initializeAppCheck(app, {
-          provider: new ReCaptchaEnterpriseProvider(firebaseConfig.recaptchaSiteKey),
-          isTokenAutoRefreshEnabled: true,
-        });
-      }
-      const firestore = getFirestore(app);
-      if (emulatorHost) {
-        const [host, port] = emulatorHost.split(':');
-        connectFirestoreEmulator(firestore, host, Number(port));
-      }
-      return firestore;
-    })();
-  }
-  return dbPromise;
-}
 
 const text = (form: HTMLFormElement, name: string, max: number) => {
   const el = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | RadioNodeList | null;
@@ -182,7 +139,7 @@ export function setupRsvpForm(root: HTMLElement) {
     if (key === lastChecked) return;
     lastChecked = key;
     try {
-      const snap = await getDoc(doc(await db(), `sites/${siteId}/emails/${await emailHash(key)}`));
+      const snap = await getDoc(doc(getDb(), `sites/${siteId}/emails/${await emailHash(key)}`));
       if (emailField.value.trim().toLowerCase() !== key) return; // el campo cambió mientras tanto
       const at = snap.exists() ? (snap.get('lastAt') as { toDate?: () => Date } | undefined) : undefined;
       if (at?.toDate) {
@@ -318,7 +275,7 @@ export function setupRsvpForm(root: HTMLElement) {
       // Honeypot: un bot que rellena el campo oculto ve un "gracias" y no guarda nada.
       const honeypot = (form.elements.namedItem('website') as HTMLInputElement | null)?.value;
       if (!honeypot) {
-        const firestore = await db();
+        const firestore = getDb();
         const batch = writeBatch(firestore);
         batch.set(doc(collection(firestore, `sites/${siteId}/rsvps`)), data);
         batch.set(doc(firestore, `sites/${siteId}/emails/${await emailHash(data.email)}`), { lastAt: serverTimestamp() });

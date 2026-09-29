@@ -3,5 +3,6 @@
   "apiKey": "AIzaSyAAOZ8vBjn5kwFbQz7DXd0EAATLSvBmGBA",
   "appId": "1:944933884893:web:72163fe9a86e025060dc34",
   "authDomain": "youwebit-platform.firebaseapp.com",
-  "recaptchaSiteKey": "6Ld8x9AtAAAAAC9hcr9Gvpr40Jj2Bss896OFFG6y"
+  "recaptchaSiteKey": "6Ld8x9AtAAAAAC9hcr9Gvpr40Jj2Bss896OFFG6y",
+  "quizUrl": "https://europe-west1-youwebit-platform.cloudfunctions.net/quiz"
 }

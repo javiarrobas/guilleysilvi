@@ -34,3 +34,6 @@ fotos/
 firebase-debug.log
 firestore-debug.log
 ui-debug.log
+
+# Quiz answer key (public repo: never commit it; publish with npm run quiz:publish)
+src/data/quiz.answers.json

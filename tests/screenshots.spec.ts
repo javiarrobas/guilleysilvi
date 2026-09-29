@@ -18,6 +18,8 @@ const routes: Record<string, string> = {
   fotos: '/fotos/',
   preguntas: '/preguntas/',
   confirmar: '/confirmar/',
+  juego: '/juego/',
+  ranking: '/ranking/',
   'ca-home': '/ca/',
   'ca-santander': '/ca/santander/',
   'en-home': '/en/',

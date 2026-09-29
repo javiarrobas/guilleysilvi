@@ -82,6 +82,19 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // Quiz. The ranking is public by design (name, emoji, score — no email) and only
+    // the quiz function writes it; players (with emails) and the answer key are closed.
+    match /sites/{siteId}/ranking/{playerId} {
+      allow get, list: if siteExists(siteId);
+      allow write: if false;
+    }
+    match /sites/{siteId}/players/{playerId} {
+      allow read, write: if false;
+    }
+    match /sites/{siteId}/quiz/{docId} {
+      allow read, write: if false;
+    }
+
     // Site configuration (name, export token hash…) is written by Terraform and
     // read by the export function with admin credentials. Clients see nothing.
     match /sites/{siteId} {

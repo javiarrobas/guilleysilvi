@@ -1,0 +1,162 @@
+---
+/**
+ * El juego "¿Cuánto sabes de Silvia y Guille?". Las preguntas salen de
+ * src/data/quiz.json (sin respuestas); la corrección la hace la función de la
+ * plataforma. Lógica en src/scripts/quiz.ts.
+ */
+import { getDictionary, getLocale, interpolate } from '@/i18n';
+import { href } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
+import quiz from '@/data/quiz.json';
+import Icon from './Icon.astro';
+
+const EMOJIS = ['🦊', '🐙', '🦁', '🐸', '🦄', '🐧', '🐢', '🐝', '🦋', '🐬', '🦉', '🐨', '🌵', '🍓', '🍕', '🌊', '⚓', '🏄', '🎸', '🎩', '🥂', '🦞', '🐚', '⛵'];
+
+const locale = getLocale(Astro.currentLocale);
+const t = getDictionary(locale);
+const q = t.quiz;
+const questions = quiz.questions.map((item) => ({
+  id: item.id,
+  text: (item.text as Record<string, string>)[locale] ?? item.text.es,
+  options: item.options.map((o) => (o as Record<string, string>)[locale] ?? o.es),
+}));
+const messages = {
+  required: q.required, invalidEmail: q.invalidEmail, pickEmoji: q.pickEmoji, progress: q.progress, next: q.next, finish: q.finish,
+  sending: q.sending, resultTitle: q.resultTitle, resultPerfect: q.resultPerfect, resultGreat: q.resultGreat, resultOk: q.resultOk,
+  resultLow: q.resultLow, yourAnswer: q.yourAnswer, correctAnswer: q.correctAnswer, published: q.published, unpublished: q.unpublished,
+  unpublish: q.unpublish, publishNow: q.publishNow, alreadyText: q.alreadyText, notReady: q.notReady, errorTitle: q.errorTitle, errorText: q.errorText,
+};
+---
+
+<div class="quiz" data-quiz data-site={siteConfig.siteId} data-locale={locale} data-questions={JSON.stringify(questions)} data-messages={JSON.stringify(messages)}>
+  <!-- Intro -->
+  <div data-panel="intro">
+    <form data-intro novalidate>
+      <fieldset class="block">
+        <legend class="block__title">{q.avatar}</legend>
+        <div class="emojis" role="radiogroup" aria-label={q.avatar}>
+          {EMOJIS.map((e) => (
+            <label class="emoji">
+              <input type="radio" name="emoji" value={e} />
+              <span>{e}</span>
+            </label>
+          ))}
+        </div>
+        <p class="error" data-error="emoji"></p>
+      </fieldset>
+      <div class="grid grid--2">
+        <div class="field">
+          <label for="quiz-name">{q.name}</label>
+          <input id="quiz-name" name="name" type="text" maxlength="60" autocomplete="given-name" required />
+          <p class="error" data-error="name"></p>
+        </div>
+        <div class="field">
+          <label for="quiz-email">{q.email}</label>
+          <input id="quiz-email" name="email" type="email" maxlength="160" autocomplete="email" inputmode="email" required />
+          <p class="error" data-error="email"></p>
+          <p class="small muted">{q.emailNote}</p>
+        </div>
+      </div>
+      <p class="actions">
+        <button class="btn btn--primary" type="submit">{q.start}<Icon name="arrowRight" /></button>
+        <span class="small muted">{interpolate(q.questionsCount, { n: questions.length })}</span>
+      </p>
+    </form>
+  </div>
+
+  <!-- Preguntas -->
+  <div class="play" data-panel="play" hidden>
+    <div class="bar" aria-hidden="true"><span data-q-bar></span></div>
+    <p class="eyebrow" data-q-title></p>
+    <h2 class="title-md play__q" data-q-text></h2>
+    <div class="options" data-q-options></div>
+    <p class="actions"><button class="btn btn--primary" type="button" data-q-next disabled>{q.next}</button></p>
+  </div>
+
+  <!-- Resultado -->
+  <div class="panel" data-panel="result" hidden tabindex="-1">
+    <Icon name="vinyl" class="panel__icon" />
+    <h2 class="title-lg" data-result-title></h2>
+    <p class="lead" data-result-lead></p>
+    <ol class="rq" data-result-list></ol>
+    <div class="publish" data-publish-ask hidden>
+      <p class="publish__q">{q.publishQuestion}</p>
+      <p class="small muted">{q.publishHint}</p>
+      <p class="actions">
+        <button class="btn btn--primary" type="button" data-publish-yes>{q.publishYes}</button>
+        <button class="btn btn--ghost" type="button" data-publish-no>{q.publishNo}</button>
+      </p>
+    </div>
+    <div class="publish" data-publish-state hidden>
+      <p class="publish__q" data-publish-status></p>
+      <p class="actions">
+        <a class="btn btn--primary" href={href(locale, 'ranking')}>{q.seeRanking}<Icon name="arrowRight" /></a>
+        <button class="btn btn--ghost btn--sm" type="button" data-publish-toggle></button>
+      </p>
+    </div>
+  </div>
+
+  <!-- Ya jugó -->
+  <div class="panel" data-panel="already" hidden tabindex="-1">
+    <h2 class="title-md">{q.alreadyTitle}</h2>
+    <p class="panel__text" data-already-text></p>
+    <a class="btn btn--primary" href={href(locale, 'ranking')}>{q.seeRanking}<Icon name="arrowRight" /></a>
+  </div>
+
+  <!-- Error -->
+  <div class="panel panel--error" data-panel="error" hidden tabindex="-1" role="alert">
+    <h2 class="title-md" data-error-title>{q.errorTitle}</h2>
+    <p class="panel__text" data-error-text>{q.errorText}</p>
+    <button class="btn btn--sm" type="button" data-retry>{q.retry}</button>
+  </div>
+</div>
+
+<style>
+  .quiz { max-width: 44rem; }
+  .block { margin: 0 0 1.5rem; padding: 0; border: 0; min-inline-size: 0; }
+  .block__title { padding: 0; margin-bottom: 0.75rem; font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 1.875rem); }
+  .emojis { display: grid; grid-template-columns: repeat(auto-fill, minmax(3.25rem, 1fr)); gap: 0.5rem; }
+  .emoji { position: relative; display: block; }
+  .emoji input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .emoji span { display: grid; place-items: center; aspect-ratio: 1; border: 1px solid var(--line-strong); border-radius: var(--radius-lg); background: var(--white); font-size: 1.75rem; transition: transform 0.15s var(--ease), border-color 0.15s var(--ease), background-color 0.15s var(--ease); }
+  .emoji input:checked + span { background: var(--ink); border-color: var(--ink); transform: scale(1.06); }
+  .emoji input:focus-visible + span { outline: 2px solid var(--sea); outline-offset: 2px; }
+  .grid { --grid-gap: 1rem 1.25rem; }
+  .field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .field label { font-size: 0.9375rem; font-weight: 500; }
+  input[type='text'], input[type='email'] { width: 100%; min-height: 3rem; padding: 0.7rem 0.9rem; border: 1px solid var(--line-strong); border-radius: var(--radius); background: var(--white); color: var(--ink); font: inherit; font-size: 1rem; }
+  input:focus { outline: none; border-color: var(--sea); box-shadow: 0 0 0 3px rgba(47, 95, 110, 0.15); }
+  .error { font-size: 0.85rem; color: #a5432f; }
+  .error:empty { display: none; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.25rem; margin-top: 1.5rem; }
+  .bar { height: 4px; border-radius: 999px; background: var(--sea-3); overflow: hidden; margin-bottom: 1.25rem; }
+  .bar span { display: block; height: 100%; width: 0; background: var(--sea); transition: width 0.4s var(--ease); }
+  .play__q { margin-top: 0.5rem; }
+  .options { display: grid; gap: 0.6rem; margin-top: 1.25rem; }
+  .options :global(.option) { position: relative; display: block; }
+  .options :global(.option input) { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+  .options :global(.option span) { display: block; padding: 0.9rem 1.1rem; border: 1px solid var(--line-strong); border-radius: var(--radius-lg); background: var(--white); font-size: 1.0625rem; transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease); }
+  .options :global(.option input:checked + span) { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  .options :global(.option input:focus-visible + span) { outline: 2px solid var(--sea); outline-offset: 2px; }
+  .panel { padding: clamp(1.5rem, 5vw, 2.5rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
+  .panel:focus { outline: none; }
+  .panel__icon { width: 2rem; height: 2rem; margin-bottom: 1rem; color: var(--sea); stroke-width: 1.2; }
+  .panel__text { margin: 0.9rem 0 1.5rem; color: var(--ink-2); }
+  .panel--error { border-color: #a5432f; }
+  .lead { margin-top: 0.75rem; }
+  .rq { margin: 1.5rem 0 0; display: grid; gap: 0.75rem; }
+  .rq :global(li) { padding: 0.9rem 1rem 0.9rem 1.1rem; border-left: 3px solid var(--line-strong); background: var(--paper); border-radius: 0 var(--radius) var(--radius) 0; }
+  .rq :global(li.is-correct) { border-left-color: var(--sea); }
+  .rq :global(li.is-wrong) { border-left-color: #a5432f; }
+  .rq :global(.rq__title) { font-weight: 500; }
+  .rq :global(.rq__line) { margin-top: 0.25rem; font-size: 0.9375rem; color: var(--ink-2); }
+  .rq :global(.rq__line--right) { color: var(--sea-dark); }
+  .publish { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+  .publish__q { font-family: var(--font-display); font-size: 1.375rem; line-height: 1.2; }
+</style>
+
+<script>
+  import { setupQuiz } from '@/scripts/quiz';
+
+  document.querySelectorAll<HTMLElement>('[data-quiz]').forEach(setupQuiz);
+</script>
