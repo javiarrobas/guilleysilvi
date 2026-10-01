@@ -114,7 +114,7 @@ test('menú móvil: abre, lista las secciones y navega', async ({ page, isMobile
   await expect(toggle).toHaveAttribute('aria-expanded', 'true');
   const menu = page.locator('#site-menu');
   await expect(menu).toBeVisible();
-  await expect(menu.locator('.site-menu__item')).toHaveCount(7);
+  await expect(menu.locator('.site-menu__item')).toHaveCount(8);
   await menu.getByRole('link', { name: 'Alojamiento' }).click();
   await expect(page).toHaveURL(/\/alojamiento\/$/);
 });

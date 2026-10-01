@@ -1,6 +1,6 @@
 ---
 import { getDictionary, getLocale } from '@/i18n';
-import { href, navKeys, type PageKey } from '@/i18n/routes';
+import { desktopNavKeys, href, navKeys, type PageKey } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
 import LanguageSwitcher from './LanguageSwitcher.astro';
 
@@ -22,7 +22,7 @@ const t = getDictionary(locale);
     <nav class="nav-desktop" aria-label={t.common.menu}>
       <ul class="nav-desktop__list">
         {
-          navKeys.map((key) => (
+          desktopNavKeys.map((key) => (
             <li>
               <a href={href(locale, key)} aria-current={current === key ? 'page' : undefined}>
                 {t.nav[key]}

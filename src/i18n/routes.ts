@@ -17,8 +17,15 @@ export const pageKeys = [
 ] as const;
 export type PageKey = (typeof pageKeys)[number];
 
-/** Páginas que aparecen en el menú principal (el resto se enlaza desde otros sitios). */
-export const navKeys: PageKey[] = ['day', 'transport', 'stay', 'santander', 'preboda', 'photos', 'faq'];
+/** Páginas del menú a pantalla completa (móvil): caben todas. */
+export const navKeys: PageKey[] = ['day', 'transport', 'stay', 'santander', 'preboda', 'photos', 'quiz', 'faq'];
+
+/**
+ * Barra de navegación de escritorio: el menú del brief original más el juego. Con las
+ * ocho entradas y el botón de confirmar no cabe a 1280 px en castellano y catalán, así
+ * que las preguntas frecuentes quedan en el menú móvil, el pie y el índice de la portada.
+ */
+export const desktopNavKeys: PageKey[] = navKeys.filter((key) => key !== 'faq');
 
 /**
  * Rutas (slugs) por idioma. Las rutas de cada idioma solo funcionan cuando existan
