@@ -10,10 +10,10 @@
     "preview": "node scripts/serve.mjs dist 4321",
     "check": "astro check",
     "astro": "astro",
-    "og": "node scripts/og-image.mjs",
+    "og": "node scripts/require-node.cjs && node scripts/og-image.mjs",
     "test:e2e": "node scripts/e2e.mjs",
-    "photos": "node scripts/import-photos.mjs",
-    "quiz:publish": "node scripts/publish-quiz.mjs"
+    "photos": "node scripts/require-node.cjs && node scripts/import-photos.mjs",
+    "quiz:publish": "node scripts/require-node.cjs && node scripts/publish-quiz.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
