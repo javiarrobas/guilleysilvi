@@ -35,7 +35,7 @@ export const places: Place[] = [
       en: 'Our recommended tortilla pincho. The first thing we order when we get to Santander.',
       tr: "Tavsiye ettiğimiz tortilla pinchosu. Santander'a varınca ilk sipariş ettiğimiz şey.",
     },
-    images: [],
+    images: ['diluvio-tortilla'],
     mapsQuery: 'El Diluvio, Santander',
   },
   {

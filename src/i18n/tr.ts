@@ -149,7 +149,6 @@ export const tr: Dictionary = {
     eyebrow: 'Konaklama',
     title: 'Nerede kalınır',
     lead: 'Nerede kalacağınızı bilmiyor musunuz? 🏨 WhatsApp’tan yazın, size uygun bir bölge veya konaklama bulmanıza yardım edelim.',
-    whatsappCta: "WhatsApp'tan yazın",
     helpTitle: 'Yardım ediyoruz',
     helpText: 'Kaç kişi olduğunuzu, bütçenizi ve ne istediğinizi söyleyin; size bölge ve konaklama önerelim.',
     groups: {
@@ -263,6 +262,7 @@ export const tr: Dictionary = {
     lead: 'Çift hakkında birkaç hızlı soru. Dört seçenek, tek hak ve doğru bilip bilmediğini anında öğreneceksin. Sonunda puanının sıralamada görünüp görünmeyeceğine sen karar veriyorsun.',
     questionsCount: '{n} soru',
     avatar: 'Avatarını seç',
+    avatarHint: 'Daha fazlası için kaydır.',
     name: 'Adın',
     email: 'E-postan',
     emailNote: 'Yalnızca herkesin bir kez oynaması için. Sıralamada görünmez.',

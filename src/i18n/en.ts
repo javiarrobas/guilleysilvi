@@ -148,7 +148,6 @@ export const en: Dictionary = {
     eyebrow: 'Where to stay',
     title: 'Where to sleep',
     lead: "Not sure where to stay? 🏨 Message us on WhatsApp and we'll help you find an area or a place that suits you.",
-    whatsappCta: 'Message us on WhatsApp',
     helpTitle: "We'll give you a hand",
     helpText: "Tell us how many you are, your budget and what you fancy, and we'll suggest an area and a place to stay.",
     groups: {
@@ -262,6 +261,7 @@ export const en: Dictionary = {
     lead: "A few quick questions about the couple. Four options, a single attempt, and you'll know straight away whether you got it right. At the end you decide whether your score goes on the ranking.",
     questionsCount: '{n} questions',
     avatar: 'Pick your avatar',
+    avatarHint: 'Scroll for more.',
     name: 'Your name',
     email: 'Your email',
     emailNote: 'Only so that each person plays once. It never appears on the ranking.',

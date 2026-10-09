@@ -4,7 +4,7 @@ Web de la boda. Estática, muy ligera y pensada para móvil (la mayoría de invi
 la abrirán desde WhatsApp). Hecha con [Astro](https://astro.build) y publicada en
 GitHub Pages.
 
-- **Producción:** https://javiarrobas.github.io/guilleysilvi/ (hasta que haya dominio propio)
+- **Producción:** https://guilleysilvi.web.app (hasta que haya dominio propio)
 - **Idiomas:** castellano (por defecto), catalán en `/ca/`, inglés en `/en/` y turco en `/tr/` (ver [Idiomas](#idiomas)).
 
 ## Requisitos
@@ -27,7 +27,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
-| Nombres, fecha, fecha límite, WhatsApp, idiomas | `src/site.config.ts`              |
+| Nombres, fecha, fecha límite, idiomas       | `src/site.config.ts`                  |
 | Conexión con Firebase (formulario, juego)  | `src/firebase.config.json`            |
 | Preguntas del juego / clave de respuestas  | `src/data/quiz.json` / `quiz.answers.json` (local) |
 | Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts`, `en.ts`, `tr.ts` |
@@ -64,6 +64,11 @@ convierten solas (macOS).
 El mosaico adapta cada celda a la orientación de la foto (retratos 3:4, paisajes 3:2) y completa
 siempre la última fila. Astro genera al compilar las versiones redimensionadas para cada pantalla.
 
+Las fotos que se usan como **banner** al final de cada página (`<PhotoBanner id="…" />`) se
+recortan a 3:2 en escritorio y 4:5 en móvil; el campo `focus` de `gallery.json` (p. ej.
+`"center 58%"`) dice qué parte conservar, para que no se pierdan las caras. `npm run photos`
+conserva esos valores al regenerar el fichero.
+
 ### Formulario de confirmación
 
 El formulario es propio de la web (`src/components/RsvpForm.astro` + `src/scripts/rsvp.ts`):
@@ -95,6 +100,8 @@ correcta), resultado final con un mensaje según la puntuación y la opción de 
 ranking (`/ranking/`). Un intento por email; si se cierra a medias, al volver continúa donde
 estaba. Quien confirma asistencia pasa al juego con nombre y email ya rellenos.
 
+- **Avatares**: la lista de emojis está en `src/components/QuizGame.astro` (unos 120); la
+  función acepta cualquier emoji, así que se puede ampliar sin tocar la plataforma.
 - **Preguntas**: `src/data/quiz.json`, en los cuatro idiomas (las de los novios, octubre de
   2026; las opciones van barajadas para que la correcta no sea siempre la primera). Mantén los
   `id` estables y el orden de las opciones. No contiene las respuestas.
@@ -110,12 +117,6 @@ estaba. Quien confirma asistencia pasa al juego con nombre y email ya rellenos.
   cuestionario en los dos ficheros y vuelve a publicar la clave **antes** de desplegar la web.
 - **Pruebas**: `tests/quiz.spec.ts` simula la función con `page.route` y lee el ranking real del
   emulador; la función se prueba en su repo (`functions/quiz/test`).
-
-### WhatsApp de los novios
-
-La página de alojamiento invita a escribir por WhatsApp. El número va en `whatsapp` de
-`src/site.config.ts` (formato internacional sin espacios, p. ej. `34600000000`); mientras esté
-vacío, el botón se muestra desactivado.
 
 ### Alojamientos
 
@@ -176,14 +177,13 @@ plataforma:
 | `GCP_DEPLOY_SERVICE_ACCOUNT` | output `sites.guilleysilvi.deploy_service_account` |
 | `SITE_URL` (opcional) | `https://guilleysilvi.web.app` o el dominio definitivo |
 
-URL por defecto: `https://guilleysilvi.web.app`. El subdominio `guilleysilvi.youwebit.com` y,
+URL pública: `https://guilleysilvi.web.app`. El subdominio `guilleysilvi.youwebit.com` y,
 más adelante, el dominio propio de la boda se conectan desde la plataforma (`custom_domain`),
 sin tocar nada aquí salvo `SITE_URL`.
 
-En Firebase la web vive en la raíz, así que el workflow compila con `BASE_PATH=/`. El workflow
-antiguo de GitHub Pages (`deploy.yml`) sigue publicando en
-`https://javiarrobas.github.io/guilleysilvi/` hasta que se retire; GitHub Pages no permite
-alojar webs de un servicio comercial, por eso el cambio.
+GitHub Pages ya no se usa (su workflow se retiró en octubre de 2026; GitHub Pages no permite
+alojar webs de un servicio comercial). Si el repositorio aún tiene Pages activo, desactívalo en
+Settings → Pages para que la URL antigua deje de servir una copia vieja.
 
 Para probar en local exactamente lo que se publicará:
 

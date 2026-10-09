@@ -6,14 +6,12 @@ import AccommodationCard from '@/components/AccommodationCard.astro';
 import PhotoBanner from '@/components/PhotoBanner.astro';
 import Icon from '@/components/Icon.astro';
 import { getDictionary, getLocale } from '@/i18n';
-import { siteConfig } from '@/site.config';
 import { href } from '@/i18n/routes';
 import { busLocation, stayZone } from '@/data/locations';
 import { accommodations, accommodationGroups } from '@/data/accommodations';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
-const whatsappUrl = siteConfig.whatsapp ? `https://wa.me/${siteConfig.whatsapp}` : '';
 const grouped = accommodationGroups
   .map((group) => ({ group, items: accommodations.filter((item) => item.group === group) }))
   .filter(({ items }) => items.length > 0);
@@ -45,13 +43,6 @@ const grouped = accommodationGroups
       <div>
         <h2 class="title-md">{t.stay.helpTitle}</h2>
         <p class="help__text">{t.stay.helpText}</p>
-        {
-          whatsappUrl ? (
-            <a class="btn btn--accent" href={whatsappUrl} target="_blank" rel="noopener noreferrer">{t.stay.whatsappCta}<Icon name="external" /></a>
-          ) : (
-            <span class="btn btn--accent" aria-disabled="true">{t.stay.whatsappCta}</span>
-          )
-        }
       </div>
     </div>
   </section>

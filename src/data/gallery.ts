@@ -24,11 +24,13 @@ export interface GalleryImage {
   alt: Localized;
   /** Se muestra en grande dentro del mosaico. */
   featured?: boolean;
+  /** object-position para recortes apaisados (banners): dónde está lo importante. */
+  focus?: string;
 }
 
 const listed: GalleryImage[] = manifest.images
   .filter((item) => byId.has(item.id))
-  .map((item) => ({ id: item.id, src: byId.get(item.id)!, alt: item.alt, featured: item.featured }));
+  .map((item) => ({ id: item.id, src: byId.get(item.id)!, alt: item.alt, featured: item.featured, focus: (item as { focus?: string }).focus }));
 
 const listedIds = new Set(listed.map((item) => item.id));
 const extra: GalleryImage[] = [...byId.keys()]

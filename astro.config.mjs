@@ -2,15 +2,11 @@
 import { defineConfig } from 'astro/config';
 
 /**
- * Despliegue en GitHub Pages
- * --------------------------
- * El workflow (.github/workflows/deploy.yml) inyecta SITE_URL y BASE_PATH a
- * partir de la configuración de Pages del repositorio:
- *   - URL por defecto:  SITE_URL=https://javiarrobas.github.io  BASE_PATH=/guilleysilvi
- *   - Dominio propio:   SITE_URL=https://tudominio.com          BASE_PATH=""  → base "/"
- * En local no hace falta definir nada: la web se sirve en la raíz.
+ * Despliegue en Firebase Hosting (.github/workflows/deploy-firebase.yml).
+ * SITE_URL es la URL pública (vistas previas, canonical); BASE_PATH solo se usaría si
+ * la web viviera en una subcarpeta. En local no hace falta definir nada.
  */
-const site = process.env.SITE_URL || 'https://javiarrobas.github.io';
+const site = process.env.SITE_URL || 'https://guilleysilvi.web.app';
 const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({

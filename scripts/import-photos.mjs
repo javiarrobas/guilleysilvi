@@ -11,7 +11,7 @@
  * Los originales de fotos/ no se suben al repositorio (.gitignore).
  */
 import { execFileSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { basename, extname, join } from 'node:path';
 import { tmpdir } from 'node:os';
 import sharp from 'sharp';
@@ -49,6 +49,7 @@ const GUIDE = [
   { file: 'Rabas el riojano.jpeg', out: 'riojano-rabas' },
   { file: 'Taberna Santoña.jpeg', out: 'santona-anchoas' },
   { file: 'Tortilla Cañadío.jpeg', out: 'canadio-tortilla' },
+  { file: 'Pincho diluvio.jpeg', out: 'diluvio-tortilla' },
 ];
 const GUIDE_SOURCE = 'fotos/santander';
 const GUIDE_DIR = 'src/assets/santander';
@@ -91,11 +92,19 @@ console.log(`portada  hero.jpg  ${hero.width}x${hero.height}  ${(hero.size / 102
 mkdirSync(GALLERY_DIR, { recursive: true });
 for (const old of readdirSync(GALLERY_DIR)) if (/\.(jpe?g|png|webp)$/i.test(old)) rmSync(join(GALLERY_DIR, old));
 
+// Puntos de interés (object-position) de las fotos que se usan como banner: se
+// conservan de gallery.json al regenerarlo, para no perderlos al añadir fotos.
+let previousFocus = {};
+try {
+  previousFocus = Object.fromEntries(JSON.parse(readFileSync('src/data/gallery.json', 'utf8')).images.filter((i) => i.focus).map((i) => [i.id, i.focus]));
+} catch {
+  /* primera vez */
+}
 const images = [];
 for (const [i, photo] of photos.entries()) {
   const id = `${String(i + 1).padStart(2, '0')}-${slug(photo.file)}`;
   const info = await process(photo.file, join(GALLERY_DIR, `${id}.jpg`), MAX_GALLERY);
-  images.push({ id, alt: photo.alt, ...(photo.featured ? { featured: true } : {}) });
+  images.push({ id, alt: photo.alt, ...(photo.featured ? { featured: true } : {}), ...(previousFocus[id] ? { focus: previousFocus[id] } : {}) });
   console.log(`galería  ${id}.jpg  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} kB`);
 }
 

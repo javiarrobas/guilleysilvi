@@ -16,7 +16,8 @@
         "en": "Silvia and Guille at a harbour, with the boats behind them",
         "tr": "Silvia ve Guille bir limanda, arkada tekneler"
       },
-      "featured": true
+      "featured": true,
+      "focus": "center 55%"
     },
     {
       "id": "02-38e0f166-a5d7-4eed-b978-21cefca58838",
@@ -53,7 +54,8 @@
         "en": "Silvia and Guille in a meadow at dusk, with the estuary behind",
         "tr": "Silvia ve Guille gün batımında bir çayırda, arkada haliç"
       },
-      "featured": true
+      "featured": true,
+      "focus": "center 52%"
     },
     {
       "id": "06-img-0665",
@@ -62,7 +64,8 @@
         "ca": "La Silvia i el Guille davant d'una casa de ratlles",
         "en": "Silvia and Guille in front of a striped house",
         "tr": "Silvia ve Guille çizgili bir evin önünde"
-      }
+      },
+      "focus": "center 58%"
     },
     {
       "id": "07-img-1862",
@@ -71,7 +74,8 @@
         "ca": "La Silvia i el Guille als penya-segats, amb el mar al darrere",
         "en": "Silvia and Guille on the cliffs, with the sea behind them",
         "tr": "Silvia ve Guille uçurumlarda, arkalarında deniz"
-      }
+      },
+      "focus": "center 52%"
     },
     {
       "id": "08-img-20230221-152928",
@@ -90,7 +94,8 @@
         "en": "Silvia and Guille in front of a Romanesque church",
         "tr": "Silvia ve Guille Romanesk bir kilisenin önünde"
       },
-      "featured": true
+      "featured": true,
+      "focus": "center 58%"
     },
     {
       "id": "10-222f457c-e250-4489-89e8-b7a135080b52",
@@ -99,7 +104,8 @@
         "ca": "La Silvia i el Guille amb cascos de moto",
         "en": "Silvia and Guille wearing motorbike helmets",
         "tr": "Silvia ve Guille motosiklet kasklarıyla"
-      }
+      },
+      "focus": "center 45%"
     },
     {
       "id": "11-img-7183",
@@ -108,7 +114,8 @@
         "ca": "La Silvia i el Guille al mar",
         "en": "Silvia and Guille in the sea",
         "tr": "Silvia ve Guille denizde"
-      }
+      },
+      "focus": "center 48%"
     },
     {
       "id": "12-img-7499",
@@ -126,7 +133,8 @@
         "ca": "La Silvia i el Guille en un partit",
         "en": "Silvia and Guille at a match",
         "tr": "Silvia ve Guille bir maçta"
-      }
+      },
+      "focus": "center 40%"
     },
     {
       "id": "14-img-2595",
@@ -144,7 +152,8 @@
         "ca": "La Silvia i el Guille en un festival",
         "en": "Silvia and Guille at a festival",
         "tr": "Silvia ve Guille bir festivalde"
-      }
+      },
+      "focus": "center 52%"
     },
     {
       "id": "16-fb5fd5ec-73f9-4e2c-998a-91a75add7f22",

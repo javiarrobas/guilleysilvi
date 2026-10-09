@@ -3,6 +3,10 @@
  * Una foto de los novios a todo el ancho del contenedor, para que cada sección tenga
  * algo personal. `id` es el nombre de fichero de la galería sin extensión
  * (src/data/gallery.json). Si no existe, no se muestra nada.
+ *
+ * Casi todas las fotos son verticales: en escritorio se recortan a 3:2 y en móvil a 4:5
+ * (casi la foto entera), centrando el recorte en el `focus` de gallery.json para que
+ * nunca se pierdan las caras (ni el anillo).
  */
 import { Image } from 'astro:assets';
 import { getLocale, l } from '@/i18n';
@@ -10,13 +14,13 @@ import { gallery } from '@/data/gallery';
 
 interface Props {
   id: string;
-  /** 'wide' (21:9, por defecto) o 'photo' (3:2, más alta). */
+  /** 'photo' (3:2, por defecto) o 'wide' (2:1, más baja; solo para fotos apaisadas). */
   ratio?: 'wide' | 'photo';
   caption?: string;
   class?: string;
 }
 
-const { id, ratio = 'wide', caption, class: className } = Astro.props;
+const { id, ratio = 'photo', caption, class: className } = Astro.props;
 const locale = getLocale(Astro.currentLocale);
 const image = gallery.find((img) => img.id === id);
 ---
@@ -24,7 +28,7 @@ const image = gallery.find((img) => img.id === id);
 {
   image && (
     <figure class:list={['container banner', `banner--${ratio}`, className]}>
-      <Image class="banner__img" src={image.src} alt={l(image.alt, locale)} widths={[720, 1200, 1800]} sizes="(min-width: 80em) 1152px, 100vw" loading="lazy" />
+      <Image class="banner__img" src={image.src} alt={l(image.alt, locale)} widths={[720, 1200, 1800]} sizes="(min-width: 80em) 1152px, 100vw" loading="lazy" style={image.focus ? `object-position: ${image.focus}` : undefined} />
       {caption && <figcaption class="banner__caption small muted serif italic">{caption}</figcaption>}
     </figure>
   )
@@ -37,19 +41,19 @@ const image = gallery.find((img) => img.id === id);
 
   .banner__img {
     width: 100%;
-    aspect-ratio: 21 / 9;
+    aspect-ratio: 3 / 2;
     object-fit: cover;
-    object-position: center 35%;
+    object-position: center 50%;
     border-radius: var(--radius-lg);
   }
 
-  .banner--photo .banner__img {
-    aspect-ratio: 3 / 2;
+  .banner--wide .banner__img {
+    aspect-ratio: 2 / 1;
   }
 
   @media (max-width: 40em) {
     .banner__img {
-      aspect-ratio: 4 / 3;
+      aspect-ratio: 4 / 5;
     }
   }
 

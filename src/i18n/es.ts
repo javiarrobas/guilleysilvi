@@ -148,7 +148,6 @@ export const es = {
     eyebrow: 'Alojamiento',
     title: 'Dónde dormir',
     lead: '¿No sabéis dónde alojaros? 🏨 Escribidnos por WhatsApp y os ayudamos a buscar una zona o alojamiento que os venga bien.',
-    whatsappCta: 'Escribidnos por WhatsApp',
     helpTitle: 'Os echamos una mano',
     helpText: 'Contadnos cuántos sois, qué presupuesto manejáis y qué os apetece, y os sugerimos zona y alojamiento.',
     groups: {
@@ -262,6 +261,7 @@ export const es = {
     lead: 'Unas preguntas rápidas sobre los novios. Cuatro opciones, un solo intento y sabrás al momento si has acertado. Al final decides si tu puntuación aparece en el ranking.',
     questionsCount: '{n} preguntas',
     avatar: 'Elige tu avatar',
+    avatarHint: 'Desliza para ver más.',
     name: 'Tu nombre',
     email: 'Tu email',
     emailNote: 'Solo para que cada persona juegue una vez. No aparece en el ranking.',

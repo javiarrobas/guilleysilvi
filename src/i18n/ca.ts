@@ -148,7 +148,6 @@ export const ca: Dictionary = {
     eyebrow: 'Allotjament',
     title: 'On dormir',
     lead: 'No sabeu on allotjar-vos? 🏨 Escriviu-nos per WhatsApp i us ajudem a buscar una zona o allotjament que us vagi bé.',
-    whatsappCta: 'Escriviu-nos per WhatsApp',
     helpTitle: 'Us donem un cop de mà',
     helpText: 'Expliqueu-nos quants sou, quin pressupost teniu i què us ve de gust, i us suggerim zona i allotjament.',
     groups: {
@@ -262,6 +261,7 @@ export const ca: Dictionary = {
     lead: 'Unes preguntes ràpides sobre els nuvis. Quatre opcions, un sol intent i sabràs al moment si has encertat. Al final decideixes si la teva puntuació apareix al rànquing.',
     questionsCount: '{n} preguntes',
     avatar: 'Tria el teu avatar',
+    avatarHint: "Llisca per veure'n més.",
     name: 'El teu nom',
     email: 'El teu email',
     emailNote: 'Només perquè cada persona jugui una vegada. No apareix al rànquing.',

@@ -185,8 +185,8 @@ test('santander: collage con los seis sitios, fotos y enlaces al mapa', async ({
   await page.goto('/santander/');
   const cards = page.locator('.place');
   await expect(cards).toHaveCount(6);
-  await expect(cards.locator('img')).toHaveCount(6); // 5 sitios con foto, uno con dos
-  await expect(page.locator('.place--none')).toHaveCount(1); // El Diluvio, sin foto todavía
+  await expect(cards.locator('img')).toHaveCount(7); // seis sitios con foto, La Conveniente con dos
+  await expect(page.locator('.place--none')).toHaveCount(0);
   for (const link of await page.locator('.place a[href^="https://www.google.com/maps/"]').all()) {
     await expect(link).toHaveAttribute('target', '_blank');
   }
@@ -197,6 +197,15 @@ test('confirmar: muestra el formulario propio (sin botón de "próximamente")', 
   await page.goto('/confirmar/');
   await expect(page.locator('[data-rsvp-form]')).toBeVisible();
   await expect(page.locator('.rsvp__action')).toHaveCount(0);
+});
+
+test('banners: cada página lleva una foto de los novios con su punto de interés', async ({ page }) => {
+  for (const path of ['/el-gran-dia/', '/transporte/', '/alojamiento/', '/santander/', '/preboda/', '/juego/', '/ranking/', '/preguntas/', '/confirmar/']) {
+    await page.goto(path);
+    const img = page.locator('figure.banner img');
+    await expect(img, path).toHaveCount(1);
+    await expect(img, path).toHaveAttribute('style', /object-position: center \d+%/);
+  }
 });
 
 test('404 personalizada', async ({ page }) => {
