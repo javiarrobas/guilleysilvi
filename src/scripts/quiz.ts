@@ -130,10 +130,11 @@ export function setupQuiz(root: HTMLElement) {
       if (res.status === 503) return fail(m.errorTitle, m.notReady);
       if (!res.ok) throw new Error(`quiz start ${res.status}`);
       const data = (await res.json()) as Start;
+      if (!Array.isArray(data.questions) || typeof data.playerToken !== 'string') throw new Error('quiz start: unexpected session');
       current = { ...player, playerToken: data.playerToken, status: 'playing' };
       save(current);
       order = data.questions.filter((id) => byId.has(id));
-      judged = data.answered;
+      judged = data.answered && typeof data.answered === 'object' ? data.answered : {};
       const firstPending = order.findIndex((id) => !judged[id]);
       index = firstPending === -1 ? order.length - 1 : firstPending;
       if (data.resumed && resumeNote) resumeNote.hidden = false;
@@ -211,8 +212,9 @@ export function setupQuiz(root: HTMLElement) {
     void (async () => {
       try {
         const res = await api('answer', { email: current!.email, playerToken: current!.playerToken, questionId: q.id, choice: Number(input.value) });
-        if (res.status === 403) {
-          // token perdido o reemplazado desde otro dispositivo: volvemos a sincronizar
+        if (res.status === 403 || res.status === 409) {
+          // token perdido o reemplazado desde otro dispositivo, partida ya terminada, o el
+          // cuestionario ha cambiado: `start` resuelve los tres casos
           await start({ ...current!, playerToken: '' });
           return;
         }
@@ -296,6 +298,10 @@ export function setupQuiz(root: HTMLElement) {
     qBar.style.width = '100%';
     try {
       const res = await api('finish', { email: current.email, playerToken: current.playerToken });
+      if (res.status === 403 || res.status === 409) {
+        await start({ ...current, playerToken: '' });
+        return;
+      }
       if (!res.ok) throw new Error(`quiz finish ${res.status}`);
       const data = (await res.json()) as Finish;
       current = { ...current, status: 'finished', score: data.score, total: data.total, public: data.public };

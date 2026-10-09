@@ -2,13 +2,14 @@
 import { collection, getDocs } from 'firebase/firestore/lite';
 import { emailHash, getDb } from './firebase-client';
 
-type Entry = { id: string; name: string; emoji: string; score: number; total: number; at: number };
+type Entry = { id: string; name: string; emoji: string; score: number; total: number; quizId: string; at: number };
 
 const fill = (text: string, vars: Record<string, string | number>) => text.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ''));
 
 export function setupRanking(root: HTMLElement) {
   const m = JSON.parse(root.dataset.messages ?? '{}') as Record<string, string>;
   const siteId = root.dataset.site ?? '';
+  const quizId = root.dataset.quiz ?? '';
   const list = root.querySelector<HTMLElement>('[data-ranking-list]')!;
   const status = root.querySelector<HTMLElement>('[data-ranking-status]')!;
   const count = root.querySelector<HTMLElement>('[data-ranking-count]')!;
@@ -44,9 +45,11 @@ export function setupRanking(root: HTMLElement) {
     try {
       const snap = await getDocs(collection(getDb(), `sites/${siteId}/ranking`));
       const entries: Entry[] = snap.docs.map((d) => {
-        const data = d.data() as { name?: string; emoji?: string; score?: number; total?: number; at?: { toMillis?: () => number } };
-        return { id: d.id, name: String(data.name ?? ''), emoji: String(data.emoji ?? ''), score: Number(data.score ?? 0), total: Number(data.total ?? 0), at: data.at?.toMillis?.() ?? 0 };
-      });
+        const data = d.data() as { name?: string; emoji?: string; score?: number; total?: number; quizId?: string; at?: { toMillis?: () => number } };
+        return { id: d.id, name: String(data.name ?? ''), emoji: String(data.emoji ?? ''), score: Number(data.score ?? 0), total: Number(data.total ?? 0), quizId: String(data.quizId ?? ''), at: data.at?.toMillis?.() ?? 0 };
+      })
+        // Puntuaciones de otra versión del cuestionario (p. ej. el de prueba) no cuentan.
+        .filter((e) => e.quizId === quizId);
       entries.sort((a, b) => b.score - a.score || a.at - b.at || a.name.localeCompare(b.name));
       render(entries, await mine());
     } catch (error) {

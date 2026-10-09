@@ -2,6 +2,7 @@
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
+import quiz from '@/data/quiz.json';
 import Icon from './Icon.astro';
 
 const locale = getLocale(Astro.currentLocale);
@@ -10,7 +11,7 @@ const r = t.ranking;
 const messages = { empty: r.empty, players: r.players, you: r.you, loading: r.loading, error: r.error };
 ---
 
-<div class="board" data-ranking data-site={siteConfig.siteId} data-messages={JSON.stringify(messages)}>
+<div class="board" data-ranking data-site={siteConfig.siteId} data-quiz={quiz.id} data-messages={JSON.stringify(messages)}>
   <div class="board__tools">
     <p class="small muted" data-ranking-count></p>
     <div class="board__actions">

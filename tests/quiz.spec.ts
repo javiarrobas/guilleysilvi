@@ -198,21 +198,24 @@ test('en catalán: textos y locale=ca', async ({ page }) => {
 
 test('ranking: ordena por puntuación y marca al jugador de este navegador', async ({ page, request }) => {
   const now = new Date().toISOString();
-  const seed = async (email: string, name: string, emoji: string, score: number) =>
+  const seed = async (email: string, name: string, emoji: string, score: number, quizId = quiz.id) =>
     request.patch(`${DOCS}/sites/guilleysilvi/ranking/${sha256(email)}`, {
       headers: OWNER,
-      data: { fields: { name: { stringValue: name }, emoji: { stringValue: emoji }, score: { integerValue: String(score) }, total: { integerValue: String(total) }, at: { timestampValue: now } } },
+      data: { fields: { name: { stringValue: name }, emoji: { stringValue: emoji }, score: { integerValue: String(score) }, total: { integerValue: String(total) }, quizId: { stringValue: quizId }, at: { timestampValue: now } } },
     });
   await seed('r1@example.com', 'Bea', '🐙', 6);
   await seed('r2@example.com', 'Ana', '🦊', 8);
   await seed('r3@example.com', 'Pau', '🐧', 3);
+  await seed('old@example.com', 'Viejo', '👻', 8, 'guilleysilvi-v1'); // de otra versión: no se muestra
 
   await page.goto('/ranking/');
   await page.evaluate((key) => localStorage.setItem(key, JSON.stringify({ email: 'r1@example.com', name: 'Bea', emoji: '🐙', playerToken: 't', status: 'finished', score: 6, total: 22, public: true })), 'quiz:guilleysilvi');
   await page.reload();
   const rows = page.locator('[data-ranking-list] .rank');
   await expect(rows.first()).toBeVisible({ timeout: 15_000 });
+  await expect(rows).toHaveCount(3);
   const names = await rows.locator('.rank__name').allTextContents();
+  expect(names).not.toContain('Viejo');
   expect(names[0]).toBe('Ana');
   expect(names[1]).toBe('Bea (tú)');
   expect(names[names.length - 1]).toBe('Pau');
