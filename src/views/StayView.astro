@@ -6,7 +6,6 @@ import AccommodationCard from '@/components/AccommodationCard.astro';
 import PhotoBanner from '@/components/PhotoBanner.astro';
 import Icon from '@/components/Icon.astro';
 import { getDictionary, getLocale } from '@/i18n';
-import { href } from '@/i18n/routes';
 import { busLocation, stayZone } from '@/data/locations';
 import { accommodations, accommodationGroups } from '@/data/accommodations';
 
@@ -60,17 +59,6 @@ const grouped = accommodationGroups
     ))
   }
 
-  <section class="container section section--flush-top">
-    <div class="tip">
-      <Icon name="compass" class="tip__icon" />
-      <div>
-        <p class="eyebrow eyebrow--ink">{t.stay.tipTitle}</p>
-        <p class="tip__text">{t.stay.tipText}</p>
-        <a class="arrow-link" href={href(locale, 'transport')}>{t.nav.transport}<Icon name="arrowRight" /></a>
-      </div>
-    </div>
-  </section>
-
   <PhotoBanner id="01-img-8506" />
 </Base>
 
@@ -121,23 +109,4 @@ const grouped = accommodationGroups
     margin-top: 1.5rem;
   }
 
-  .tip {
-    display: flex;
-    gap: 1.25rem;
-    align-items: flex-start;
-    max-width: 62ch;
-  }
-
-  .tip__icon {
-    flex: none;
-    width: 2rem;
-    height: 2rem;
-    color: var(--sea);
-    stroke-width: 1.2;
-  }
-
-  .tip__text {
-    margin: 0.5rem 0 0.9rem;
-    color: var(--ink-2);
-  }
 </style>

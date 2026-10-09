@@ -163,8 +163,6 @@ export const tr: Dictionary = {
     zoneTitle: 'Önerdiğimiz bölge',
     zoneText:
       "Çemberin içinde kalan her yer, Centro Botín'deki otobüs kalkış noktasına yaklaşık 15 dakika yürüme mesafesinde.",
-    tipTitle: 'Bir tavsiye',
-    tipText: "1 Mayıs resmî tatil ve Santander'da uzun bir hafta sonu: rezervasyonunuzu erkenden yapın.",
   },
   santander: {
     eyebrow: "Bizim Santander'imiz",

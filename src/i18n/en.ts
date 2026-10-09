@@ -162,8 +162,6 @@ export const en: Dictionary = {
     zoneTitle: 'The area we recommend',
     zoneText:
       'Everything inside the circle is about a 15-minute walk from the bus departure point, at the Centro Botín.',
-    tipTitle: 'A tip',
-    tipText: '1 May is a public holiday and a long weekend in Santander: book well in advance.',
   },
   santander: {
     eyebrow: 'Our Santander',

@@ -162,8 +162,6 @@ export const ca: Dictionary = {
     zoneTitle: 'La zona que recomanem',
     zoneText:
       "Tot el que quedi dins del cercle és a uns 15 minuts a peu del punt de sortida de l'autobús, al Centro Botín.",
-    tipTitle: 'Un consell',
-    tipText: "L'1 de maig és festiu i cap de setmana llarg a Santander: reserveu amb temps.",
   },
   santander: {
     eyebrow: 'El nostre Santander',

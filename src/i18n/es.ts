@@ -162,8 +162,6 @@ export const es = {
     zoneTitle: 'La zona que recomendamos',
     zoneText:
       'Todo lo que quede dentro del círculo está a unos 15 minutos andando del punto de salida del autobús, en el Centro Botín.',
-    tipTitle: 'Un consejo',
-    tipText: 'El 1 de mayo es festivo y fin de semana largo en Santander: reservad con tiempo.',
   },
   santander: {
     eyebrow: 'Nuestro Santander',
