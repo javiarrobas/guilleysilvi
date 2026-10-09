@@ -1,16 +1,19 @@
 ---
 /**
  * Cuenta atrás hasta la ceremonia. Se renderiza con los valores del momento
- * de la compilación y el script la actualiza cada segundo en el navegador.
+ * de la compilación y el script la actualiza en el navegador.
+ *  - normal: cuatro cifras grandes (días, horas, minutos, segundos)
+ *  - compact: una línea, "Faltan N días", para ponerla junto a los nombres
  */
-import { getDictionary, getLocale } from '@/i18n';
+import { getDictionary, getLocale, interpolate } from '@/i18n';
 import { siteConfig } from '@/site.config';
 
 interface Props {
   class?: string;
+  compact?: boolean;
 }
 
-const { class: className, ...rest } = Astro.props;
+const { class: className, compact = false, ...rest } = Astro.props;
 const t = getDictionary(getLocale(Astro.currentLocale));
 
 const target = new Date(siteConfig.weddingDate);
@@ -28,33 +31,65 @@ const units = [
   { key: 'minutes', value: pad(initial.minutes), label: t.countdown.minutes },
   { key: 'seconds', value: pad(initial.seconds), label: t.countdown.seconds },
 ];
+const compactText = initial.days === 1 ? t.countdown.compactOne : interpolate(t.countdown.compact, { n: initial.days });
 ---
 
-<div
-  {...rest}
-  class:list={['countdown', className]}
-  data-countdown
-  data-target={siteConfig.weddingDate}
-  data-today={t.countdown.today}
-  data-past={t.countdown.past}
->
-  <p class="eyebrow countdown__label" data-countdown-label>{t.countdown.label}</p>
-  <div class="countdown__units" role="timer" data-countdown-units>
-    {
-      units.map((unit) => (
-        <div class="countdown__unit">
-          <span class="countdown__num tabular" data-unit={unit.key}>
-            {unit.value}
-          </span>
-          <span class="countdown__name">{unit.label}</span>
-        </div>
-      ))
-    }
-  </div>
-  <p class="countdown__message" hidden data-countdown-message></p>
-</div>
+{
+  compact ? (
+    <p
+      {...rest}
+      class:list={['countdown-compact', className]}
+      data-countdown
+      data-compact
+      data-target={siteConfig.weddingDate}
+      data-today={t.countdown.today}
+      data-past={t.countdown.past}
+      data-template={t.countdown.compact}
+      data-template-one={t.countdown.compactOne}
+    >
+      <span class="emoji" aria-hidden="true">⏳</span>
+      <span data-compact-text>{compactText}</span>
+    </p>
+  ) : (
+    <div
+      {...rest}
+      class:list={['countdown', className]}
+      data-countdown
+      data-target={siteConfig.weddingDate}
+      data-today={t.countdown.today}
+      data-past={t.countdown.past}
+    >
+      <p class="eyebrow countdown__label" data-countdown-label>
+        {t.countdown.label}
+      </p>
+      <div class="countdown__units" role="timer" data-countdown-units>
+        {units.map((unit) => (
+          <div class="countdown__unit">
+            <span class="countdown__num tabular" data-unit={unit.key}>
+              {unit.value}
+            </span>
+            <span class="countdown__name">{unit.label}</span>
+          </div>
+        ))}
+      </div>
+      <p class="countdown__message" hidden data-countdown-message />
+    </div>
+  )
+}
 
 <style>
+  .countdown-compact {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.95rem;
+    border-radius: 999px;
+    background: var(--sun-2);
+    color: var(--ink);
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
   .countdown__units {
     display: flex;
     gap: clamp(1rem, 4vw, 2.25rem);
@@ -98,6 +133,26 @@ const units = [
   roots.forEach((root) => {
     const target = new Date(root.dataset.target ?? '').getTime();
     if (Number.isNaN(target)) return;
+    const madridDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
+    const weddingDay = madridDay.format(new Date(target));
+    const pad = (n: number) => String(n).padStart(2, '0');
+
+    if ('compact' in root.dataset) {
+      const text = root.querySelector<HTMLElement>('[data-compact-text]');
+      const tick = () => {
+        const diff = target - Date.now();
+        if (!text) return false;
+        if (diff <= 0) {
+          text.textContent = madridDay.format(new Date()) === weddingDay ? root.dataset.today ?? '' : root.dataset.past ?? '';
+          return false;
+        }
+        const days = Math.floor(diff / 86_400_000);
+        text.textContent = days === 1 ? root.dataset.templateOne ?? '' : (root.dataset.template ?? '').replace('{n}', String(days));
+        return true;
+      };
+      if (tick()) window.setInterval(tick, 60_000);
+      return;
+    }
 
     const label = root.querySelector<HTMLElement>('[data-countdown-label]');
     const units = root.querySelector<HTMLElement>('[data-countdown-units]');
@@ -108,14 +163,10 @@ const units = [
       minutes: root.querySelector<HTMLElement>('[data-unit="minutes"]'),
       seconds: root.querySelector<HTMLElement>('[data-unit="seconds"]'),
     };
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const madridDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Madrid' });
-    const weddingDay = madridDay.format(new Date(target));
 
     const tick = () => {
       const now = Date.now();
       const diff = target - now;
-
       if (diff <= 0) {
         const isToday = madridDay.format(new Date(now)) === weddingDay;
         if (units) units.hidden = true;
@@ -126,7 +177,6 @@ const units = [
         }
         return false;
       }
-
       if (fields.days) fields.days.textContent = String(Math.floor(diff / 86_400_000));
       if (fields.hours) fields.hours.textContent = pad(Math.floor((diff / 3_600_000) % 24));
       if (fields.minutes) fields.minutes.textContent = pad(Math.floor((diff / 60_000) % 60));

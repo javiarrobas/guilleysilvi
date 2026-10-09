@@ -15,7 +15,7 @@ const t = getDictionary(locale);
 
 <article class:list={['card location', { 'location--highlight': location.highlight }]}>
   <div class="location__head">
-    <span class="location__num" aria-hidden="true">{index}</span>
+    <span class="location__num" aria-hidden="true">{location.emoji}</span>
     <div>
       <p class="eyebrow">{l(location.short, locale)}{location.time && <span class="location__time"> · {location.time}</span>}</p>
       <h3 class="location__name title-sm">{location.name}</h3>
@@ -62,14 +62,13 @@ const t = getDictionary(locale);
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    background: var(--ink);
-    color: var(--paper);
-    font-family: var(--font-display);
-    font-size: 1.125rem;
+    background: var(--sea-3);
+    font-size: 1.25rem;
+    line-height: 1;
   }
 
   .location--highlight .location__num {
-    background: var(--sea);
+    background: var(--sun-2);
   }
 
   .location__time {

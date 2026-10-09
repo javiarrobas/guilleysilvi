@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 import Faq from '@/components/Faq.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
@@ -23,6 +24,8 @@ const t = getDictionary(locale);
       <a class="btn btn--primary" href={href(locale, 'rsvp')}>{t.common.rsvp}</a>
     </p>
   </section>
+
+  <PhotoBanner id="10-222f457c-e250-4489-89e8-b7a135080b52" />
 </Base>
 
 <style>

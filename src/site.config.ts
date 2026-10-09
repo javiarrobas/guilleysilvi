@@ -47,6 +47,12 @@ export const siteConfig = {
   enabledLocales: ['es', 'ca', 'en', 'tr'] as Locale[],
 
   /**
+   * Número de WhatsApp de los novios para ayudar con el alojamiento, en formato
+   * internacional sin espacios (p. ej. '34600000000'). Vacío = el texto se muestra sin enlace.
+   */
+  whatsapp: '',
+
+  /**
    * La web es privada (invitados): pedimos a los buscadores que no la indexen.
    * No afecta a las vistas previas de WhatsApp.
    */

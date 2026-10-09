@@ -5,7 +5,7 @@ const pages = [
   { path: '/el-gran-dia/', h1: /1 de mayo de 2027/ },
   { path: '/transporte/', h1: /Cómo llegar/ },
   { path: '/alojamiento/', h1: /Dónde dormir/ },
-  { path: '/santander/', h1: /guía muy personal/ },
+  { path: '/santander/', h1: /Nuestros sitios de siempre/ },
   { path: '/preboda/', h1: /calentar motores/ },
   { path: '/fotos/', h1: /Nosotros/ },
   { path: '/preguntas/', h1: /Dudas habituales/ },
@@ -22,7 +22,7 @@ const pages = [
   { path: '/ca/el-gran-dia/', h1: /1 de maig de 2027/, lang: 'ca' },
   { path: '/ca/transport/', h1: /Com arribar-hi/, lang: 'ca' },
   { path: '/ca/allotjament/', h1: /On dormir/, lang: 'ca' },
-  { path: '/ca/santander/', h1: /guia molt personal/, lang: 'ca' },
+  { path: '/ca/santander/', h1: /Els nostres llocs de sempre/, lang: 'ca' },
   { path: '/ca/preboda/', h1: /escalfar motors/, lang: 'ca' },
   { path: '/ca/fotos/', h1: /Nosaltres/, lang: 'ca' },
   { path: '/ca/preguntes/', h1: /Dubtes habituals/, lang: 'ca' },
@@ -31,7 +31,7 @@ const pages = [
   { path: '/en/the-big-day/', h1: /1 May 2027/, lang: 'en' },
   { path: '/en/getting-there/', h1: /How to get there/, lang: 'en' },
   { path: '/en/where-to-stay/', h1: /Where to sleep/, lang: 'en' },
-  { path: '/en/santander/', h1: /very personal guide/, lang: 'en' },
+  { path: '/en/santander/', h1: /Our usual places/, lang: 'en' },
   { path: '/en/pre-wedding/', h1: /warming up/, lang: 'en' },
   { path: '/en/photos/', h1: /Us/, lang: 'en' },
   { path: '/en/faq/', h1: /Common questions/, lang: 'en' },
@@ -40,7 +40,7 @@ const pages = [
   { path: '/tr/buyuk-gun/', h1: /1 Mayıs 2027/, lang: 'tr' },
   { path: '/tr/ulasim/', h1: /Nasıl gidilir/, lang: 'tr' },
   { path: '/tr/konaklama/', h1: /Nerede kalınır/, lang: 'tr' },
-  { path: '/tr/santander/', h1: /kişisel bir rehber/, lang: 'tr' },
+  { path: '/tr/santander/', h1: /Her zamanki yerlerimiz/, lang: 'tr' },
   { path: '/tr/dugun-oncesi/', h1: /ısınmaya başlıyoruz/, lang: 'tr' },
   { path: '/tr/fotograflar/', h1: /Biz/, lang: 'tr' },
   { path: '/tr/sss/', h1: /Merak edilenler/, lang: 'tr' },
@@ -94,15 +94,19 @@ test('móvil estrecho (320 px): nada desborda', async ({ page, isMobile }) => {
   }
 });
 
-test('portada: cuenta atrás en marcha y botón de confirmar', async ({ page }) => {
+test('portada: cuenta atrás compacta, confirmar y juego visibles sin hacer scroll', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('[data-unit="days"]')).toHaveText(/^\d+$/);
-  const seconds = page.locator('[data-unit="seconds"]');
-  const before = await seconds.textContent();
-  await page.waitForTimeout(1200);
-  expect(await seconds.textContent()).not.toBe(before);
-
-  await page.locator('.hero').getByRole('link', { name: 'Confirmar asistencia' }).click();
+  await expect(page.locator('.hero [data-compact-text]')).toHaveText(/Faltan \d+ días/);
+  const rsvp = page.locator('.hero').getByRole('link', { name: 'Confirmar asistencia' });
+  const quiz = page.locator('.hero').getByRole('link', { name: '¿Cuánto sabes de nosotros?' });
+  for (const link of [rsvp, quiz]) {
+    const box = await link.boundingBox();
+    const viewport = page.viewportSize()!;
+    expect(box, 'enlace visible').not.toBeNull();
+    expect(box!.y + box!.height, 'dentro de la primera pantalla').toBeLessThanOrEqual(viewport.height);
+  }
+  await expect(page.locator('.hero .timeline, .day .timeline__item')).toHaveCount(7);
+  await rsvp.click();
   await expect(page).toHaveURL(/\/confirmar\/$/);
 });
 
@@ -130,7 +134,7 @@ test('transporte: el mapa se inicializa con los tres puntos y la zona', async ({
   const map = page.locator('.venue-map');
   await map.scrollIntoViewIfNeeded();
   await expect(map).toHaveClass(/is-ready/);
-  await expect(page.locator('.venue-marker')).toHaveCount(3);
+  await expect(page.locator('.venue-marker')).toHaveCount(5); // tren, aeropuerto, bus, ceremonia, celebración
   await expect(page.locator('.venue-marker--highlight')).toHaveCount(1);
   await expect(page.locator('path.leaflet-interactive')).toHaveCount(1); // círculo de la zona
   await expect(page.locator('.leaflet-tile-loaded').first()).toBeVisible({ timeout: 15_000 });
@@ -149,7 +153,7 @@ test('alojamiento: mapa centrado en la zona recomendada', async ({ page }) => {
   await map.scrollIntoViewIfNeeded();
   await expect(map).toHaveClass(/is-ready/);
   await expect(page.locator('.venue-marker')).toHaveCount(1);
-  await expect(page.getByText('Próximamente').first()).toBeVisible();
+  await expect(page.getByText('Escribidnos por WhatsApp').first()).toBeVisible();
 });
 
 test('preguntas: los desplegables abren y cierran', async ({ page }) => {
@@ -177,12 +181,14 @@ test('fotos: el visor se abre y navega', async ({ page }) => {
   await expect(page.locator('dialog[open]')).toHaveCount(0);
 });
 
-test('santander: las categorías enlazan a sus secciones', async ({ page }) => {
+test('santander: collage con los seis sitios, fotos y enlaces al mapa', async ({ page }) => {
   await page.goto('/santander/');
-  const chips = page.locator('.chip');
-  await expect(chips).toHaveCount(9);
-  for (const href of await chips.evaluateAll((els) => els.map((el) => (el as HTMLAnchorElement).hash))) {
-    await expect(page.locator(href)).toHaveCount(1);
+  const cards = page.locator('.place');
+  await expect(cards).toHaveCount(6);
+  await expect(cards.locator('img')).toHaveCount(6); // 5 sitios con foto, uno con dos
+  await expect(page.locator('.place--none')).toHaveCount(1); // El Diluvio, sin foto todavía
+  for (const link of await page.locator('.place a[href^="https://www.google.com/maps/"]').all()) {
+    await expect(link).toHaveAttribute('target', '_blank');
   }
 });
 

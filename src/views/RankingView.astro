@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 import RankingBoard from '@/components/RankingBoard.astro';
 import { getDictionary, getLocale } from '@/i18n';
 
@@ -15,4 +16,6 @@ const t = getDictionary(locale);
   <section class="container section section--flush-top">
     <RankingBoard />
   </section>
+
+  <PhotoBanner id="13-img-3971" />
 </Base>

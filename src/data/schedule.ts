@@ -2,73 +2,100 @@ import type { Localized } from '@/i18n';
 import type { IconName } from '@/components/icons';
 import type { LocationId } from './locations';
 
-/** Horarios del gran día. El orden es el que se muestra. */
+/**
+ * Horarios del gran día (versión de los novios, octubre de 2026). El orden es el
+ * que se muestra. `time` puede ser una hora ("11:30") o un texto ("Después").
+ */
 export interface ScheduleItem {
-  time: string;
+  time: Localized;
+  /** Emoji del hito: es lo que se ve en el marcador del recorrido. */
+  emoji: string;
+  /** Icono de línea, por si el emoji no se renderiza (p. ej. en el pie). */
+  icon: IconName;
   title: Localized;
   /** Nombre del lugar (no se traduce). */
   place?: string;
   address?: string[];
   text?: Localized;
-  icon: IconName;
   /** Si se indica, la tarjeta muestra el botón de Google Maps de ese punto. */
   locationId?: LocationId;
 }
 
 export const schedule: ScheduleItem[] = [
   {
-    time: '11:45',
-    title: { es: 'Autobús', ca: 'Autobús', en: 'Bus', tr: 'Otobüs' },
-    text: {
-      es: 'Salida desde Santander centro, zona Centro Botín.',
-      ca: 'Sortida des de Santander centre, zona Centro Botín.',
-      en: 'Departure from central Santander, by the Centro Botín.',
-      tr: 'Santander merkezden, Centro Botín bölgesinden hareket.',
-    },
+    time: '11:30',
+    emoji: '🚌',
     icon: 'bus',
+    title: {
+      es: 'Salida de buses desde el Centro Botín',
+      ca: 'Sortida dels busos des del Centro Botín',
+      en: 'Buses leave from the Centro Botín',
+      tr: 'Otobüsler Centro Botín’den kalkıyor',
+    },
+    text: {
+      es: 'Cuidado con la preboda, que nos conocemos…',
+      ca: 'Compte amb la preboda, que ens coneixem…',
+      en: 'Go easy at the pre-wedding party. We know you…',
+      tr: 'Düğün öncesi partide dikkat, sizi tanıyoruz…',
+    },
     locationId: 'bus',
   },
   {
     time: '12:30',
-    title: { es: 'Ceremonia', ca: 'Cerimònia', en: 'Ceremony', tr: 'Tören' },
+    emoji: '⛪',
+    icon: 'chapel',
+    title: { es: 'Empieza la misa', ca: 'Comença la missa', en: 'The ceremony begins', tr: 'Tören başlıyor' },
     place: 'Santuario de Nuestra Señora de Latas',
     address: ['Barrio Latas, 8', '39160 Loredo, Cantabria'],
-    text: {
-      es: 'La ceremonia será aproximadamente de 12:30 a 13:30.',
-      ca: 'La cerimònia serà aproximadament de 12:30 a 13:30.',
-      en: 'The ceremony will run roughly from 12:30 to 13:30.',
-      tr: 'Tören yaklaşık 12:30-13:30 arası sürecek.',
-    },
-    icon: 'chapel',
     locationId: 'ceremony',
   },
   {
+    time: '13:30',
+    emoji: '🚌',
+    icon: 'bus',
+    title: {
+      es: 'Salida de buses hacia La Huerta de Cubas',
+      ca: 'Sortida dels busos cap a La Huerta de Cubas',
+      en: 'Buses leave for La Huerta de Cubas',
+      tr: 'Otobüsler La Huerta de Cubas’a hareket ediyor',
+    },
+  },
+  {
     time: '14:00',
-    title: { es: 'Cóctel', ca: 'Còctel', en: 'Drinks reception', tr: 'Kokteyl' },
-    place: 'Huerta de Cubas',
-    address: ['Barrio La Polvorosa', '39793 Cubas, Cantabria'],
+    emoji: '🥂',
     icon: 'cocktail',
+    title: { es: 'Empieza el cóctel', ca: 'Comença el còctel', en: 'The cocktail begins', tr: 'Kokteyl başlıyor' },
+    place: 'La Huerta de Cubas',
+    address: ['Barrio La Polvorosa', '39793 Cubas, Cantabria'],
     locationId: 'party',
   },
   {
-    time: '16:30',
-    title: { es: 'Comida', ca: 'Dinar', en: 'Lunch', tr: 'Yemek' },
+    time: '16:00',
+    emoji: '🍽️',
     icon: 'cutlery',
+    title: { es: 'Empieza la comida', ca: 'Comença el dinar', en: 'Lunch is served', tr: 'Yemek başlıyor' },
   },
   {
-    time: '18:30',
-    title: { es: 'Baile, DJ y copitas', ca: 'Ball, DJ i copes', en: 'Dancing, DJ and drinks', tr: 'Dans, DJ ve içkiler' },
+    time: { es: 'Después', ca: 'Després', en: 'Then', tr: 'Sonra' },
+    emoji: '💃🕺',
     icon: 'vinyl',
+    title: { es: 'Baile, copas y fiesta', ca: 'Ball, copes i festa', en: 'Dancing, drinks and party', tr: 'Dans, içki ve parti' },
   },
   {
     time: '00:00',
-    title: { es: 'Autobús de vuelta', ca: 'Autobús de tornada', en: 'Bus back', tr: 'Dönüş otobüsü' },
-    text: {
-      es: 'Huerta de Cubas → Santander centro / Centro Botín.',
-      ca: 'Huerta de Cubas → Santander centre / Centro Botín.',
-      en: 'Huerta de Cubas → central Santander / Centro Botín.',
-      tr: 'Huerta de Cubas → Santander merkez / Centro Botín.',
+    emoji: '🪩',
+    icon: 'moon',
+    title: {
+      es: 'Fin de barra libre y fiesta',
+      ca: 'Fi de barra lliure i festa',
+      en: 'Open bar closes, party ends',
+      tr: 'Açık bar kapanıyor, parti bitiyor',
     },
-    icon: 'bus',
+    text: {
+      es: 'Los autobuses de vuelta a Santander salen al terminar.',
+      ca: 'Els autobusos de tornada a Santander surten en acabar.',
+      en: 'The buses back to Santander leave when it ends.',
+      tr: 'Santander’a dönüş otobüsleri bitişte kalkıyor.',
+    },
   },
 ];

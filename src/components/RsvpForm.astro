@@ -6,6 +6,7 @@
  */
 import { getDictionary, getLocale } from '@/i18n';
 import { siteConfig } from '@/site.config';
+import { href } from '@/i18n/routes';
 import Icon from './Icon.astro';
 
 const locale = getLocale(Astro.currentLocale);
@@ -13,6 +14,8 @@ const t = getDictionary(locale);
 const f = t.rsvp.form;
 
 const messages = {
+  nextQuiz: f.nextQuiz,
+  redirecting: f.redirecting,
   required: f.required,
   invalidEmail: f.invalidEmail,
   fixErrors: f.fixErrors,
@@ -28,7 +31,7 @@ const yesNo = [
 ];
 ---
 
-<div class="rsvp-form" data-rsvp data-site={siteConfig.siteId} data-locale={locale} data-messages={JSON.stringify(messages)}>
+<div class="rsvp-form" data-rsvp data-site={siteConfig.siteId} data-locale={locale} data-quiz-href={href(locale, 'quiz')} data-messages={JSON.stringify(messages)}>
   <div data-panel="form">
     <form data-rsvp-form novalidate autocomplete="on">
       <!-- Tus datos -->
@@ -270,11 +273,16 @@ const yesNo = [
     </form>
   </div>
 
-  <div class="panel" data-panel="success" hidden tabindex="-1">
-    <Icon name="waves" class="panel__icon" />
+  <div class="panel panel--next" data-panel="success" hidden tabindex="-1">
+    <span class="panel__big" aria-hidden="true">🎉</span>
     <h2 class="title-md">{f.successTitle}</h2>
     <p class="panel__text">{f.successText}</p>
-    <button class="btn btn--ghost btn--sm" type="button" data-again>{f.again}</button>
+    <p class="panel__next">{f.nextQuiz}</p>
+    <p class="panel__actions">
+      <a class="btn btn--accent btn--lg" href={href(locale, 'quiz')} data-go-quiz>{f.goQuiz}<Icon name="arrowRight" /></a>
+      <button class="btn btn--ghost btn--sm" type="button" data-stay>{f.stayHere}</button>
+    </p>
+    <p class="small muted" data-redirect-note role="status"></p>
   </div>
 
   <div class="panel" data-panel="success-no" hidden tabindex="-1">
@@ -520,6 +528,33 @@ const yesNo = [
 
   .panel--error {
     border-color: #a5432f;
+  }
+
+  .panel--next {
+    background: linear-gradient(135deg, var(--sun-2), var(--coral-2));
+    border-color: transparent;
+  }
+
+  .panel__big {
+    display: block;
+    font-size: 2.5rem;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+  }
+
+  .panel__next {
+    margin: 0.5rem 0 1.25rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 4vw, 1.75rem);
+    line-height: 1.2;
+  }
+
+  .panel__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    margin-bottom: 0.75rem;
   }
 
   @media (min-width: 40em) {

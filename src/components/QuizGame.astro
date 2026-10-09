@@ -22,8 +22,8 @@ const questions = quiz.questions.map((item) => ({
 }));
 const messages = {
   required: q.required, invalidEmail: q.invalidEmail, pickEmoji: q.pickEmoji, progress: q.progress, next: q.next, finish: q.finish,
-  sending: q.sending, resultTitle: q.resultTitle, resultPerfect: q.resultPerfect, resultGreat: q.resultGreat, resultOk: q.resultOk,
-  resultLow: q.resultLow, yourAnswer: q.yourAnswer, correctAnswer: q.correctAnswer, published: q.published, unpublished: q.unpublished,
+  sending: q.sending, resultTitle: q.resultTitle, tiers: q.tiers, correct: q.correct, wrong: q.wrong,
+  yourAnswer: q.yourAnswer, correctAnswer: q.correctAnswer, published: q.published, unpublished: q.unpublished,
   unpublish: q.unpublish, publishNow: q.publishNow, alreadyText: q.alreadyText, notReady: q.notReady, errorTitle: q.errorTitle, errorText: q.errorText,
 };
 ---
@@ -32,6 +32,7 @@ const messages = {
   <!-- Intro -->
   <div data-panel="intro">
     <form data-intro novalidate>
+      <p class="note small" data-prefilled hidden>✉️ {q.prefilled}</p>
       <fieldset class="block">
         <legend class="block__title">{q.avatar}</legend>
         <div class="emojis" role="radiogroup" aria-label={q.avatar}>
@@ -67,9 +68,11 @@ const messages = {
   <!-- Preguntas -->
   <div class="play" data-panel="play" hidden>
     <div class="bar" aria-hidden="true"><span data-q-bar></span></div>
+    <p class="note small" data-resume hidden>{q.resume}</p>
     <p class="eyebrow" data-q-title></p>
     <h2 class="title-md play__q" data-q-text></h2>
     <div class="options" data-q-options></div>
+    <p class="feedback" data-q-feedback hidden role="status" aria-live="polite"></p>
     <p class="actions"><button class="btn btn--primary" type="button" data-q-next disabled>{q.next}</button></p>
   </div>
 
@@ -137,6 +140,17 @@ const messages = {
   .options :global(.option input) { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
   .options :global(.option span) { display: block; padding: 0.9rem 1.1rem; border: 1px solid var(--line-strong); border-radius: var(--radius-lg); background: var(--white); font-size: 1.0625rem; transition: background-color 0.15s var(--ease), color 0.15s var(--ease), border-color 0.15s var(--ease); }
   .options :global(.option input:checked + span) { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+  /* Tras corregir: estas reglas deben ganar a la de :checked (misma especificidad, van después). */
+  .options :global(.option.is-correct input + span),
+  .options :global(.option.is-correct input:checked + span) { background: var(--sea); border-color: var(--sea); color: #fff; transition: none; }
+  .options :global(.option.is-wrong input + span),
+  .options :global(.option.is-wrong input:checked + span) { background: var(--coral); border-color: var(--coral); color: #fff; transition: none; }
+  .options :global(.option.is-dim input + span) { opacity: 0.55; }
+  .options :global(.option input:disabled) { cursor: default; }
+  .feedback { margin-top: 1rem; padding: 0.8rem 1rem; border-radius: var(--radius-lg); font-weight: 500; }
+  .feedback--ok { background: var(--sea-3); color: var(--sea-dark); }
+  .feedback--ko { background: var(--coral-2); color: var(--coral-dark); }
+  .note { padding: 0.7rem 0.9rem; margin-bottom: 1rem; border-radius: var(--radius); background: var(--sun-2); color: var(--ink-2); }
   .options :global(.option input:focus-visible + span) { outline: 2px solid var(--sea); outline-offset: 2px; }
   .panel { padding: clamp(1.5rem, 5vw, 2.5rem); border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--white); }
   .panel:focus { outline: none; }

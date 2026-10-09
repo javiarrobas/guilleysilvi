@@ -19,21 +19,21 @@ export const faq: FaqItem[] = [
     id: 'autobuses',
     question: { es: '¿Habrá autobuses?', ca: 'Hi haurà autobusos?', en: 'Will there be buses?', tr: 'Otobüs olacak mı?' },
     answer: {
-      es: 'Sí. A las 11:45 saldrá un autobús desde Santander centro (zona Centro Botín) hacia la ceremonia, y después os llevará a la Huerta de Cubas. A las 00:00 habrá autobús de vuelta al mismo punto. En el formulario os preguntamos si los usaréis, para ajustar las plazas.',
-      ca: "Sí. A les 11:45 sortirà un autobús des de Santander centre (zona Centro Botín) cap a la cerimònia, i després us portarà a la Huerta de Cubas. A les 00:00 hi haurà autobús de tornada al mateix punt. Al formulari us preguntem si els fareu servir, per ajustar les places.",
-      en: 'Yes. At 11:45 a bus will leave central Santander (by the Centro Botín) for the ceremony, and afterwards it will take you on to the Huerta de Cubas. At 00:00 there will be a bus back to the same spot. In the form we ask whether you will use them, so we can book the right number of seats.',
-      tr: "Evet. Saat 11:45'te Santander merkezden (Centro Botín bölgesi) törene bir otobüs kalkacak, ardından sizi Huerta de Cubas'a götürecek. Saat 00:00'da aynı noktaya dönüş otobüsü olacak. Koltuk sayısını ayarlamak için formda bunları kullanıp kullanmayacağınızı soruyoruz.",
+      es: 'Sí. A las 11:30 salen los autobuses desde el Centro Botín hacia la misa y a las 13:30 siguen hasta La Huerta de Cubas. Al terminar la fiesta (00:00) os devuelven al mismo punto. En el formulario os preguntamos si los usaréis, para ajustar las plazas.',
+      ca: "Sí. A les 11:30 surten els autobusos des del Centro Botín cap a la missa i a les 13:30 segueixen fins a La Huerta de Cubas. En acabar la festa (00:00) us tornen al mateix punt. Al formulari us preguntem si els fareu servir, per ajustar les places.",
+      en: 'Yes. Buses leave the Centro Botín at 11:30 for the ceremony and continue to La Huerta de Cubas at 13:30. When the party ends (00:00) they bring you back to the same spot. The form asks whether you will use them, so we can size them.',
+      tr: "Evet. Otobüsler 11:30'da Centro Botín'den törene kalkıyor ve 13:30'da La Huerta de Cubas'a devam ediyor. Parti bitince (00:00) sizi aynı noktaya geri getiriyor. Formda kullanıp kullanmayacağınızı soruyoruz; yerleri ayarlamak için.",
     },
-    links: [{ page: 'transport', label: { es: 'Ver transporte', ca: 'Veure transport', en: 'See transport', tr: 'Ulaşımı gör' } }],
+    links: [{ page: 'transport', label: { es: 'Ver cómo llegar', ca: 'Veure com arribar-hi', en: 'See getting there', tr: 'Ulaşımı gör' } }],
   },
   {
     id: 'alojarse',
     question: { es: '¿Dónde recomendamos alojarse?', ca: 'On recomanem allotjar-se?', en: 'Where do we recommend staying?', tr: 'Nerede kalmanızı öneriyoruz?' },
     answer: {
-      es: 'En el centro de Santander, a distancia andando del punto de salida del autobús. En la sección de alojamiento hay un mapa con la zona que recomendamos e iremos añadiendo hoteles y apartamentos concretos.',
-      ca: "Al centre de Santander, a distància a peu del punt de sortida de l'autobús. A la secció d'allotjament hi ha un mapa amb la zona que recomanem i hi anirem afegint hotels i apartaments concrets.",
-      en: 'In central Santander, within walking distance of the bus departure point. The accommodation section has a map of the area we recommend, and we will be adding specific hotels and apartments.',
-      tr: 'Santander merkezde, otobüsün kalkış noktasına yürüme mesafesinde. Konaklama bölümünde önerdiğimiz bölgenin haritası var; oraya somut otel ve daire önerileri ekleyeceğiz.',
+      es: 'En el centro de Santander, a distancia andando del Centro Botín, de donde salen los autobuses. En la sección de alojamiento hay un mapa con la zona que recomendamos. ¿Dudas? Escribidnos por WhatsApp y os ayudamos a elegir.',
+      ca: "Al centre de Santander, a distància a peu del Centro Botín, d'on surten els autobusos. A la secció d'allotjament hi ha un mapa amb la zona que recomanem. Dubtes? Escriviu-nos per WhatsApp i us ajudem a triar.",
+      en: 'In central Santander, within walking distance of the Centro Botín, where the buses leave from. The accommodation page has a map of the area we recommend. Not sure? Message us on WhatsApp and we will help you choose.',
+      tr: "Santander merkezde, otobüslerin kalktığı Centro Botín'e yürüme mesafesinde. Konaklama sayfasında önerdiğimiz bölgenin haritası var. Kararsız mısınız? WhatsApp'tan yazın, seçmenize yardım edelim.",
     },
     links: [{ page: 'stay', label: { es: 'Ver alojamiento', ca: 'Veure allotjament', en: 'See where to stay', tr: 'Konaklamayı gör' } }],
   },
@@ -70,16 +70,6 @@ export const faq: FaqItem[] = [
     links: [{ page: 'rsvp', label: { es: 'Confirmar asistencia', ca: 'Confirmar assistència', en: 'RSVP', tr: 'Katılımını bildir' } }],
   },
   {
-    id: 'acompanante',
-    question: { es: '¿Puedo venir con acompañante?', ca: 'Puc venir amb acompanyant?', en: 'Can I bring a guest?', tr: 'Yanımda biriyle gelebilir miyim?' },
-    answer: {
-      es: 'En el formulario de confirmación podrás indicar si vienes acompañado/a y los datos de tu acompañante (nombre, apellidos y alergias o necesidades alimentarias).',
-      ca: "Al formulari de confirmació podràs indicar si vens acompanyat/ada i les dades del teu acompanyant (nom, cognoms i al·lèrgies o necessitats alimentàries).",
-      en: 'In the RSVP form you will be able to tell us whether you are bringing someone, along with their details (name, surname and any allergies or dietary needs).',
-      tr: 'Katılım formunda biriyle gelip gelmediğinizi ve onun bilgilerini (ad, soyad ve alerjiler ya da beslenme ihtiyaçları) belirtebileceksiniz.',
-    },
-  },
-  {
     id: 'fecha-limite',
     question: {
       es: '¿Hasta cuándo puedo confirmar asistencia?',
@@ -97,14 +87,14 @@ export const faq: FaqItem[] = [
   },
   {
     id: 'preboda',
-    question: { es: '¿Habrá preboda?', ca: 'Hi haurà preboda?', en: 'Will there be a pre-wedding get-together?', tr: 'Düğün öncesi buluşma olacak mı?' },
+    question: { es: '¿Habrá preboda?', ca: 'Hi haurà preboda?', en: 'Will there be a pre-wedding party?', tr: 'Düğün öncesi parti olacak mı?' },
     answer: {
-      es: 'Sí. El viernes 30 de abril haremos una pequeña preboda en Santander para todos los que ya estéis por allí. Pronto os contamos dónde, cuándo y cómo.',
-      ca: "Sí. El divendres 30 d'abril farem una petita preboda a Santander per a tots els que ja hi sigueu. Aviat us expliquem on, quan i com.",
-      en: 'Yes. On Friday 30 April we will have a small pre-wedding gathering in Santander for everyone who is already around. We will tell you where, when and how very soon.',
-      tr: "Evet. 30 Nisan Cuma günü, şehirde olan herkes için Santander'da küçük bir buluşma yapacağız. Nerede, ne zaman ve nasıl olacağını yakında anlatacağız.",
+      es: 'Sí: el viernes 30 de abril, una quedada informal en Santander para empezar el finde todos juntos. Estamos terminando de decidir el sitio y os lo confirmaremos muy pronto. 🍻',
+      ca: "Sí: el divendres 30 d'abril, una trobada informal a Santander per començar el cap de setmana tots junts. Estem acabant de decidir el lloc i us ho confirmarem molt aviat. 🍻",
+      en: 'Yes: on Friday 30 April, an informal get-together in Santander to start the weekend all together. We are finalising the venue and will confirm it very soon. 🍻',
+      tr: "Evet: 30 Nisan Cuma, hafta sonuna hep birlikte başlamak için Santander'da gayriresmi bir buluşma. Yeri belirlemek üzereyiz ve çok yakında bildireceğiz. 🍻",
     },
-    links: [{ page: 'preboda', label: { es: 'Ver la previa', ca: 'Veure la prèvia', en: 'See the warm-up', tr: 'Ön kutlamayı gör' } }],
+    links: [{ page: 'preboda', label: { es: 'Ver la previa', ca: 'Veure la prèvia', en: 'See the pre-wedding', tr: 'Düğün öncesini gör' } }],
   },
   {
     id: 'vuelta-antes',
@@ -119,6 +109,12 @@ export const faq: FaqItem[] = [
   {
     id: 'dress-code',
     question: { es: '¿Cuál es el dress code?', ca: 'Quin és el dress code?', en: 'What is the dress code?', tr: 'Kıyafet kuralı nedir?' },
-    soon: true,
+    answer: {
+      es: 'Formal ✨ Chicos: traje y corbata. Chicas: vestido elegante. Todos iremos muy guapos, seguro. Importante: estamos en Santander y es mayo… puede refrescar un poquito, especialmente cuando caiga el sol. 🌊',
+      ca: 'Formal ✨ Nois: vestit i corbata. Noies: vestit elegant. Tots anirem molt guapos, segur. Important: som a Santander i és maig… pot refrescar una mica, sobretot quan es pongui el sol. 🌊',
+      en: "Formal ✨ Gents: suit and tie. Ladies: elegant dress. We'll all look great, no doubt. Important: this is Santander in May… it can get a little chilly, especially once the sun goes down. 🌊",
+      tr: "Resmi ✨ Erkekler: takım elbise ve kravat. Kadınlar: şık elbise. Hepimiz çok şık olacağız, kesin. Önemli: Santander'dayız ve mayıs ayı… özellikle güneş battıktan sonra biraz serinleyebilir. 🌊",
+    },
+    links: [{ page: 'day', label: { es: 'Ver el gran día', ca: 'Veure el gran dia', en: 'See the big day', tr: 'Büyük günü gör' } }],
   },
 ];

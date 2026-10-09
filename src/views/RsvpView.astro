@@ -8,6 +8,7 @@ import { href } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
 import { firebaseConfigured } from '@/lib/firebase';
 import RsvpForm from '@/components/RsvpForm.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
@@ -19,7 +20,7 @@ const mode = formUrl ? 'external' : firebaseConfigured ? 'embedded' : 'soon';
 
 <Base page="rsvp" title={t.nav.rsvp}>
   <header class="container page-head">
-    <SectionHead as="h1" size="xl" eyebrow={t.rsvp.eyebrow} title={t.rsvp.title} lead={t.rsvp.lead} />
+    <SectionHead as="h1" size="xl" eyebrow={`${t.rsvp.eyebrow} ✉️`} title={t.rsvp.title} lead={t.rsvp.lead} />
   </header>
 
   <section class="container section section--flush-top">
@@ -60,6 +61,8 @@ const mode = formUrl ? 'external' : firebaseConfigured ? 'embedded' : 'soon';
 
     </div>
   </section>
+
+  <PhotoBanner id="05-img-7604" />
 </Base>
 
 <style>

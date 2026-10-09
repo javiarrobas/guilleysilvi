@@ -37,3 +37,7 @@ ui-debug.log
 
 # Quiz answer key (public repo: never commit it; publish with npm run quiz:publish)
 src/data/quiz.answers.json
+
+# material enviado por los novios (documentos con respuestas del juego, fotos originales)
+cambios/
+~$*

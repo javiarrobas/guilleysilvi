@@ -41,6 +41,19 @@ const photos = [
   // Sin usar (casi idéntica a IMG_7499): 'IMG_7498.jpeg'
 ];
 
+/** Fotos de la guía "Nuestro Santander": fichero original en fotos/santander/ → nombre de salida. */
+const GUIDE = [
+  { file: 'Cecina La conveniente.jpeg', out: 'conveniente-cecina' },
+  { file: 'Conveniente GUille.jpeg', out: 'conveniente-guille' },
+  { file: 'Marucho Silvi.jpeg', out: 'marucho-silvia' },
+  { file: 'Rabas el riojano.jpeg', out: 'riojano-rabas' },
+  { file: 'Taberna Santoña.jpeg', out: 'santona-anchoas' },
+  { file: 'Tortilla Cañadío.jpeg', out: 'canadio-tortilla' },
+];
+const GUIDE_SOURCE = 'fotos/santander';
+const GUIDE_DIR = 'src/assets/santander';
+const MAX_GUIDE = 1600;
+
 const GALLERY_DIR = 'src/assets/gallery';
 const MAX_GALLERY = 2000;
 const MAX_HERO = 2400;
@@ -50,8 +63,8 @@ const tmp = join(tmpdir(), 'guilleysilvi-photos');
 mkdirSync(tmp, { recursive: true });
 
 /** Devuelve una ruta legible por sharp (convierte HEIC → JPEG con sips). */
-function readable(file) {
-  const path = join(SOURCE, file);
+function readable(file, source = SOURCE) {
+  const path = join(source, file);
   if (!existsSync(path)) throw new Error(`No existe ${path}`);
   if (!/\.heic$/i.test(file)) return path;
   const out = join(tmp, `${basename(file, extname(file))}.jpg`);
@@ -59,8 +72,8 @@ function readable(file) {
   return out;
 }
 
-async function process(file, out, max) {
-  const info = await sharp(readable(file))
+async function process(file, out, max, source = SOURCE) {
+  const info = await sharp(readable(file, source))
     .rotate()
     .resize({ width: max, height: max, fit: 'inside', withoutEnlargement: true })
     .jpeg({ quality: QUALITY, mozjpeg: true })
@@ -84,6 +97,17 @@ for (const [i, photo] of photos.entries()) {
   const info = await process(photo.file, join(GALLERY_DIR, `${id}.jpg`), MAX_GALLERY);
   images.push({ id, alt: photo.alt, ...(photo.featured ? { featured: true } : {}) });
   console.log(`galería  ${id}.jpg  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} kB`);
+}
+
+// Guía "Nuestro Santander"
+mkdirSync(GUIDE_DIR, { recursive: true });
+for (const photo of GUIDE) {
+  if (!existsSync(join(GUIDE_SOURCE, photo.file))) {
+    console.log(`guía     ${photo.out}: falta ${photo.file} en ${GUIDE_SOURCE}/ (se mantiene la versión anterior si existe)`);
+    continue;
+  }
+  const info = await process(photo.file, join(GUIDE_DIR, `${photo.out}.jpg`), MAX_GUIDE, GUIDE_SOURCE);
+  console.log(`guía     ${photo.out}.jpg  ${info.width}x${info.height}  ${(info.size / 1024).toFixed(0)} kB`);
 }
 
 writeFileSync('src/data/gallery.json', JSON.stringify({ hero: { alt: HERO.alt }, images }, null, 2) + '\n');

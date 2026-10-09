@@ -4,25 +4,44 @@ import Base from '@/layouts/Base.astro';
 import Countdown from '@/components/Countdown.astro';
 import Icon from '@/components/Icon.astro';
 import SectionHead from '@/components/SectionHead.astro';
+import Timeline from '@/components/Timeline.astro';
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro';
 import { getDictionary, getLocale, l } from '@/i18n';
-import { href, pageKeys } from '@/i18n/routes';
+import { href, pageKeys, type PageKey } from '@/i18n/routes';
 import { siteConfig } from '@/site.config';
 import { heroAlt, heroImage, heroIsPlaceholder } from '@/data/gallery';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
-const indexPages = pageKeys.filter((key) => key !== 'home');
+const indexPages = pageKeys.filter((key): key is Exclude<PageKey, 'home'> => !['home', 'rsvp', 'quiz'].includes(key));
 ---
 
 <Base page="home">
+  <!-- Portada: nombres, fecha, cuenta atrás pequeña y las dos acciones que importan -->
   <section class="hero">
     <div class="container hero__grid">
-      <div class="hero__head">
+      <div class="hero__text">
         <p class="eyebrow reveal">{t.hero.eyebrow}</p>
         <h1 class="display hero__names reveal">
           <span class="hero__line">{siteConfig.couple.first}</span>
           <span class="hero__line"><span class="hero__amp">&amp;</span> {siteConfig.couple.second}</span>
         </h1>
+        <p class="hero__tagline reveal reveal--2">
+          <span class="emoji" aria-hidden="true">📍</span>
+          {t.hero.tagline}
+        </p>
+        <Countdown compact class="hero__countdown reveal reveal--2" />
+        <div class="hero__cta reveal reveal--3">
+          <a class="btn btn--accent btn--lg hero__rsvp" href={href(locale, 'rsvp')}>
+            <span class="emoji" aria-hidden="true">✉️</span>
+            {t.common.rsvp}
+          </a>
+          <a class="btn btn--ghost hero__quiz" href={href(locale, 'quiz')}>
+            <span class="emoji" aria-hidden="true">🎯</span>
+            {t.hero.quizCta}
+          </a>
+        </div>
+        <LanguageSwitcher class="hero__langs reveal reveal--3" />
       </div>
 
       <figure class:list={['hero__media reveal reveal--2', { 'hero__media--placeholder': heroIsPlaceholder }]}>
@@ -40,28 +59,34 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
           )
         }
       </figure>
-
-      <div class="hero__body">
-        <p class="hero__tagline reveal reveal--2">
-          <Icon name="north" class="hero__north" />
-          {t.hero.tagline}
-        </p>
-        <Countdown class="hero__countdown reveal reveal--3" />
-        <div class="hero__cta reveal reveal--3">
-          <a class="btn btn--primary" href={href(locale, 'rsvp')}>{t.common.rsvp}</a>
-        </div>
-      </div>
     </div>
   </section>
 
-  <section class="section essentials">
+  <!-- El recorrido del día -->
+  <section class="section day">
+    <div class="container">
+      <SectionHead eyebrow={`${t.home.dayEyebrow} 🗓️`} title={t.home.dayTitle} />
+      <div class="day__timeline">
+        <Timeline compact />
+      </div>
+      <p class="small muted day__note">{t.day.note}</p>
+      <p class="day__cta">
+        <a class="arrow-link" href={href(locale, 'day')}>{t.home.dayCta}<Icon name="arrowRight" /></a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Lo esencial -->
+  <section class="section section--flush-top essentials">
     <div class="container">
       <p class="eyebrow">{t.home.essentialsEyebrow}</p>
       <ul class="essentials__list">
         {
-          t.home.essentials.map((item) => (
+          t.home.essentials.map((item, i) => (
             <li class="essentials__item">
-              <p class="eyebrow eyebrow--ink">{item.label}</p>
+              <p class="eyebrow eyebrow--ink">
+                <span class="emoji" aria-hidden="true">{['⛪', '🥂', '🚌'][i]}</span> {item.label}
+              </p>
               <h2 class="essentials__title">{item.title}</h2>
               <p class="small muted">{item.detail}</p>
               <a class="arrow-link essentials__link" href={href(locale, item.page)}>
@@ -75,6 +100,24 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
     </div>
   </section>
 
+  <!-- El juego -->
+  <section class="section section--flush-top">
+    <div class="container">
+      <div class="game">
+        <span class="game__emoji" aria-hidden="true">🎯</span>
+        <div class="game__text">
+          <h2 class="title-lg">{t.home.quizTitle}</h2>
+          <p class="game__lead">{t.home.quizText}</p>
+        </div>
+        <div class="game__actions">
+          <a class="btn btn--primary" href={href(locale, 'quiz')}>{t.home.quizBtn}<Icon name="arrowRight" /></a>
+          <a class="arrow-link" href={href(locale, 'ranking')}>{t.nav.ranking}<Icon name="arrowRight" /></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Índice -->
   <section class="section section--flush-top">
     <div class="container">
       <SectionHead eyebrow={t.home.indexEyebrow} title={t.home.indexTitle} />
@@ -96,6 +139,7 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
     </div>
   </section>
 
+  <!-- Confirmar, otra vez, al final -->
   <section class="section section--flush-top">
     <div class="container">
       <div class="banner">
@@ -104,7 +148,7 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
           <h2 class="title-lg">{t.home.rsvpTitle}</h2>
           <p class="banner__lead">{t.home.rsvpText}</p>
         </div>
-        <a class="btn banner__btn" href={href(locale, 'rsvp')}>{t.common.rsvp}</a>
+        <a class="btn btn--accent btn--lg banner__btn" href={href(locale, 'rsvp')}><span class="emoji" aria-hidden="true">✉️</span>{t.common.rsvp}</a>
         <Icon name="waves" class="banner__mark" />
       </div>
     </div>
@@ -114,7 +158,7 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
 <style>
   /* ---------- Portada ---------- */
   .hero {
-    padding-block: clamp(1.5rem, 5vw, 4.5rem) clamp(2rem, 5vw, 4rem);
+    padding-block: clamp(1.25rem, 4vw, 4rem) clamp(1.5rem, 4vw, 3rem);
   }
 
   .hero__grid {
@@ -125,7 +169,7 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
   .hero__names {
     display: flex;
     flex-direction: column;
-    margin-top: 0.9rem;
+    margin-top: 0.75rem;
   }
 
   .hero__line:last-child {
@@ -135,6 +179,42 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
   .hero__amp {
     font-style: italic;
     color: var(--sea);
+  }
+
+  .hero__tagline {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-start;
+    max-width: 26ch;
+    margin-top: 1.1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.375rem, 5vw, 1.875rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__tagline .emoji {
+    font-size: 0.8em;
+    margin-top: 0.2em;
+  }
+
+  .hero__countdown {
+    margin-top: 1rem;
+  }
+
+  .hero__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .hero__rsvp .emoji {
+    font-size: 1.1em;
+  }
+
+  .hero__langs {
+    margin-top: 1.25rem;
   }
 
   .hero__media {
@@ -150,76 +230,47 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
     object-fit: cover;
   }
 
-  .hero__tagline {
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-    max-width: 24ch;
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 5.5vw, 2.25rem);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    color: var(--ink);
-  }
-
-  .hero__north {
-    flex: none;
-    width: 1em;
-    height: 1em;
-    margin-top: 0.15em;
-    color: var(--sea);
-  }
-
-  .hero__countdown {
-    margin-top: clamp(1.75rem, 5vw, 2.75rem);
-  }
-
-  .hero__cta {
-    margin-top: clamp(1.75rem, 5vw, 2.5rem);
-  }
-
-  .hero__cta .btn {
-    width: 100%;
-  }
-
   @media (min-width: 40em) {
     .hero__media {
       margin-inline: 0;
       border-radius: var(--radius-lg);
     }
-    .hero__cta .btn {
-      width: auto;
+    .hero__cta {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
     }
   }
 
   @media (min-width: 64em) {
     .hero__grid {
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      grid-template-areas:
-        'head media'
-        'body media';
       column-gap: clamp(2rem, 6vw, 5rem);
-      align-items: stretch;
-    }
-    .hero__head {
-      grid-area: head;
-    }
-    .hero__body {
-      grid-area: body;
-      align-self: end;
+      align-items: center;
     }
     .hero__media {
-      grid-area: media;
-      aspect-ratio: auto;
-      min-height: 100%;
+      position: relative;
+      aspect-ratio: 4 / 5;
+      max-height: 42rem;
     }
     .hero__img {
       position: absolute;
       inset: 0;
     }
-    .hero__media {
-      position: relative;
-    }
+  }
+
+  /* ---------- El día ---------- */
+  .day__timeline {
+    max-width: 44rem;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .day__note {
+    max-width: 60ch;
+  }
+
+  .day__cta {
+    margin-top: 1.25rem;
   }
 
   /* ---------- Lo esencial ---------- */
@@ -253,6 +304,44 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
     }
     .essentials__item {
       padding: 2rem 0;
+    }
+  }
+
+  /* ---------- El juego ---------- */
+  .game {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--sun-2), var(--coral-2));
+  }
+
+  .game__emoji {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+
+  .game__lead {
+    margin-top: 0.75rem;
+    max-width: 48ch;
+    color: var(--ink-2);
+  }
+
+  .game__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+  }
+
+  @media (min-width: 48em) {
+    .game {
+      flex-direction: row;
+      align-items: center;
+    }
+    .game__text {
+      flex: 1;
     }
   }
 
@@ -346,15 +435,6 @@ const indexPages = pageKeys.filter((key) => key !== 'home');
 
   .banner__btn {
     align-self: flex-start;
-    background: var(--paper);
-    border-color: var(--paper);
-    color: var(--ink);
-  }
-
-  .banner__btn:hover {
-    background: var(--sea-2);
-    border-color: var(--sea-2);
-    color: var(--ink);
   }
 
   .banner__mark {

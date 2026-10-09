@@ -7,20 +7,26 @@
 :root {
   color-scheme: light;
 
-  /* Paleta: papel, tinta y mar Cantábrico */
-  --paper: #f6f3ee;
-  --paper-2: #ede8e0;
+  /* Paleta: papel cálido, tinta, mar Cantábrico más luminoso y un coral para
+     lo que de verdad importa (confirmar asistencia). Viva pero no chillona. */
+  --paper: #faf6ef;
+  --paper-2: #f1ebe0;
   --white: #fffdf9;
   --ink: #16232b;
   --ink-2: #3b474f;
   --stone: #5f6b72;
   --line: rgba(22, 35, 43, 0.14);
   --line-strong: rgba(22, 35, 43, 0.34);
-  --sea: #2f5f6e;
-  --sea-dark: #23484f;
-  --sea-2: #c8d8dc;
-  --sea-3: #e6eef0;
-  --sand: #d8cbb6;
+  --sea: #1f7f8c;
+  --sea-dark: #165f69;
+  --sea-2: #bfe1e5;
+  --sea-3: #e4f2f3;
+  --coral: #e0694a;
+  --coral-dark: #c1532f;
+  --coral-2: #fbe6df;
+  --sun: #f3c14b;
+  --sun-2: #fdf1d0;
+  --sand: #ead9bd;
 
   /* Tipografía */
   --font-display: 'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
@@ -340,6 +346,26 @@ address {
   border-color: var(--ink);
 }
 
+/* El botón que de verdad importa: confirmar asistencia. */
+.btn--accent {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+  box-shadow: 0 10px 24px -12px rgba(224, 105, 74, 0.7);
+}
+
+.btn--accent:hover {
+  background: var(--coral-dark);
+  border-color: var(--coral-dark);
+  color: #fff;
+}
+
+.btn--lg {
+  min-height: 3.75rem;
+  padding: 1.1rem 2rem;
+  font-size: 0.9375rem;
+}
+
 .btn--ghost {
   background: transparent;
   color: var(--ink);
@@ -394,6 +420,14 @@ address {
 
 .arrow-link:hover .icon {
   transform: translateX(4px);
+}
+
+/* Emoji decorativo junto a un texto: mismo tamaño que la letra, sin romper la línea. */
+.emoji {
+  display: inline-block;
+  font-style: normal;
+  line-height: 1;
+  vertical-align: -0.1em;
 }
 
 /* ---------- Etiquetas ---------- */

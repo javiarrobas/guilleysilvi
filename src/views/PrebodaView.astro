@@ -2,6 +2,7 @@
 import Base from '@/layouts/Base.astro';
 import SoonBadge from '@/components/SoonBadge.astro';
 import Icon from '@/components/Icon.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
 
@@ -15,7 +16,7 @@ const t = getDictionary(locale);
       <p class="eyebrow">{t.preboda.eyebrow}</p>
       <SoonBadge fill />
     </div>
-    <h1 class="title-xl preboda__title">{t.preboda.title}</h1>
+    <h1 class="title-xl preboda__title">{t.preboda.title} 🍻</h1>
   </header>
 
   <section class="container section section--flush-top">
@@ -40,6 +41,8 @@ const t = getDictionary(locale);
       <p class="small muted">{t.preboda.formNote} <a href={href(locale, 'rsvp')}>{t.common.rsvp}</a>.</p>
     </div>
   </section>
+
+  <PhotoBanner id="15-img-9697" />
 </Base>
 
 <style>

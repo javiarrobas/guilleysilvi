@@ -3,6 +3,7 @@ import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import Timeline from '@/components/Timeline.astro';
 import Icon from '@/components/Icon.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
 
@@ -12,7 +13,7 @@ const t = getDictionary(locale);
 
 <Base page="day" title={t.nav.day}>
   <header class="container page-head">
-    <SectionHead as="h1" size="xl" eyebrow={t.day.eyebrow} title={t.day.title} lead={t.day.lead} />
+    <SectionHead as="h1" size="xl" eyebrow={`${t.day.eyebrow} 🗓️`} title={t.day.title} lead={t.day.lead} />
   </header>
 
   <section class="container section section--flush-top">
@@ -27,6 +28,19 @@ const t = getDictionary(locale);
       <a class="btn btn--ghost" href={href(locale, 'transport')}>{t.day.mapCta}<Icon name="arrowRight" /></a>
     </p>
   </section>
+
+  <section class="container section section--flush-top">
+    <div class="dress">
+      <p class="eyebrow">{t.day.dressEyebrow} 👗🤵</p>
+      <h2 class="title-lg">{t.day.dressTitle}</h2>
+      <ul class="dress__lines">
+        {t.day.dressLines.map((line) => <li>{line}</li>)}
+      </ul>
+      <p class="dress__note">{t.day.dressNote}</p>
+    </div>
+  </section>
+
+  <PhotoBanner id="09-img-9154" />
 </Base>
 
 <style>
@@ -50,5 +64,30 @@ const t = getDictionary(locale);
 
   .cta {
     margin-top: clamp(2rem, 5vw, 3rem);
+  }
+
+  .dress {
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--sun-2), var(--sea-3));
+  }
+
+  .dress .title-lg {
+    margin-top: 0.5rem;
+  }
+
+  .dress__lines {
+    margin-top: 1rem;
+    font-size: 1.125rem;
+  }
+
+  .dress__lines li + li {
+    margin-top: 0.25rem;
+  }
+
+  .dress__note {
+    margin-top: 1rem;
+    max-width: 56ch;
+    color: var(--ink-2);
   }
 </style>

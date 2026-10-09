@@ -27,7 +27,7 @@ Capturas de todas las páginas para revisar el diseño: `SCREENSHOTS=1 npm run t
 
 | Qué                                        | Dónde                                 |
 | ------------------------------------------ | ------------------------------------- |
-| Nombres, fecha, fecha límite, idiomas       | `src/site.config.ts`                  |
+| Nombres, fecha, fecha límite, WhatsApp, idiomas | `src/site.config.ts`              |
 | Conexión con Firebase (formulario, juego)  | `src/firebase.config.json`            |
 | Preguntas del juego / clave de respuestas  | `src/data/quiz.json` / `quiz.answers.json` (local) |
 | Textos de la interfaz (menú, títulos…)     | `src/i18n/es.ts`, `ca.ts`, `en.ts`, `tr.ts` |
@@ -90,20 +90,32 @@ y tamaños validados, nadie lee desde el navegador), App Check con reCAPTCHA Ent
 ### El juego («¿Cuánto sabes de Silvia y Guille?»)
 
 Un cuestionario tipo Kahoot en `/juego/` (y `/ca/joc/`, `/en/quiz/`, `/tr/oyun/`): avatar,
-nombre y email, preguntas de una en una, resultado con las respuestas correctas y la opción
-de publicar la puntuación en el ranking (`/ranking/`). Un intento por email.
+nombre y email, 22 preguntas de una en una con corrección inmediata (verde/rojo y la respuesta
+correcta), resultado final con un mensaje según la puntuación y la opción de publicarla en el
+ranking (`/ranking/`). Un intento por email; si se cierra a medias, al volver continúa donde
+estaba. Quien confirma asistencia pasa al juego con nombre y email ya rellenos.
 
-- **Preguntas**: `src/data/quiz.json`, en los cuatro idiomas. Las actuales son de ejemplo;
-  sustitúyelas manteniendo los `id` estables. No contiene las respuestas.
+- **Preguntas**: `src/data/quiz.json`, en los cuatro idiomas (las de los novios, octubre de
+  2026; las opciones van barajadas para que la correcta no sea siempre la primera). Mantén los
+  `id` estables y el orden de las opciones. No contiene las respuestas.
 - **Respuestas correctas**: `src/data/quiz.answers.json` (copia de `quiz.answers.example.json`,
   **ignorado por git** porque el repo es público). Índice 0-based de la opción correcta por
   pregunta. Se publican en Firestore con `npm run quiz:publish` (usa tu cuenta wedoco.io de
   gcloud), donde solo las lee la función que puntúa: nunca viajan al navegador.
-- **Corrección y ranking**: la función `quiz` de youwebit-platform puntúa, guarda al jugador y,
-  si acepta, su entrada pública (emoji, nombre, puntuación; sin email). Su URL está en
+- **Corrección y ranking**: la función `quiz` de youwebit-platform lleva la partida de cada
+  jugador (`start` → `answer` por pregunta → `finish` → `publish`), así que cada respuesta se
+  juzga en el servidor en el momento y la clave nunca llega al navegador. Su URL está en
   `quizUrl` de `src/firebase.config.json`.
+- **Si cambian las preguntas**: edita `quiz.json` y `quiz.answers.json`, sube el `id` del
+  cuestionario en los dos ficheros y vuelve a publicar la clave **antes** de desplegar la web.
 - **Pruebas**: `tests/quiz.spec.ts` simula la función con `page.route` y lee el ranking real del
   emulador; la función se prueba en su repo (`functions/quiz/test`).
+
+### WhatsApp de los novios
+
+La página de alojamiento invita a escribir por WhatsApp. El número va en `whatsapp` de
+`src/site.config.ts` (formato internacional sin espacios, p. ej. `34600000000`); mientras esté
+vacío, el botón se muestra desactivado.
 
 ### Alojamientos
 
@@ -112,12 +124,12 @@ automáticamente en *Cerca del autobús · Centro de Santander · Apartamentos p
 Opciones económicas*. Mientras la lista esté vacía, la página muestra el mapa con la zona
 recomendada y un aviso de «Próximamente».
 
-### Guía de Santander
+### Nuestro Santander
 
-`src/data/santander.ts` contiene **recomendaciones de relleno** (lugares conocidos con
-comentarios genéricos) para dar forma a la sección. Hay que revisarlas y sustituirlas por
-las de Silvia y Guille. Cada recomendación admite foto (`image`), comentario, ubicación y
-el texto que se busca en Google Maps al pulsar «Ver en mapa».
+`src/data/santander.ts` tiene los seis sitios de los novios (foto, emoji, recomendación corta,
+búsqueda en Google Maps). Las fotos originales van en `fotos/santander/` (fuera de git) y
+`npm run photos` las deja optimizadas en `src/assets/santander/` con los nombres de la lista
+`GUIDE` de `scripts/import-photos.mjs`. Un sitio sin foto se muestra con su emoji en grande.
 
 ### Mapa
 

@@ -4,6 +4,12 @@ import { schedule } from '@/data/schedule';
 import { locations } from '@/data/locations';
 import Icon from './Icon.astro';
 
+interface Props {
+  /** Versión corta para la portada: sin direcciones ni enlaces a mapas. */
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
 const byId = new Map(locations.map((loc) => [loc.id, loc]));
@@ -15,18 +21,22 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
       const location = item.locationId ? byId.get(item.locationId) : undefined;
       return (
         <li class="timeline__item">
-          <time class="timeline__time tabular" datetime={item.time}>
-            {item.time}
-          </time>
+          {typeof item.time === 'string' ? (
+            <time class="timeline__time tabular" datetime={item.time}>
+              {item.time}
+            </time>
+          ) : (
+            <span class="timeline__time timeline__time--text">{l(item.time, locale)}</span>
+          )}
           <span class="timeline__marker" aria-hidden="true">
-            <Icon name={item.icon} />
+            <span class="timeline__emoji">{item.emoji}</span>
           </span>
           <div class="timeline__body">
             <h3 class="timeline__title">{l(item.title, locale)}</h3>
             {item.place && <p class="timeline__place">{item.place}</p>}
-            {item.address && <address class="timeline__address small muted">{item.address.join(' · ')}</address>}
+            {!compact && item.address && <address class="timeline__address small muted">{item.address.join(' · ')}</address>}
             {item.text && <p class="timeline__text">{l(item.text, locale)}</p>}
-            {location && (
+            {!compact && location && (
               <a class="arrow-link timeline__link" href={location.mapsUrl} target="_blank" rel="noopener noreferrer">
                 {t.common.openInMaps}
                 <Icon name="external" />
@@ -76,6 +86,12 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
     font-size: clamp(1.25rem, 4.5vw, 1.75rem);
     line-height: var(--marker);
     letter-spacing: -0.01em;
+    color: var(--sea-dark);
+  }
+
+  .timeline__time--text {
+    font-size: clamp(1rem, 3.5vw, 1.25rem);
+    font-style: italic;
   }
 
   .timeline__marker {
@@ -83,10 +99,20 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
     place-items: center;
     width: var(--marker);
     height: var(--marker);
-    border: 1px solid var(--line-strong);
     border-radius: 50%;
-    background: var(--paper);
-    color: var(--ink);
+    background: var(--sun-2);
+    box-shadow: inset 0 0 0 1px var(--sand);
+  }
+
+  .timeline__item:nth-child(odd) .timeline__marker {
+    background: var(--sea-3);
+    box-shadow: inset 0 0 0 1px var(--sea-2);
+  }
+
+  .timeline__emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+    letter-spacing: -0.15em;
   }
 
   .timeline__body {
@@ -120,6 +146,9 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
     .timeline {
       --marker: 3.25rem;
       --time-col: 6rem;
+    }
+    .timeline__emoji {
+      font-size: 1.5rem;
     }
     .timeline__item {
       column-gap: 1.5rem;

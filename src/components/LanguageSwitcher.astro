@@ -29,7 +29,9 @@ const show = enabled.length > 1;
   show && variant === 'dropdown' && (
     <details {...rest} class:list={['lang-menu', className]} data-lang-menu>
       <summary class="lang-menu__trigger" aria-label={`${t.common.language}: ${t.label}`}>
+        <span class="lang-menu__globe" aria-hidden="true">🌐</span>
         {locale.toUpperCase()}
+        <span class="lang-menu__chevron" aria-hidden="true" />
       </summary>
       <div class="lang-menu__panel">
         <ul>
@@ -115,15 +117,37 @@ const show = enabled.length > 1;
   .lang-menu__trigger {
     display: inline-flex;
     align-items: center;
-    padding-block: 0.25rem;
+    gap: 0.4rem;
+    min-height: 2.25rem;
+    padding: 0.3rem 0.7rem 0.3rem 0.55rem;
     cursor: pointer;
     font-size: 0.75rem;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--ink-2);
-    border-bottom: 1px solid transparent;
-    transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--white);
+    transition: color 0.2s var(--ease), border-color 0.2s var(--ease), background-color 0.2s var(--ease);
+  }
+
+  .lang-menu__globe {
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  .lang-menu__chevron {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-2px) rotate(45deg);
+    transition: transform 0.2s var(--ease);
+  }
+
+  .lang-menu[open] .lang-menu__chevron {
+    transform: translateY(1px) rotate(-135deg);
   }
 
   /* Sin marcador nativo: ni el triángulo de Chrome/Safari ni el de Firefox. */
@@ -141,8 +165,8 @@ const show = enabled.length > 1;
 
   .lang-menu__trigger:hover,
   .lang-menu[open] .lang-menu__trigger {
-    color: var(--ink);
-    border-color: var(--ink);
+    border-color: var(--sea);
+    background: var(--sea-3);
   }
 
   .lang-menu__panel {

@@ -1,0 +1,59 @@
+---
+/**
+ * Una foto de los novios a todo el ancho del contenedor, para que cada sección tenga
+ * algo personal. `id` es el nombre de fichero de la galería sin extensión
+ * (src/data/gallery.json). Si no existe, no se muestra nada.
+ */
+import { Image } from 'astro:assets';
+import { getLocale, l } from '@/i18n';
+import { gallery } from '@/data/gallery';
+
+interface Props {
+  id: string;
+  /** 'wide' (21:9, por defecto) o 'photo' (3:2, más alta). */
+  ratio?: 'wide' | 'photo';
+  caption?: string;
+  class?: string;
+}
+
+const { id, ratio = 'wide', caption, class: className } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const image = gallery.find((img) => img.id === id);
+---
+
+{
+  image && (
+    <figure class:list={['container banner', `banner--${ratio}`, className]}>
+      <Image class="banner__img" src={image.src} alt={l(image.alt, locale)} widths={[720, 1200, 1800]} sizes="(min-width: 80em) 1152px, 100vw" loading="lazy" />
+      {caption && <figcaption class="banner__caption small muted serif italic">{caption}</figcaption>}
+    </figure>
+  )
+}
+
+<style>
+  .banner {
+    margin-block: clamp(2rem, 6vw, 4rem);
+  }
+
+  .banner__img {
+    width: 100%;
+    aspect-ratio: 21 / 9;
+    object-fit: cover;
+    object-position: center 35%;
+    border-radius: var(--radius-lg);
+  }
+
+  .banner--photo .banner__img {
+    aspect-ratio: 3 / 2;
+  }
+
+  @media (max-width: 40em) {
+    .banner__img {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  .banner__caption {
+    margin-top: 0.6rem;
+  }
+</style>

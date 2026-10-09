@@ -98,6 +98,13 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   await page.getByRole('button', { name: 'Enviar respuesta' }).click();
   await expect(page.locator('[data-panel="success"]')).toBeVisible({ timeout: 15_000 });
   await expect(page.locator('[data-panel="success"]')).toContainText('¡Gracias!');
+  // El siguiente paso es el juego: mensaje, botón y cuenta atrás de redirección que se puede cancelar
+  await expect(page.locator('[data-panel="success"]')).toContainText('¡Ya estás dentro! Ahora vamos a ver cuánto sabes de nosotros dos… 👀');
+  await expect(page.locator('[data-redirect-note]')).toHaveText(/Te llevamos al juego en \d s/);
+  await expect(page.locator('[data-go-quiz]')).toHaveAttribute('href', '/juego/');
+  await page.locator('[data-stay]').click();
+  await expect(page.locator('[data-redirect-note]')).toHaveText('');
+  expect(await page.evaluate(() => sessionStorage.getItem('quiz:prefill'))).toContain(email);
 
   const docs = await docsByEmail(request, email);
   expect(docs).toHaveLength(1);
@@ -125,7 +132,7 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   expect(lookup?.lastAt?.timestampValue).toBeTruthy();
 
   // En una visita nueva, al escribir ese email y salir del campo, avisa de la respuesta anterior
-  await page.reload();
+  await page.goto('/confirmar/');
   await expect(page.locator('[data-email-hint]')).toBeHidden();
   await page.locator('#email').fill(email);
   await page.locator('#firstName').click(); // blur del email

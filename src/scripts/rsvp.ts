@@ -14,6 +14,8 @@ import { isLocale, type Locale } from '@/i18n';
 import { emailHash, getDb } from './firebase-client';
 
 type Messages = {
+  nextQuiz: string;
+  redirecting: string;
   required: string;
   invalidEmail: string;
   fixErrors: string;
@@ -283,6 +285,7 @@ export function setupRsvpForm(root: HTMLElement) {
       }
       lastChecked = ''; // la próxima vez que se escriba este email, el aviso será correcto
       show(data.attending ? 'success' : 'successNo');
+      if (data.attending) handOverToQuiz(data);
     } catch (error) {
       console.error('rsvp: no se pudo guardar la respuesta', error);
       show('error');
@@ -291,6 +294,42 @@ export function setupRsvpForm(root: HTMLElement) {
       submit.textContent = messages.submit;
     }
   };
+
+  // --- Siguiente paso natural: el juego. Guardamos nombre y email para no pedirlos
+  // otra vez y, salvo que el invitado prefiera quedarse, lo llevamos allí en unos segundos.
+  const quizHref = root.dataset.quizHref ?? '';
+  const redirectNote = root.querySelector<HTMLElement>('[data-redirect-note]');
+  let redirectTimer: number | undefined;
+  const cancelRedirect = () => {
+    if (redirectTimer) window.clearInterval(redirectTimer);
+    redirectTimer = undefined;
+    if (redirectNote) redirectNote.textContent = '';
+  };
+  const handOverToQuiz = (data: Rsvp) => {
+    try {
+      sessionStorage.setItem('quiz:prefill', JSON.stringify({ name: data.firstName, email: data.email }));
+    } catch {
+      /* sin almacenamiento */
+    }
+    if (!quizHref || !redirectNote) return;
+    let seconds = 8;
+    const paint = () => (redirectNote.textContent = messages.redirecting.replace('{n}', String(seconds)));
+    paint();
+    redirectTimer = window.setInterval(() => {
+      seconds -= 1;
+      if (seconds <= 0) {
+        cancelRedirect();
+        window.location.href = quizHref;
+        return;
+      }
+      paint();
+    }, 1000);
+  };
+  root.querySelector('[data-stay]')?.addEventListener('click', () => {
+    cancelRedirect();
+    (root.querySelector('[data-stay]') as HTMLElement | null)?.setAttribute('hidden', '');
+  });
+  root.querySelector('[data-go-quiz]')?.addEventListener('click', cancelRedirect);
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();

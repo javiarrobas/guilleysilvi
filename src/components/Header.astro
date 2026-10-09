@@ -143,9 +143,14 @@ const t = getDictionary(locale);
     gap: 0.75rem;
   }
 
-  .site-header__cta,
-  .site-header__lang {
+  .site-header__cta {
     display: none;
+    white-space: nowrap;
+  }
+
+  /* El idioma se ve siempre, también en móvil: es lo primero que necesita un invitado de fuera. */
+  .site-header__lang {
+    display: block;
     white-space: nowrap;
   }
 
@@ -283,9 +288,6 @@ const t = getDictionary(locale);
 
   @media (min-width: 64em) {
     .nav-desktop {
-      display: block;
-    }
-    .site-header__lang {
       display: block;
     }
     .menu-toggle,

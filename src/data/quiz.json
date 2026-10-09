@@ -1,85 +1,775 @@
 {
-  "_comment": "PLACEHOLDER QUESTIONS — replace with the real ones. Keep each question's `id` stable and the option order in sync with quiz.answers.json (the answer key, gitignored, published with `npm run quiz:publish`). Up to 10 options per question. Texts in the four languages of the site.",
-  "id": "guilleysilvi-v1",
+  "_comment": "Preguntas del juego (versión de los novios, octubre de 2026), en los cuatro idiomas. Las respuestas correctas NO están aquí: viven en quiz.answers.json (ignorado por git) y se publican con `npm run quiz:publish`. Mantén los `id` estables y el orden de las opciones; si cambias una pregunta, revisa su respuesta.",
+  "id": "guilleysilvi-v2",
   "questions": [
     {
-      "id": "q1",
-      "text": { "es": "¿Dónde se conocieron Silvia y Guille?", "ca": "On es van conèixer la Silvia i el Guille?", "en": "Where did Silvia and Guille meet?", "tr": "Silvia ve Guille nerede tanıştı?" },
+      "id": "q01",
+      "text": {
+        "es": "¿Cuál es la habilidad oculta de Silvia?",
+        "ca": "Quina és l’habilitat oculta de la Silvia?",
+        "en": "What is Silvia's hidden talent?",
+        "tr": "Silvia'nın gizli yeteneği nedir?"
+      },
       "options": [
-        { "es": "En la universidad", "ca": "A la universitat", "en": "At university", "tr": "Üniversitede" },
-        { "es": "En un concierto", "ca": "En un concert", "en": "At a concert", "tr": "Bir konserde" },
-        { "es": "En la boda de unos amigos", "ca": "Al casament d'uns amics", "en": "At a friends' wedding", "tr": "Arkadaşlarının düğününde" },
-        { "es": "En una app", "ca": "En una app", "en": "On an app", "tr": "Bir uygulamada" }
+        {
+          "es": "Jugar a la Play",
+          "ca": "Jugar a la Play",
+          "en": "Playing the PlayStation",
+          "tr": "PlayStation oynamak"
+        },
+        {
+          "es": "Taxidermia",
+          "ca": "Taxidèrmia",
+          "en": "Taxidermy",
+          "tr": "Taksidermi"
+        },
+        {
+          "es": "La pintura",
+          "ca": "La pintura",
+          "en": "Painting",
+          "tr": "Resim"
+        },
+        {
+          "es": "La cerámica",
+          "ca": "La ceràmica",
+          "en": "Pottery",
+          "tr": "Seramik"
+        }
       ]
     },
     {
-      "id": "q2",
-      "text": { "es": "¿Quién dio el primer paso?", "ca": "Qui va fer el primer pas?", "en": "Who made the first move?", "tr": "İlk adımı kim attı?" },
+      "id": "q02",
+      "text": {
+        "es": "¿Qué deporte le falta por practicar a Guille?",
+        "ca": "Quin esport li falta per practicar al Guille?",
+        "en": "Which sport has Guille not tried yet?",
+        "tr": "Guille hangi sporu henüz denemedi?"
+      },
       "options": [
-        { "es": "Silvia", "ca": "La Silvia", "en": "Silvia", "tr": "Silvia" },
-        { "es": "Guille", "ca": "El Guille", "en": "Guille", "tr": "Guille" },
-        { "es": "Fue mutuo", "ca": "Va ser mutu", "en": "It was mutual", "tr": "Karşılıklıydı" },
-        { "es": "Un amigo en común", "ca": "Un amic en comú", "en": "A mutual friend", "tr": "Ortak bir arkadaş" }
+        {
+          "es": "Salto BASE",
+          "ca": "Salt BASE",
+          "en": "BASE jumping",
+          "tr": "BASE atlayışı"
+        },
+        {
+          "es": "Kitesurf",
+          "ca": "Kitesurf",
+          "en": "Kitesurfing",
+          "tr": "Kitesurf"
+        },
+        {
+          "es": "Squash",
+          "ca": "Squash",
+          "en": "Squash",
+          "tr": "Squash"
+        },
+        {
+          "es": "Boxeo",
+          "ca": "Boxa",
+          "en": "Boxing",
+          "tr": "Boks"
+        }
       ]
     },
     {
-      "id": "q3",
-      "text": { "es": "¿Cuál es su destino de viaje favorito?", "ca": "Quina és la seva destinació de viatge preferida?", "en": "What is their favourite travel destination?", "tr": "En sevdikleri seyahat rotası hangisi?" },
+      "id": "q03",
+      "text": {
+        "es": "¿Quién limpia más en casa?",
+        "ca": "Qui neteja més a casa?",
+        "en": "Who does more cleaning at home?",
+        "tr": "Evde kim daha çok temizlik yapar?"
+      },
       "options": [
-        { "es": "Lisboa", "ca": "Lisboa", "en": "Lisbon", "tr": "Lizbon" },
-        { "es": "Roma", "ca": "Roma", "en": "Rome", "tr": "Roma" },
-        { "es": "Tokio", "ca": "Tòquio", "en": "Tokyo", "tr": "Tokyo" },
-        { "es": "Cualquier playa del norte", "ca": "Qualsevol platja del nord", "en": "Any beach up north", "tr": "Kuzeydeki herhangi bir plaj" }
+        {
+          "es": "Los dos por igual",
+          "ca": "Tots dos igual",
+          "en": "Both equally",
+          "tr": "İkisi eşit"
+        },
+        {
+          "es": "Nadie, esperamos un milagro",
+          "ca": "Ningú, esperem un miracle",
+          "en": "Nobody, we wait for a miracle",
+          "tr": "Hiç kimse, mucize bekliyoruz"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        }
       ]
     },
     {
-      "id": "q4",
-      "text": { "es": "¿Qué pide siempre Guille en un bar de Santander?", "ca": "Què demana sempre el Guille en un bar de Santander?", "en": "What does Guille always order in a bar in Santander?", "tr": "Guille Santander'da bir barda hep ne sipariş eder?" },
+      "id": "q04",
+      "text": {
+        "es": "¿Quién es LA más lista de la casa?",
+        "ca": "Qui és LA més llesta de la casa?",
+        "en": "Who is THE smartest one in the house?",
+        "tr": "Evin EN zekisi kim?"
+      },
       "options": [
-        { "es": "Rabas", "ca": "Rabas", "en": "Rabas (fried squid)", "tr": "Rabas (kızarmış kalamar)" },
-        { "es": "Anchoas", "ca": "Anxoves", "en": "Anchovies", "tr": "Hamsi" },
-        { "es": "Un sobao", "ca": "Un sobao", "en": "A sobao", "tr": "Bir sobao" },
-        { "es": "Cocido montañés", "ca": "Cocido montañés", "en": "Cocido montañés", "tr": "Cocido montañés" }
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Depende del día",
+          "ca": "Depèn del dia",
+          "en": "Depends on the day",
+          "tr": "Güne göre değişir"
+        },
+        {
+          "es": "No nos metamos en líos",
+          "ca": "No ens fiquem en embolics",
+          "en": "Let's not go there",
+          "tr": "Belaya bulaşmayalım"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        }
       ]
     },
     {
-      "id": "q5",
-      "text": { "es": "¿Qué serie han visto juntos más veces?", "ca": "Quina sèrie han vist junts més vegades?", "en": "Which series have they watched together most often?", "tr": "Birlikte en çok hangi diziyi izlediler?" },
+      "id": "q05",
+      "text": {
+        "es": "¿Cuál es nuestra comida favorita para un día de resaca?",
+        "ca": "Quin és el nostre menjar preferit per a un dia de ressaca?",
+        "en": "What is our favourite hangover food?",
+        "tr": "Akşamdan kalma günü için en sevdiğimiz yemek?"
+      },
       "options": [
-        { "es": "Friends", "ca": "Friends", "en": "Friends", "tr": "Friends" },
-        { "es": "The Office", "ca": "The Office", "en": "The Office", "tr": "The Office" },
-        { "es": "Los Soprano", "ca": "Els Soprano", "en": "The Sopranos", "tr": "The Sopranos" },
-        { "es": "Juego de tronos", "ca": "Joc de trons", "en": "Game of Thrones", "tr": "Game of Thrones" }
+        {
+          "es": "Indio",
+          "ca": "Indi",
+          "en": "Indian",
+          "tr": "Hint yemeği"
+        },
+        {
+          "es": "Carbonara",
+          "ca": "Carbonara",
+          "en": "Carbonara",
+          "tr": "Carbonara"
+        },
+        {
+          "es": "Pizza",
+          "ca": "Pizza",
+          "en": "Pizza",
+          "tr": "Pizza"
+        },
+        {
+          "es": "Hamburguesa",
+          "ca": "Hamburguesa",
+          "en": "Burger",
+          "tr": "Hamburger"
+        }
       ]
     },
     {
-      "id": "q6",
-      "text": { "es": "¿Dónde fue la pedida?", "ca": "On va ser la petició de mà?", "en": "Where did the proposal happen?", "tr": "Evlilik teklifi nerede yapıldı?" },
+      "id": "q06",
+      "text": {
+        "es": "¿Cuál ha sido nuestro viaje favorito hasta la fecha?",
+        "ca": "Quin ha estat el nostre viatge preferit fins ara?",
+        "en": "What has been our favourite trip so far?",
+        "tr": "Şimdiye kadarki en sevdiğimiz seyahat?"
+      },
       "options": [
-        { "es": "En la playa", "ca": "A la platja", "en": "On the beach", "tr": "Plajda" },
-        { "es": "En un restaurante", "ca": "En un restaurant", "en": "In a restaurant", "tr": "Bir restoranda" },
-        { "es": "En casa, en pijama", "ca": "A casa, en pijama", "en": "At home, in pyjamas", "tr": "Evde, pijamayla" },
-        { "es": "De viaje", "ca": "De viatge", "en": "While travelling", "tr": "Seyahatte" }
+        {
+          "es": "Nueva York",
+          "ca": "Nova York",
+          "en": "New York",
+          "tr": "New York"
+        },
+        {
+          "es": "Roma",
+          "ca": "Roma",
+          "en": "Rome",
+          "tr": "Roma"
+        },
+        {
+          "es": "París",
+          "ca": "París",
+          "en": "Paris",
+          "tr": "Paris"
+        },
+        {
+          "es": "Londres",
+          "ca": "Londres",
+          "en": "London",
+          "tr": "Londra"
+        }
       ]
     },
     {
-      "id": "q7",
-      "text": { "es": "¿Cuántos años llevan juntos?", "ca": "Quants anys fa que estan junts?", "en": "How many years have they been together?", "tr": "Kaç yıldır birlikteler?" },
+      "id": "q07",
+      "text": {
+        "es": "¿Quién tarda más en cambiarse para salir?",
+        "ca": "Qui triga més a canviar-se per sortir?",
+        "en": "Who takes longer to get ready to go out?",
+        "tr": "Dışarı çıkmak için kim daha geç hazırlanır?"
+      },
       "options": [
-        { "es": "3", "ca": "3", "en": "3", "tr": "3" },
-        { "es": "5", "ca": "5", "en": "5", "tr": "5" },
-        { "es": "7", "ca": "7", "en": "7", "tr": "7" },
-        { "es": "10", "ca": "10", "en": "10", "tr": "10" }
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Depende del plan",
+          "ca": "Depèn del pla",
+          "en": "Depends on the plan",
+          "tr": "Plana göre değişir"
+        }
       ]
     },
     {
-      "id": "q8",
-      "text": { "es": "¿Quién de los dos es más puntual?", "ca": "Qui dels dos és més puntual?", "en": "Which of the two is more punctual?", "tr": "İkisinden hangisi daha dakik?" },
+      "id": "q08",
+      "text": {
+        "es": "¿Qué es lo primero que pedimos cuando llegamos a Santander?",
+        "ca": "Què és el primer que demanem quan arribem a Santander?",
+        "en": "What is the first thing we order when we get to Santander?",
+        "tr": "Santander'a varınca ilk sipariş ettiğimiz şey?"
+      },
       "options": [
-        { "es": "Silvia", "ca": "La Silvia", "en": "Silvia", "tr": "Silvia" },
-        { "es": "Guille", "ca": "El Guille", "en": "Guille", "tr": "Guille" },
-        { "es": "Ninguno", "ca": "Cap dels dos", "en": "Neither", "tr": "Hiçbiri" },
-        { "es": "Los dos, siempre", "ca": "Tots dos, sempre", "en": "Both, always", "tr": "İkisi de, her zaman" }
+        {
+          "es": "Anchoas",
+          "ca": "Anxoves",
+          "en": "Anchovies",
+          "tr": "Hamsi"
+        },
+        {
+          "es": "Sobaos",
+          "ca": "Sobaos",
+          "en": "Sobaos",
+          "tr": "Sobao"
+        },
+        {
+          "es": "Gildas",
+          "ca": "Gildes",
+          "en": "Gildas",
+          "tr": "Gilda"
+        },
+        {
+          "es": "Pincho de tortilla",
+          "ca": "Pintxo de truita",
+          "en": "Tortilla pincho",
+          "tr": "Tortilla pinchosu"
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "text": {
+        "es": "¿Quién pone más música en casa?",
+        "ca": "Qui posa més música a casa?",
+        "en": "Who plays more music at home?",
+        "tr": "Evde kim daha çok müzik açar?"
+      },
+      "options": [
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Alexa",
+          "ca": "L’Alexa",
+          "en": "Alexa",
+          "tr": "Alexa"
+        }
+      ]
+    },
+    {
+      "id": "q10",
+      "text": {
+        "es": "¿Cuál fue el último concierto al que fuimos juntos?",
+        "ca": "Quin va ser l’últim concert al qual vam anar junts?",
+        "en": "What was the last concert we went to together?",
+        "tr": "Birlikte gittiğimiz son konser hangisiydi?"
+      },
+      "options": [
+        {
+          "es": "Carolina Durante",
+          "ca": "Carolina Durante",
+          "en": "Carolina Durante",
+          "tr": "Carolina Durante"
+        },
+        {
+          "es": "La Oreja de Van Gogh",
+          "ca": "La Oreja de Van Gogh",
+          "en": "La Oreja de Van Gogh",
+          "tr": "La Oreja de Van Gogh"
+        },
+        {
+          "es": "Leiva",
+          "ca": "Leiva",
+          "en": "Leiva",
+          "tr": "Leiva"
+        },
+        {
+          "es": "Viva Suecia",
+          "ca": "Viva Suecia",
+          "en": "Viva Suecia",
+          "tr": "Viva Suecia"
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "text": {
+        "es": "¿Quién viste mejor?",
+        "ca": "Qui vesteix millor?",
+        "en": "Who dresses better?",
+        "tr": "Kim daha iyi giyinir?"
+      },
+      "options": [
+        {
+          "es": "Depende de quién responda",
+          "ca": "Depèn de qui respongui",
+          "en": "Depends who you ask",
+          "tr": "Kime sorduğuna bağlı"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Empate técnico",
+          "ca": "Empat tècnic",
+          "en": "Dead heat",
+          "tr": "Berabere"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "text": {
+        "es": "¿Quién hace mejores cremas de verduras?",
+        "ca": "Qui fa millors cremes de verdures?",
+        "en": "Who makes the better vegetable soup?",
+        "tr": "Kim daha iyi sebze çorbası yapar?"
+      },
+      "options": [
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Las compramos hechas",
+          "ca": "Les comprem fetes",
+          "en": "We buy it ready-made",
+          "tr": "Hazır alıyoruz"
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "text": {
+        "es": "¿Quién duerme más?",
+        "ca": "Qui dorm més?",
+        "en": "Who sleeps more?",
+        "tr": "Kim daha çok uyur?"
+      },
+      "options": [
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Nadie",
+          "ca": "Ningú",
+          "en": "Nobody",
+          "tr": "Hiç kimse"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "text": {
+        "es": "¿Quién prepara los tuppers?",
+        "ca": "Qui prepara els tuppers?",
+        "en": "Who preps the lunchboxes?",
+        "tr": "Yemek kaplarını kim hazırlar?"
+      },
+      "options": [
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Los dos",
+          "ca": "Tots dos",
+          "en": "Both",
+          "tr": "İkisi"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "No existen los tuppers",
+          "ca": "Els tuppers no existeixen",
+          "en": "Lunchboxes do not exist",
+          "tr": "Yemek kabı diye bir şey yok"
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "text": {
+        "es": "¿Quién aguanta más de fiesta?",
+        "ca": "Qui aguanta més de festa?",
+        "en": "Who lasts longer at a party?",
+        "tr": "Partide kim daha çok dayanır?"
+      },
+      "options": [
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Ya no estamos para eso",
+          "ca": "Ja no estem per això",
+          "en": "We are past that",
+          "tr": "Artık o işlerde değiliz"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        }
+      ]
+    },
+    {
+      "id": "q16",
+      "text": {
+        "es": "¿Quién es más puntual?",
+        "ca": "Qui és més puntual?",
+        "en": "Who is more punctual?",
+        "tr": "Kim daha dakik?"
+      },
+      "options": [
+        {
+          "es": "Los dos",
+          "ca": "Tots dos",
+          "en": "Both",
+          "tr": "İkisi"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Ninguno",
+          "ca": "Cap dels dos",
+          "en": "Neither",
+          "tr": "Hiçbiri"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "text": {
+        "es": "¿Quién hace las mejores lentejas?",
+        "ca": "Qui fa les millors llenties?",
+        "en": "Who makes the best lentils?",
+        "tr": "En iyi mercimeği kim yapar?"
+      },
+      "options": [
+        {
+          "es": "Las madres",
+          "ca": "Les mares",
+          "en": "Our mums",
+          "tr": "Anneler"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "No comemos lentejas",
+          "ca": "No mengem llenties",
+          "en": "We do not eat lentils",
+          "tr": "Mercimek yemiyoruz"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        }
+      ]
+    },
+    {
+      "id": "q18",
+      "text": {
+        "es": "¿Quién juega mejor al pádel?",
+        "ca": "Qui juga millor a pàdel?",
+        "en": "Who is better at padel?",
+        "tr": "Kim daha iyi padel oynar?"
+      },
+      "options": [
+        {
+          "es": "Depende de la pareja",
+          "ca": "Depèn de la parella",
+          "en": "Depends on the partner",
+          "tr": "Partnere bağlı"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        }
+      ]
+    },
+    {
+      "id": "q19",
+      "text": {
+        "es": "¿Quién habla más?",
+        "ca": "Qui parla més?",
+        "en": "Who talks more?",
+        "tr": "Kim daha çok konuşur?"
+      },
+      "options": [
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Depende de la hora",
+          "ca": "Depèn de l’hora",
+          "en": "Depends on the time of day",
+          "tr": "Saate göre değişir"
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "text": {
+        "es": "¿Quién llama más?",
+        "ca": "Qui truca més?",
+        "en": "Who calls more?",
+        "tr": "Kim daha çok arar?"
+      },
+      "options": [
+        {
+          "es": "Los dos igual",
+          "ca": "Tots dos igual",
+          "en": "Both the same",
+          "tr": "İkisi aynı"
+        },
+        {
+          "es": "Solo mandamos audios",
+          "ca": "Només enviem àudios",
+          "en": "We only send voice notes",
+          "tr": "Sadece sesli mesaj atıyoruz"
+        },
+        {
+          "es": "Silvia",
+          "ca": "La Silvia",
+          "en": "Silvia",
+          "tr": "Silvia"
+        },
+        {
+          "es": "Guille",
+          "ca": "El Guille",
+          "en": "Guille",
+          "tr": "Guille"
+        }
+      ]
+    },
+    {
+      "id": "q21",
+      "text": {
+        "es": "¿Dónde pidió Guille matrimonio?",
+        "ca": "On va demanar matrimoni el Guille?",
+        "en": "Where did Guille propose?",
+        "tr": "Guille evlilik teklifini nerede yaptı?"
+      },
+      "options": [
+        {
+          "es": "Maldivas",
+          "ca": "Maldives",
+          "en": "the Maldives",
+          "tr": "Maldivler"
+        },
+        {
+          "es": "Llançà",
+          "ca": "Llançà",
+          "en": "Llançà",
+          "tr": "Llançà"
+        },
+        {
+          "es": "Santander",
+          "ca": "Santander",
+          "en": "Santander",
+          "tr": "Santander"
+        },
+        {
+          "es": "Roma",
+          "ca": "Roma",
+          "en": "Rome",
+          "tr": "Roma"
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "text": {
+        "es": "¿Cuál es el grupo o artista que más suena en nuestro coche?",
+        "ca": "Quin és el grup o artista que més sona al nostre cotxe?",
+        "en": "Which band or artist plays most in our car?",
+        "tr": "Arabamızda en çok hangi grup veya sanatçı çalar?"
+      },
+      "options": [
+        {
+          "es": "Leiva",
+          "ca": "Leiva",
+          "en": "Leiva",
+          "tr": "Leiva"
+        },
+        {
+          "es": "Viva Suecia",
+          "ca": "Viva Suecia",
+          "en": "Viva Suecia",
+          "tr": "Viva Suecia"
+        },
+        {
+          "es": "Carolina Durante",
+          "ca": "Carolina Durante",
+          "en": "Carolina Durante",
+          "tr": "Carolina Durante"
+        },
+        {
+          "es": "Melendi",
+          "ca": "Melendi",
+          "en": "Melendi",
+          "tr": "Melendi"
+        }
       ]
     }
   ]

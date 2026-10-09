@@ -3,15 +3,17 @@ import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import VenueMap from '@/components/VenueMap.astro';
 import AccommodationCard from '@/components/AccommodationCard.astro';
-import SoonBadge from '@/components/SoonBadge.astro';
+import PhotoBanner from '@/components/PhotoBanner.astro';
 import Icon from '@/components/Icon.astro';
 import { getDictionary, getLocale } from '@/i18n';
+import { siteConfig } from '@/site.config';
 import { href } from '@/i18n/routes';
 import { busLocation, stayZone } from '@/data/locations';
 import { accommodations, accommodationGroups } from '@/data/accommodations';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
+const whatsappUrl = siteConfig.whatsapp ? `https://wa.me/${siteConfig.whatsapp}` : '';
 const grouped = accommodationGroups
   .map((group) => ({ group, items: accommodations.filter((item) => item.group === group) }))
   .filter(({ items }) => items.length > 0);
@@ -19,7 +21,7 @@ const grouped = accommodationGroups
 
 <Base page="stay" title={t.nav.stay}>
   <header class="container page-head">
-    <SectionHead as="h1" size="xl" eyebrow={t.stay.eyebrow} title={t.stay.title} lead={t.stay.lead} />
+    <SectionHead as="h1" size="xl" eyebrow={`${t.stay.eyebrow} 🏨`} title={t.stay.title} lead={t.stay.lead} />
   </header>
 
   <section class="container section section--flush-top">
@@ -37,32 +39,34 @@ const grouped = accommodationGroups
     </div>
   </section>
 
+  <section class="container section section--flush-top">
+    <div class="help">
+      <span class="help__emoji" aria-hidden="true">💬</span>
+      <div>
+        <h2 class="title-md">{t.stay.helpTitle}</h2>
+        <p class="help__text">{t.stay.helpText}</p>
+        {
+          whatsappUrl ? (
+            <a class="btn btn--accent" href={whatsappUrl} target="_blank" rel="noopener noreferrer">{t.stay.whatsappCta}<Icon name="external" /></a>
+          ) : (
+            <span class="btn btn--accent" aria-disabled="true">{t.stay.whatsappCta}</span>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
   {
-    grouped.length === 0 ? (
+    grouped.map(({ group, items }) => (
       <section class="container section section--flush-top">
-        <div class="soon">
-          <SoonBadge />
-          <h2 class="title-lg soon__title">{t.stay.soonTitle}</h2>
-          <p class="soon__text">{t.stay.soonText}</p>
-          <ul class="soon__groups">
-            {accommodationGroups.map((group) => (
-              <li>{t.stay.groups[group]}</li>
-            ))}
-          </ul>
+        <SectionHead title={t.stay.groups[group]} size="md" />
+        <div class="grid grid--3 cards">
+          {items.map((item) => (
+            <AccommodationCard item={item} />
+          ))}
         </div>
       </section>
-    ) : (
-      grouped.map(({ group, items }) => (
-        <section class="container section section--flush-top">
-          <SectionHead title={t.stay.groups[group]} size="md" />
-          <div class="grid grid--3 cards">
-            {items.map((item) => (
-              <AccommodationCard item={item} />
-            ))}
-          </div>
-        </section>
-      ))
-    )
+    ))
   }
 
   <section class="container section section--flush-top">
@@ -75,6 +79,8 @@ const grouped = accommodationGroups
       </div>
     </div>
   </section>
+
+  <PhotoBanner id="01-img-8506" />
 </Base>
 
 <style>
@@ -100,34 +106,24 @@ const grouped = accommodationGroups
     }
   }
 
-  .soon {
-    padding: clamp(2rem, 6vw, 3.5rem);
-    border: 1px dashed var(--line-strong);
-    border-radius: var(--radius-lg);
-  }
-
-  .soon__title {
-    margin-top: 1rem;
-  }
-
-  .soon__text {
-    margin-top: 1rem;
-    color: var(--ink-2);
-  }
-
-  .soon__groups {
+  .help {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-top: 1.25rem;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--coral-2), var(--sun-2));
   }
 
-  .soon__groups li {
-    padding: 0.5rem 0.9rem;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    background: var(--white);
-    font-size: 0.9375rem;
+  .help__emoji {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .help__text {
+    margin: 0.75rem 0 1.25rem;
+    max-width: 52ch;
+    color: var(--ink-2);
   }
 
   .cards {
