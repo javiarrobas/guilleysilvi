@@ -161,7 +161,7 @@ export const tr: Dictionary = {
   photos: {
     eyebrow: 'Fotoğraflar',
     title: 'Biz',
-    lead: 'Bizden birkaç fotoğraf. Yakında daha fazlası olacak.',
+    lead: 'Bizden birkaç fotoğraf.',
     placeholderNote: 'Fotoğrafları seçiyoruz. Çok yakında burada.',
   },
   rsvp: {
@@ -170,7 +170,6 @@ export const tr: Dictionary = {
     lead:
       'Gelmeni çok isteriz. Bildirmek sadece birkaç dakikanı alır ve her şeyi düzenlememize yardımcı olur: otobüsler, menüler ve masalar.',
     deadlineLabel: 'Son tarih',
-    deadlineSoon: 'Son tarihi yakında bildireceğiz. Ne kadar erken bildirirseniz o kadar iyi.',
     button: 'Forma git',
     buttonSoon: 'Form yakında hazır olacak',
     soonText: 'Formu bitiriyoruz. Hazır olur olmaz düğme etkinleşecek ve size haber vereceğiz.',

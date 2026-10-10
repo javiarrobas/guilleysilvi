@@ -25,10 +25,14 @@ const mode = formUrl ? 'external' : firebaseConfigured ? 'embedded' : 'soon';
 
   <section class="container section section--flush-top">
     <div class="rsvp">
-      <p class="rsvp__deadline rsvp__deadline--top">
-        <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
-        <span>{deadline || t.rsvp.deadlineSoon}</span>
-      </p>
+      {
+        deadline && (
+          <p class="rsvp__deadline rsvp__deadline--top">
+            <span class="eyebrow eyebrow--ink">{t.rsvp.deadlineLabel}</span>
+            <span>{deadline}</span>
+          </p>
+        )
+      }
 
       {mode === 'embedded' && <RsvpForm />}
 

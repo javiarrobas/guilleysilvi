@@ -160,7 +160,7 @@ export const ca: Dictionary = {
   photos: {
     eyebrow: 'Fotos',
     title: 'Nosaltres',
-    lead: "Algunes fotos nostres. Aviat n'hi haurà més.",
+    lead: 'Algunes fotos nostres.',
     placeholderNote: 'Estem triant les fotos. Molt aviat aquí.',
   },
   rsvp: {
@@ -169,7 +169,6 @@ export const ca: Dictionary = {
     lead:
       "Ens faria molta il·lusió que vinguessis. Confirmar només et prendrà un parell de minuts i ens ajuda a organitzar-ho tot: autobusos, menús i taules.",
     deadlineLabel: 'Data límit',
-    deadlineSoon: 'Properament us direm la data límit. Com abans confirmeu, millor.',
     button: 'Anar al formulari',
     buttonSoon: 'Formulari disponible properament',
     soonText: "Estem acabant el formulari. Tan bon punt estigui llest, el botó s'activarà i us avisarem.",

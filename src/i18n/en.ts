@@ -160,7 +160,7 @@ export const en: Dictionary = {
   photos: {
     eyebrow: 'Photos',
     title: 'Us',
-    lead: 'A few photos of us. There will be more soon.',
+    lead: 'A few photos of us.',
     placeholderNote: 'We are choosing the photos. Very soon here.',
   },
   rsvp: {
@@ -169,7 +169,6 @@ export const en: Dictionary = {
     lead:
       'We would love you to come. Confirming only takes a couple of minutes and helps us organise everything: buses, menus and tables.',
     deadlineLabel: 'Deadline',
-    deadlineSoon: 'We will tell you the deadline soon. The sooner you confirm, the better.',
     button: 'Go to the form',
     buttonSoon: 'Form available soon',
     soonText: 'We are finishing the form. As soon as it is ready, the button will be enabled and we will let you know.',

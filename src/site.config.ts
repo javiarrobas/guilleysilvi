@@ -33,7 +33,7 @@ export const siteConfig = {
   rsvpFormUrl: '',
 
   /**
-   * Fecha límite para confirmar (texto libre, por idioma). Vacío = "Próximamente".
+   * Fecha límite para confirmar (texto libre, por idioma). Vacío = no se muestra nada.
    * Ejemplo: { es: '31 de marzo de 2027', en: '31 March 2027', … }
    */
   rsvpDeadline: { es: '', ca: '', en: '', tr: '' } as Record<Locale, string>,

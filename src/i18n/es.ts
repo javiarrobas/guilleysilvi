@@ -160,7 +160,7 @@ export const es = {
   photos: {
     eyebrow: 'Fotos',
     title: 'Nosotros',
-    lead: 'Algunas fotos nuestras. Pronto habrá más.',
+    lead: 'Algunas fotos nuestras.',
     placeholderNote: 'Estamos eligiendo las fotos. Muy pronto aquí.',
   },
   rsvp: {
@@ -169,7 +169,6 @@ export const es = {
     lead:
       'Nos haría mucha ilusión que vinieras. Confirmar solo te llevará un par de minutos y nos ayuda a organizarlo todo: autobuses, menús y mesas.',
     deadlineLabel: 'Fecha límite',
-    deadlineSoon: 'Próximamente os diremos la fecha límite. Cuanto antes confirméis, mejor.',
     button: 'Ir al formulario',
     buttonSoon: 'Formulario disponible próximamente',
     soonText: 'Estamos terminando el formulario. En cuanto esté listo, el botón se activará y os avisaremos.',
