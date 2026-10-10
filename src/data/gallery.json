@@ -1,10 +1,10 @@
 {
   "hero": {
     "alt": {
-      "es": "Silvia y Guille en la costa cantábrica, entre las rocas y el mar",
-      "ca": "La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar",
-      "en": "Silvia and Guille on the Cantabrian coast, among the rocks and the sea",
-      "tr": "Silvia ve Guille Kantabria kıyısında, kayalarla deniz arasında"
+      "es": "Silvia y Guille en los acantilados, con el mar detrás",
+      "ca": "La Silvia i el Guille als penya-segats, amb el mar al darrere",
+      "en": "Silvia and Guille on the cliffs, with the sea behind them",
+      "tr": "Silvia ve Guille uçurumlarda, arkalarında deniz"
     }
   },
   "images": [
@@ -68,14 +68,14 @@
       "focus": "center 58%"
     },
     {
-      "id": "07-img-1862",
+      "id": "07-img-1725",
       "alt": {
-        "es": "Silvia y Guille en los acantilados, con el mar detrás",
-        "ca": "La Silvia i el Guille als penya-segats, amb el mar al darrere",
-        "en": "Silvia and Guille on the cliffs, with the sea behind them",
-        "tr": "Silvia ve Guille uçurumlarda, arkalarında deniz"
+        "es": "Silvia y Guille en la costa cantábrica, entre las rocas y el mar",
+        "ca": "La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar",
+        "en": "Silvia and Guille on the Cantabrian coast, among the rocks and the sea",
+        "tr": "Silvia ve Guille Kantabria kıyısında, kayalarla deniz arasında"
       },
-      "focus": "center 52%"
+      "focus": "center 48%"
     },
     {
       "id": "08-img-20230221-152928",

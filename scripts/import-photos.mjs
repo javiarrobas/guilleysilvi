@@ -17,7 +17,8 @@ import { tmpdir } from 'node:os';
 import sharp from 'sharp';
 
 const SOURCE = 'fotos';
-const HERO = { file: 'IMG_1725.HEIC', alt: { es: 'Silvia y Guille en la costa cantábrica, entre las rocas y el mar', ca: 'La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar', en: 'Silvia and Guille on the Cantabrian coast, among the rocks and the sea', tr: 'Silvia ve Guille Kantabria kıyısında, kayalarla deniz arasında' } };
+// Portada: la foto que eligieron los novios (octubre de 2026).
+const HERO = { file: 'IMG_1862.jpeg', alt: { es: 'Silvia y Guille en los acantilados, con el mar detrás', ca: 'La Silvia i el Guille als penya-segats, amb el mar al darrere', en: 'Silvia and Guille on the cliffs, with the sea behind them', tr: 'Silvia ve Guille uçurumlarda, arkalarında deniz' } };
 
 /** Orden de la galería. `featured: true` la muestra en grande. */
 const photos = [
@@ -27,7 +28,7 @@ const photos = [
   { file: 'IMG_2839.HEIC', alt: { es: 'Silvia y Guille en Navidad, en una plaza iluminada', ca: 'La Silvia i el Guille per Nadal, en una plaça il·luminada', en: 'Silvia and Guille at Christmas, in a square lit up with lights', tr: "Silvia ve Guille Noel'de, ışıklarla süslü bir meydanda" } },
   { file: 'IMG_7604.jpeg', alt: { es: 'Silvia y Guille en un prado al atardecer, con la ría al fondo', ca: 'La Silvia i el Guille en un prat al vespre, amb la ria al fons', en: 'Silvia and Guille in a meadow at dusk, with the estuary behind', tr: 'Silvia ve Guille gün batımında bir çayırda, arkada haliç' }, featured: true },
   { file: 'IMG_0665.jpeg', alt: { es: 'Silvia y Guille delante de una casa de rayas', ca: "La Silvia i el Guille davant d'una casa de ratlles", en: 'Silvia and Guille in front of a striped house', tr: 'Silvia ve Guille çizgili bir evin önünde' } },
-  { file: 'IMG_1862.jpeg', alt: { es: 'Silvia y Guille en los acantilados, con el mar detrás', ca: 'La Silvia i el Guille als penya-segats, amb el mar al darrere', en: 'Silvia and Guille on the cliffs, with the sea behind them', tr: 'Silvia ve Guille uçurumlarda, arkalarında deniz' } },
+  { file: 'IMG_1725.HEIC', alt: { es: 'Silvia y Guille en la costa cantábrica, entre las rocas y el mar', ca: 'La Silvia i el Guille a la costa cantàbrica, entre les roques i el mar', en: 'Silvia and Guille on the Cantabrian coast, among the rocks and the sea', tr: 'Silvia ve Guille Kantabria kıyısında, kayalarla deniz arasında' } }, // la portada anterior
   { file: 'IMG_20230221_152928.jpg', alt: { es: 'Silvia y Guille esquiando', ca: 'La Silvia i el Guille esquiant', en: 'Silvia and Guille skiing', tr: 'Silvia ve Guille kayak yaparken' } },
   { file: 'IMG_9154.jpeg', alt: { es: 'Silvia y Guille delante de una iglesia románica', ca: "La Silvia i el Guille davant d'una església romànica", en: 'Silvia and Guille in front of a Romanesque church', tr: 'Silvia ve Guille Romanesk bir kilisenin önünde' }, featured: true },
   { file: '222f457c-e250-4489-89e8-b7a135080b52.jpg', alt: { es: 'Silvia y Guille con cascos de moto', ca: 'La Silvia i el Guille amb cascos de moto', en: 'Silvia and Guille wearing motorbike helmets', tr: 'Silvia ve Guille motosiklet kasklarıyla' } },
