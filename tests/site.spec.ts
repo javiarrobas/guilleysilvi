@@ -94,20 +94,42 @@ test('móvil estrecho (320 px): nada desborda', async ({ page, isMobile }) => {
   }
 });
 
-test('portada: cuenta atrás compacta, confirmar y juego visibles sin hacer scroll', async ({ page }) => {
+test('portada: nombres, fecha y foto en la primera pantalla; confirmar y juego justo debajo', async ({ page, isMobile }) => {
   await page.goto('/');
+  const viewport = page.viewportSize()!;
+  const names = await page.locator('.hero__names').boundingBox();
+  const photo = await page.locator('.hero__media').boundingBox();
+  expect(names!.y + names!.height).toBeLessThanOrEqual(viewport.height);
+  // La foto empieza dentro de la primera pantalla
+  expect(photo!.y).toBeLessThan(viewport.height);
   await expect(page.locator('.hero [data-compact-text]')).toHaveText(/Faltan \d+ días/);
   const rsvp = page.locator('.hero').getByRole('link', { name: 'Confirmar asistencia' });
   const quiz = page.locator('.hero').getByRole('link', { name: '¿Cuánto sabes de nosotros?' });
-  for (const link of [rsvp, quiz]) {
-    const box = await link.boundingBox();
-    const viewport = page.viewportSize()!;
-    expect(box, 'enlace visible').not.toBeNull();
-    expect(box!.y + box!.height, 'dentro de la primera pantalla').toBeLessThanOrEqual(viewport.height);
+  if (isMobile) {
+    // En móvil la foto va antes que los botones, y estos a menos de dos pantallas
+    const rsvpBox = await rsvp.boundingBox();
+    expect(rsvpBox!.y).toBeGreaterThan(photo!.y + photo!.height - 1);
+    expect(rsvpBox!.y).toBeLessThan(viewport.height * 2);
   }
-  await expect(page.locator('.hero .timeline, .day .timeline__item')).toHaveCount(7);
+  await expect(quiz).toBeVisible();
+  // Después del recorrido del día solo quedan el juego y confirmar
+  await expect(page.locator('.essentials, .index')).toHaveCount(0);
+  await expect(page.locator('.game')).toHaveCount(1);
+  await expect(page.locator('.banner')).toHaveCount(1);
   await rsvp.click();
   await expect(page).toHaveURL(/\/confirmar\/$/);
+});
+
+test('cabecera: los cuatro idiomas abreviados, visibles en todas las pantallas', async ({ page }) => {
+  await page.goto('/');
+  const codes = page.locator('.site-header .lang--codes .lang__link');
+  await expect(codes).toHaveCount(4);
+  await expect(codes).toHaveText(['ES', 'CA', 'EN', 'TR']);
+  for (const code of await codes.all()) await expect(code).toBeVisible();
+  await expect(codes.nth(0)).toHaveAttribute('aria-current', 'true');
+  await codes.nth(1).click();
+  await expect(page).toHaveURL(/\/ca\/$/);
+  await expect(page.locator('.site-header .lang--codes .lang__link[aria-current="true"]')).toHaveText('CA');
 });
 
 test('menú móvil: abre, lista las secciones y navega', async ({ page, isMobile }) => {
@@ -214,59 +236,29 @@ test('404 personalizada', async ({ page }) => {
   await expect(page.locator('h1')).toContainText('playa');
 });
 
-test('idiomas: el selector lleva a la misma página en los otros idiomas', async ({ page, isMobile }) => {
+test('idiomas: el selector lleva a la misma página en los otros idiomas', async ({ page }) => {
   await page.goto('/alojamiento/');
-  // En escritorio el selector es un desplegable en la cabecera; en móvil, la lista del menú.
-  const openSwitcher = () =>
-    page.locator(isMobile ? '[data-menu-toggle]' : '.site-header [data-lang-menu] summary').click();
-
-  await openSwitcher();
+  // Los códigos de idioma están siempre a la vista en la cabecera (aria-label: nombre completo).
   await page.getByRole('link', { name: 'Català' }).first().click();
   await expect(page).toHaveURL(/\/ca\/allotjament\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'ca');
   await expect(page.locator('h1')).toContainText('On dormir');
 
-  await openSwitcher();
   await page.getByRole('link', { name: 'English' }).first().click();
   await expect(page).toHaveURL(/\/en\/where-to-stay\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('h1')).toContainText('Where to sleep');
 
-  await openSwitcher();
   await page.getByRole('link', { name: 'Türkçe' }).first().click();
   await expect(page).toHaveURL(/\/tr\/konaklama\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
   await expect(page.locator('h1')).toContainText('Nerede kalınır');
 
-  await openSwitcher();
   await page.getByRole('link', { name: 'Castellano' }).first().click();
   await expect(page).toHaveURL(/\/alojamiento\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
 });
 
-test('escritorio: el desplegable de idioma abre, marca el actual y cierra', async ({ page, isMobile }) => {
-  test.skip(isMobile, 'solo en escritorio');
-  await page.goto('/en/where-to-stay/');
-  const menu = page.locator('.site-header [data-lang-menu]');
-  const trigger = menu.locator('summary');
-  await expect(trigger).toContainText('EN');
-  await expect(menu).not.toHaveAttribute('open', '');
-
-  await trigger.click();
-  await expect(menu).toHaveAttribute('open', '');
-  await expect(menu.getByRole('link')).toHaveCount(4);
-  await expect(menu.locator('a[aria-current="true"] .lang-menu__name')).toHaveText('English');
-  await expect(menu.locator('svg')).toHaveCount(0); // sin flechas
-
-  await page.keyboard.press('Escape');
-  await expect(menu).not.toHaveAttribute('open', '');
-
-  // También se cierra al pulsar fuera.
-  await trigger.click();
-  await expect(menu).toHaveAttribute('open', '');
-  await page.locator('h1').click();
-  await expect(menu).not.toHaveAttribute('open', '');
-});
 
 test('idiomas: hreflang en todas las versiones', async ({ page }) => {
   await page.goto('/ca/transport/');

@@ -34,8 +34,7 @@ const t = getDictionary(locale);
     </nav>
 
     <div class="site-header__actions">
-      <LanguageSwitcher current={current} variant="dropdown" class="site-header__lang" />
-      <a class="btn btn--sm btn--primary site-header__cta" href={href(locale, 'rsvp')}>{t.nav.rsvp}</a>
+      <LanguageSwitcher current={current} variant="codes" class="site-header__lang" />
       <button
         class="menu-toggle"
         type="button"
@@ -92,16 +91,22 @@ const t = getDictionary(locale);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1rem;
+    gap: 0.75rem;
     min-height: var(--header-h);
   }
 
   .brand {
     font-family: var(--font-display);
-    font-size: 1.375rem;
+    font-size: 1.25rem;
     letter-spacing: -0.01em;
     text-decoration: none;
     white-space: nowrap;
+  }
+
+  @media (min-width: 26em) {
+    .brand {
+      font-size: 1.375rem;
+    }
   }
 
   .brand__amp {
@@ -115,7 +120,7 @@ const t = getDictionary(locale);
 
   .nav-desktop__list {
     display: flex;
-    gap: clamp(0.75rem, 1.4vw, 1.75rem);
+    gap: clamp(0.6rem, 1.2vw, 1.75rem);
   }
 
   .nav-desktop a {
@@ -140,18 +145,20 @@ const t = getDictionary(locale);
   .site-header__actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.25rem;
   }
 
-  .site-header__cta {
-    display: none;
-    white-space: nowrap;
+  @media (min-width: 68em) {
+    .site-header__actions {
+      gap: 0.75rem;
+    }
   }
 
   /* El idioma se ve siempre, también en móvil: es lo primero que necesita un invitado de fuera. */
   .site-header__lang {
     display: block;
     white-space: nowrap;
+    margin-right: 0.25rem;
   }
 
   .menu-toggle {
@@ -286,7 +293,7 @@ const t = getDictionary(locale);
     }
   }
 
-  @media (min-width: 64em) {
+  @media (min-width: 68em) {
     .nav-desktop {
       display: block;
     }
@@ -304,10 +311,8 @@ const t = getDictionary(locale);
     .site-header__lang {
       margin-right: 0.5rem;
     }
-    .site-header__cta {
-      display: inline-flex;
-    }
   }
+
 </style>
 
 <script>
@@ -335,7 +340,7 @@ const t = getDictionary(locale);
 
     menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
 
-    const desktop = window.matchMedia('(min-width: 64em)');
+    const desktop = window.matchMedia('(min-width: 68em)');
     desktop.addEventListener('change', (event) => {
       if (event.matches) setOpen(false);
     });
