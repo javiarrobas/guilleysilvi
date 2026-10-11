@@ -112,7 +112,7 @@ export const faq: FaqItem[] = [
     answer: {
       es: 'Formal ✨ Chicos: traje y corbata. Chicas: vestido elegante. Todos iremos muy guapos, seguro. Importante: estamos en Santander y es mayo… puede refrescar un poquito, especialmente cuando caiga el sol. 🌊',
       ca: 'Formal ✨ Nois: vestit i corbata. Noies: vestit elegant. Tots anirem molt guapos, segur. Important: som a Santander i és maig… pot refrescar una mica, sobretot quan es pongui el sol. 🌊',
-      en: "Formal ✨ Gents: suit and tie. Ladies: elegant dress. We'll all look great, no doubt. Important: this is Santander in May… it can get a little chilly, especially once the sun goes down. 🌊",
+      en: "Formal ✨ Gentlemen: suit and tie. Ladies: elegant dress. We'll all look great, no doubt. Important: this is Santander in May… it can get a little chilly, especially once the sun goes down. 🌊",
       tr: "Resmi ✨ Erkekler: takım elbise ve kravat. Kadınlar: şık elbise. Hepimiz çok şık olacağız, kesin. Önemli: Santander'dayız ve mayıs ayı… özellikle güneş battıktan sonra biraz serinleyebilir. 🌊",
     },
     links: [{ page: 'day', label: { es: 'Ver el gran día', ca: 'Veure el gran dia', en: 'See the big day', tr: 'Büyük günü gör' } }],

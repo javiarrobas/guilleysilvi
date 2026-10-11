@@ -88,7 +88,7 @@ export const en: Dictionary = {
     mapCta: 'See venues and transport',
     dressEyebrow: 'Dress code',
     dressTitle: 'Formal ✨',
-    dressLines: ['Gents: suit and tie.', 'Ladies: elegant dress.', "We'll all look great, no doubt."],
+    dressLines: ['Gentlemen: suit and tie.', 'Ladies: elegant dress.', "We'll all look great, no doubt."],
     dressNote: 'Important: this is Santander in May… it can get a little chilly, especially once the sun goes down. 🌊',
   },
   transport: {
