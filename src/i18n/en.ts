@@ -76,7 +76,7 @@ export const en: Dictionary = {
     quizText: 'A quick game of questions about the couple. Four options, one attempt and, at the end, the ranking.',
     quizBtn: 'Play',
     rsvpEyebrow: 'Coming?',
-    rsvpTitle: 'Let us know you can make it',
+    rsvpTitle: 'Let us know if you can make it',
     rsvpText:
       "It really helps us to know how many we'll be, who will use the bus and whether there is any allergy or dietary need we should take into account.",
   },
@@ -129,7 +129,7 @@ export const en: Dictionary = {
     title: 'Where to sleep',
     lead: "Not sure where to stay? 🏨 Message us on WhatsApp and we'll help you find an area or a place that suits you.",
     helpTitle: "We'll give you a hand",
-    helpText: "Tell us how many you are, your budget and what you fancy, and we'll suggest an area and a place to stay.",
+    helpText: "Tell us how many of you there are, your budget and what you fancy, and we'll suggest an area and a place to stay.",
     groups: {
       near: 'Close to the bus',
       center: 'Central Santander',
