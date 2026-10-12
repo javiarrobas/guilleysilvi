@@ -287,6 +287,15 @@ export const tr: Dictionary = {
     loading: 'Yükleniyor…',
     error: 'Sıralama yüklenemedi.',
   },
+  gift: {
+    eyebrow: 'Hediye',
+    title: 'Bir jest',
+    text: 'Bizim için en büyük hediye sizin varlığınız. Yine de bize bir jest yapmak isterseniz, balayımıza ve birlikte başlayacağımız yeni hayatımıza katkıda bulunabilirsiniz.',
+    ibanLabel: 'Hesap numarası (IBAN)',
+    copy: 'Kopyala',
+    copied: 'Kopyalandı!',
+    copyFail: 'Kopyalamak için numaraya basılı tutun',
+  },
   faq: {
     eyebrow: 'Sık sorulan sorular',
     title: 'Merak edilenler',

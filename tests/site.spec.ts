@@ -230,6 +230,20 @@ test('banners: cada página lleva una foto de los novios con su punto de interé
   }
 });
 
+test('regalo: IBAN visible en el gran día y botón de copiar', async ({ page, context, browserName }) => {
+  if (browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await page.goto('/el-gran-dia/');
+  const gift = page.locator('#regalo');
+  await expect(gift).toContainText('Nuestro mayor regalo es tu presencia');
+  await expect(gift.locator('[data-gift-iban]')).toHaveText('ES97 1583 0001 1491 9982 0937');
+  await gift.locator('[data-gift-copy]').click();
+  await expect(gift.locator('[data-gift-copy]')).toHaveText('¡Copiado!');
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('ES9715830001149199820937');
+  // La pregunta frecuente enlaza al bloque
+  await page.goto('/preguntas/');
+  await expect(page.locator('#regalo a[href="/el-gran-dia/#regalo"]')).toHaveCount(1);
+});
+
 test('404 personalizada', async ({ page }) => {
   const response = await page.goto('/no-existe/');
   expect(response?.status()).toBe(404);

@@ -38,6 +38,9 @@ export const siteConfig = {
    */
   rsvpDeadline: { es: '', ca: '', en: '', tr: '' } as Record<Locale, string>,
 
+  /** Cuenta para los regalos (IBAN, sin espacios). Vacío = no se muestra el bloque de regalo. */
+  giftIban: 'ES9715830001149199820937',
+
   /**
    * Idiomas publicados. Para activar (o desactivar) uno:
    *   1. Traduce lo que falte en src/i18n/<idioma>.ts y los campos de ese idioma en src/data/*.

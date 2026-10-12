@@ -11,7 +11,7 @@ export interface FaqItem {
   question: Localized;
   answer?: Localized;
   soon?: boolean;
-  links?: { page: PageKey; label: Localized }[];
+  links?: { page: PageKey; label: Localized; /** Ancla dentro de la página (sin #). */ hash?: string }[];
 }
 
 export const faq: FaqItem[] = [
@@ -116,5 +116,16 @@ export const faq: FaqItem[] = [
       tr: "Resmi ✨ Erkekler: takım elbise ve kravat. Kadınlar: şık elbise. Hepimiz çok şık olacağız, kesin. Önemli: Santander'dayız ve mayıs ayı… özellikle güneş battıktan sonra biraz serinleyebilir. 🌊",
     },
     links: [{ page: 'day', label: { es: 'Ver el gran día', ca: 'Veure el gran dia', en: 'See the big day', tr: 'Büyük günü gör' } }],
+  },
+  {
+    id: 'regalo',
+    question: { es: '¿Qué os podemos regalar?', ca: 'Què us podem regalar?', en: 'What can we give you?', tr: 'Size ne hediye edebiliriz?' },
+    answer: {
+      es: 'Nuestro mayor regalo es tu presencia. Sin embargo, si quieres tener un detalle con nosotros, puedes ayudarnos con el viaje de novios y nuestra nueva vida juntos: ES97 1583 0001 1491 9982 0937.',
+      ca: 'El nostre millor regal és la teva presència. Tot i així, si vols tenir un detall amb nosaltres, pots ajudar-nos amb el viatge de noces i la nostra nova vida junts: ES97 1583 0001 1491 9982 0937.',
+      en: 'Having you with us is the greatest gift. But if you would like to give us something, you can help us with our honeymoon and our new life together: ES97 1583 0001 1491 9982 0937.',
+      tr: 'Bizim için en büyük hediye sizin varlığınız. Yine de bize bir jest yapmak isterseniz, balayımıza ve yeni hayatımıza katkıda bulunabilirsiniz: ES97 1583 0001 1491 9982 0937.',
+    },
+    links: [{ page: 'day', label: { es: 'Copiar el número de cuenta', ca: 'Copiar el número de compte', en: 'Copy the account number', tr: 'Hesap numarasını kopyala' }, hash: 'regalo' }],
   },
 ];

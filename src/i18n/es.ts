@@ -286,6 +286,15 @@ export const es = {
     loading: 'Cargando…',
     error: 'No se ha podido cargar el ranking.',
   },
+  gift: {
+    eyebrow: 'Regalo',
+    title: 'Un detalle',
+    text: 'Nuestro mayor regalo es tu presencia. Sin embargo, si quieres tener un detalle con nosotros, puedes ayudarnos con el viaje de novios y nuestra nueva vida juntos.',
+    ibanLabel: 'Número de cuenta (IBAN)',
+    copy: 'Copiar',
+    copied: '¡Copiado!',
+    copyFail: 'Mantén pulsado el número para copiarlo',
+  },
   faq: {
     eyebrow: 'Preguntas frecuentes',
     title: 'Dudas habituales',

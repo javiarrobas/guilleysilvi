@@ -4,6 +4,7 @@ import SectionHead from '@/components/SectionHead.astro';
 import Timeline from '@/components/Timeline.astro';
 import Icon from '@/components/Icon.astro';
 import PhotoBanner from '@/components/PhotoBanner.astro';
+import GiftCard from '@/components/GiftCard.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
 
@@ -38,6 +39,10 @@ const t = getDictionary(locale);
       </ul>
       <p class="dress__note">{t.day.dressNote}</p>
     </div>
+  </section>
+
+  <section class="container section section--flush-top">
+    <GiftCard id="regalo" />
   </section>
 
   <PhotoBanner id="09-img-9154" />

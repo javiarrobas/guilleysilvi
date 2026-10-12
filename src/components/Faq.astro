@@ -28,7 +28,7 @@ const t = getDictionary(locale);
           {item.links && (
             <p class="faq__links">
               {item.links.map((link) => (
-                <a class="arrow-link" href={href(locale, link.page)}>
+                <a class="arrow-link" href={href(locale, link.page) + (link.hash ? `#${link.hash}` : "")}>
                   {l(link.label, locale)}
                   <Icon name="arrowRight" />
                 </a>

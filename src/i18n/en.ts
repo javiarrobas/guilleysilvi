@@ -286,6 +286,15 @@ export const en: Dictionary = {
     loading: 'Loading…',
     error: 'The ranking could not be loaded.',
   },
+  gift: {
+    eyebrow: 'Gifts',
+    title: 'A gift',
+    text: 'Having you with us is the greatest gift. But if you would like to give us something, you can help us with our honeymoon and our new life together.',
+    ibanLabel: 'Account number (IBAN)',
+    copy: 'Copy',
+    copied: 'Copied!',
+    copyFail: 'Press and hold the number to copy it',
+  },
   faq: {
     eyebrow: 'Frequently asked questions',
     title: 'Common questions',

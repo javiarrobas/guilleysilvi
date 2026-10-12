@@ -1,0 +1,133 @@
+---
+/**
+ * Bloque de regalo: el texto de los novios y el IBAN con botón de copiar.
+ * Se muestra solo si siteConfig.giftIban tiene valor.
+ */
+import { getDictionary, getLocale } from '@/i18n';
+import { siteConfig } from '@/site.config';
+
+interface Props {
+  class?: string;
+  id?: string;
+}
+
+const { class: className, id } = Astro.props;
+const t = getDictionary(getLocale(Astro.currentLocale));
+const iban = siteConfig.giftIban.replace(/\s+/g, '');
+const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
+---
+
+{
+  iban && (
+    <div class:list={['gift', className]} id={id} data-gift data-copied={t.gift.copied} data-copy={t.gift.copy} data-fail={t.gift.copyFail}>
+      <span class="gift__emoji" aria-hidden="true">🎁</span>
+      <div class="gift__body">
+        <p class="eyebrow">{t.gift.eyebrow}</p>
+        <h2 class="title-md gift__title">{t.gift.title}</h2>
+        <p class="gift__text">{t.gift.text}</p>
+        <p class="gift__label small muted">{t.gift.ibanLabel}</p>
+        <div class="gift__row">
+          <code class="gift__iban" data-gift-iban data-value={iban}>{pretty}</code>
+          <button class="btn btn--sm btn--primary gift__copy" type="button" data-gift-copy>{t.gift.copy}</button>
+        </div>
+        <p class="gift__status small" role="status" aria-live="polite" data-gift-status></p>
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .gift {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--coral-2), var(--sun-2));
+  }
+
+  .gift__emoji {
+    font-size: 2rem;
+    line-height: 1;
+  }
+
+  .gift__body {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .gift__title {
+    margin-top: 0.5rem;
+  }
+
+  .gift__text {
+    margin-top: 0.75rem;
+    max-width: 56ch;
+    color: var(--ink-2);
+  }
+
+  .gift__label {
+    margin-top: 1.25rem;
+  }
+
+  .gift__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem 0.75rem;
+    margin-top: 0.4rem;
+  }
+
+  .gift__iban {
+    padding: 0.55rem 0.8rem;
+    border-radius: var(--radius);
+    background: var(--white);
+    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    font-size: clamp(0.875rem, 3.6vw, 1rem);
+    letter-spacing: 0.04em;
+    user-select: all;
+    -webkit-user-select: all;
+    word-break: keep-all;
+  }
+
+  .gift__status {
+    min-height: 1.25rem;
+    margin-top: 0.4rem;
+    color: var(--sea-dark);
+  }
+
+  @media (max-width: 26em) {
+    .gift {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gift]').forEach((root) => {
+    const button = root.querySelector<HTMLButtonElement>('[data-gift-copy]');
+    const code = root.querySelector<HTMLElement>('[data-gift-iban]');
+    const status = root.querySelector<HTMLElement>('[data-gift-status]');
+    if (!button || !code || !status) return;
+    let timer: number | undefined;
+    button.addEventListener('click', async () => {
+      const value = code.dataset.value ?? '';
+      try {
+        await navigator.clipboard.writeText(value);
+        button.textContent = root.dataset.copied ?? '';
+        status.textContent = '';
+      } catch {
+        // Sin portapapeles (navegador antiguo o contexto no seguro): seleccionamos el número.
+        const range = document.createRange();
+        range.selectNodeContents(code);
+        const sel = window.getSelection();
+        sel?.removeAllRanges();
+        sel?.addRange(range);
+        status.textContent = root.dataset.fail ?? '';
+      }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => (button.textContent = root.dataset.copy ?? ''), 2500);
+    });
+  });
+</script>
