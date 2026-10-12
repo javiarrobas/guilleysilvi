@@ -291,7 +291,6 @@ export const tr: Dictionary = {
     eyebrow: 'Hediye',
     title: 'Bir jest',
     text: 'Bizim için en büyük hediye sizin varlığınız. Yine de bize bir jest yapmak isterseniz, balayımıza ve birlikte başlayacağımız yeni hayatımıza katkıda bulunabilirsiniz.',
-    ibanLabel: 'Hesap numarası (IBAN)',
     copy: 'Kopyala',
     copied: 'Kopyalandı!',
     copyFail: 'Kopyalamak için numaraya basılı tutun',

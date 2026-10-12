@@ -290,7 +290,6 @@ export const en: Dictionary = {
     eyebrow: 'Gifts',
     title: 'A gift',
     text: 'Having you with us is the greatest gift. But if you would like to give us something, you can help us with our honeymoon and our new life together.',
-    ibanLabel: 'Account number (IBAN)',
     copy: 'Copy',
     copied: 'Copied!',
     copyFail: 'Press and hold the number to copy it',

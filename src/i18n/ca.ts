@@ -290,7 +290,6 @@ export const ca: Dictionary = {
     eyebrow: 'Regal',
     title: 'Un detall',
     text: 'El nostre millor regal és la teva presència. Tot i així, si vols tenir un detall amb nosaltres, pots ajudar-nos amb el viatge de noces i la nostra nova vida junts.',
-    ibanLabel: 'Número de compte (IBAN)',
     copy: 'Copiar',
     copied: 'Copiat!',
     copyFail: 'Mantén premut el número per copiar-lo',

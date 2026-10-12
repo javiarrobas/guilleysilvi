@@ -26,7 +26,6 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
         <p class="eyebrow">{t.gift.eyebrow}</p>
         <h2 class="title-md gift__title">{t.gift.title}</h2>
         <p class="gift__text">{t.gift.text}</p>
-        <p class="gift__label small muted">{t.gift.ibanLabel}</p>
         <div class="gift__row">
           <span class="gift__iban tabular" data-gift-iban data-value={iban}>{pretty}</span>
           <button class="gift__copy" type="button" data-gift-copy aria-label={t.gift.copy} title={t.gift.copy}>
@@ -70,26 +69,18 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
     color: var(--ink-2);
   }
 
-  .gift__label {
-    margin-top: 1.25rem;
-  }
-
-  /* El número en una píldora blanca, con el botón de copiar dentro, a la derecha. */
+  /* El número, sin caja, con un icono discreto de copiar al lado. */
   .gift__row {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem;
-    max-width: 100%;
-    margin-top: 0.4rem;
-    padding: 0.35rem 0.35rem 0.35rem 1.1rem;
-    border-radius: 999px;
-    background: var(--white);
-    box-shadow: var(--shadow);
+    gap: 0.25rem 0.5rem;
+    margin-top: 1rem;
   }
 
   .gift__iban {
     font-family: var(--font-display);
-    font-size: clamp(1.1rem, 4.6vw, 1.5rem);
+    font-size: clamp(1.15rem, 4.8vw, 1.375rem);
     line-height: 1.2;
     letter-spacing: 0.03em;
     word-spacing: 0.3em;
@@ -104,18 +95,18 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
     display: grid;
     place-items: center;
     flex: none;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
     border: 0;
     border-radius: 50%;
-    background: var(--sea);
-    color: #fff;
+    background: transparent;
+    color: var(--sea);
     cursor: pointer;
     transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
   }
 
   .gift__copy:hover {
-    background: var(--sea-dark);
+    background: rgba(31, 127, 140, 0.1);
   }
 
   .gift__copy:active {
@@ -136,7 +127,7 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
   }
 
   .gift__copy.is-copied {
-    background: var(--coral);
+    color: var(--sea-dark);
   }
 
   .gift__copy.is-copied .gift__icon--copy {
