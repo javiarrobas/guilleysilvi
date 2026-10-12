@@ -1,8 +1,19 @@
 # Silvia & Guille · 01.05.2027 · Santander
 
+> **Ver la web en local**
+>
+> ```bash
+> cd ~/workdir/Others/weddings/guilleysilvi
+> nvm use          # Node 22 (el de por defecto en este Mac es el 12 y no funciona)
+> npm run dev      # abre http://localhost:4321
+> ```
+>
+> Se recarga sola al guardar cambios. Para pararla: `npx astro dev stop`.
+> Ojo: el formulario y el juego en local escriben en la base de datos real.
+
 Web de la boda. Estática, muy ligera y pensada para móvil (la mayoría de invitados
 la abrirán desde WhatsApp). Hecha con [Astro](https://astro.build) y publicada en
-GitHub Pages.
+Firebase Hosting.
 
 - **Producción:** https://guilleysilvi.web.app (hasta que haya dominio propio)
 - **Idiomas:** castellano (por defecto), catalán en `/ca/`, inglés en `/en/` y turco en `/tr/` (ver [Idiomas](#idiomas)).
