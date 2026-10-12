@@ -40,6 +40,8 @@ export const icons = {
   arrowUp: '<path d="M12 20V4M6 10l6-6 6 6"/>',
   external: '<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13.5V19a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5.5"/>',
   plus: '<path d="M12 5v14M5 12h14"/>',
+  copy: '<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
   chevron: '<path d="M6 9l6 6 6-6"/>',
   close: '<path d="M6 6l12 12M18 6L6 18"/>',
   menu: '<path d="M3 8h18M3 16h18"/>',

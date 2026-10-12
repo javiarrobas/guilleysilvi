@@ -237,7 +237,8 @@ test('regalo: IBAN visible en el gran día y botón de copiar', async ({ page, c
   await expect(gift).toContainText('Nuestro mayor regalo es tu presencia');
   await expect(gift.locator('[data-gift-iban]')).toHaveText('ES97 1583 0001 1491 9982 0937');
   await gift.locator('[data-gift-copy]').click();
-  await expect(gift.locator('[data-gift-copy]')).toHaveText('¡Copiado!');
+  await expect(gift.locator('[data-gift-copy]')).toHaveClass(/is-copied/);
+  await expect(gift.locator('[data-gift-status]')).toHaveText('¡Copiado!');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('ES9715830001149199820937');
   // La pregunta frecuente enlaza al bloque
   await page.goto('/preguntas/');

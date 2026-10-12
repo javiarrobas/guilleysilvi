@@ -5,6 +5,7 @@
  */
 import { getDictionary, getLocale } from '@/i18n';
 import { siteConfig } from '@/site.config';
+import Icon from './Icon.astro';
 
 interface Props {
   class?: string;
@@ -27,8 +28,11 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
         <p class="gift__text">{t.gift.text}</p>
         <p class="gift__label small muted">{t.gift.ibanLabel}</p>
         <div class="gift__row">
-          <code class="gift__iban" data-gift-iban data-value={iban}>{pretty}</code>
-          <button class="btn btn--sm btn--primary gift__copy" type="button" data-gift-copy>{t.gift.copy}</button>
+          <span class="gift__iban tabular" data-gift-iban data-value={iban}>{pretty}</span>
+          <button class="gift__copy" type="button" data-gift-copy aria-label={t.gift.copy} title={t.gift.copy}>
+            <Icon name="copy" class="gift__icon gift__icon--copy" />
+            <Icon name="check" class="gift__icon gift__icon--check" />
+          </button>
         </div>
         <p class="gift__status small" role="status" aria-live="polite" data-gift-status></p>
       </div>
@@ -70,24 +74,79 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
     margin-top: 1.25rem;
   }
 
+  /* El número en una píldora blanca, con el botón de copiar dentro, a la derecha. */
   .gift__row {
-    display: flex;
-    flex-wrap: wrap;
+    display: inline-flex;
     align-items: center;
-    gap: 0.6rem 0.75rem;
+    gap: 0.5rem;
+    max-width: 100%;
     margin-top: 0.4rem;
+    padding: 0.35rem 0.35rem 0.35rem 1.1rem;
+    border-radius: 999px;
+    background: var(--white);
+    box-shadow: var(--shadow);
   }
 
   .gift__iban {
-    padding: 0.55rem 0.8rem;
-    border-radius: var(--radius);
-    background: var(--white);
-    font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-    font-size: clamp(0.875rem, 3.6vw, 1rem);
-    letter-spacing: 0.04em;
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 4.6vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    word-spacing: 0.3em;
+    color: var(--ink);
+    white-space: nowrap;
     user-select: all;
     -webkit-user-select: all;
-    word-break: keep-all;
+  }
+
+  .gift__copy {
+    position: relative;
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 50%;
+    background: var(--sea);
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .gift__copy:hover {
+    background: var(--sea-dark);
+  }
+
+  .gift__copy:active {
+    transform: scale(0.94);
+  }
+
+  .gift__icon {
+    grid-area: 1 / 1;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+
+  .gift__icon--check {
+    opacity: 0;
+    transform: scale(0.6);
+    stroke-width: 2.2;
+  }
+
+  .gift__copy.is-copied {
+    background: var(--coral);
+  }
+
+  .gift__copy.is-copied .gift__icon--copy {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .gift__copy.is-copied .gift__icon--check {
+    opacity: 1;
+    transform: none;
   }
 
   .gift__status {
@@ -115,8 +174,9 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
       const value = code.dataset.value ?? '';
       try {
         await navigator.clipboard.writeText(value);
-        button.textContent = root.dataset.copied ?? '';
-        status.textContent = '';
+        button.classList.add('is-copied');
+        button.setAttribute('aria-label', root.dataset.copied ?? '');
+        status.textContent = root.dataset.copied ?? '';
       } catch {
         // Sin portapapeles (navegador antiguo o contexto no seguro): seleccionamos el número.
         const range = document.createRange();
@@ -127,7 +187,11 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
         status.textContent = root.dataset.fail ?? '';
       }
       window.clearTimeout(timer);
-      timer = window.setTimeout(() => (button.textContent = root.dataset.copy ?? ''), 2500);
+      timer = window.setTimeout(() => {
+        button.classList.remove('is-copied');
+        button.setAttribute('aria-label', root.dataset.copy ?? '');
+        status.textContent = '';
+      }, 2500);
     });
   });
 </script>
