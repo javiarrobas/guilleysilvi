@@ -172,7 +172,7 @@ export function setupQuiz(root: HTMLElement) {
     });
     qFeedback.hidden = false;
     qFeedback.className = `feedback ${result.correct ? 'feedback--ok' : 'feedback--ko'}`;
-    qFeedback.textContent = result.correct ? `✅ ${m.correct}` : `❌ ${m.wrong} ${q.options[result.answer] ?? ''}`;
+    qFeedback.textContent = result.correct ? m.correct : `${m.wrong} ${q.options[result.answer] ?? ''}`;
     qNext.disabled = false;
     qNext.focus();
   };

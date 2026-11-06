@@ -28,6 +28,28 @@
           }
         ]
       }
+    ],
+    "redirects": [
+      {
+        "regex": "^/alojamiento/?$",
+        "destination": "/transporte/#alojamiento",
+        "type": 301
+      },
+      {
+        "regex": "^/ca/allotjament/?$",
+        "destination": "/ca/transport/#alojamiento",
+        "type": 301
+      },
+      {
+        "regex": "^/en/where-to-stay/?$",
+        "destination": "/en/getting-there/#alojamiento",
+        "type": 301
+      },
+      {
+        "regex": "^/tr/konaklama/?$",
+        "destination": "/tr/ulasim/#alojamiento",
+        "type": 301
+      }
     ]
   }
 }

@@ -1,10 +1,12 @@
 import type { Localized } from '@/i18n';
 import type { PageKey } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
 
 /**
  * Preguntas frecuentes. Para añadir una, copia un bloque.
  *  - `soon: true` muestra la etiqueta "Próximamente" (y el texto genérico si no hay `answer`).
  *  - `links` añade enlaces a otras páginas de la web al final de la respuesta.
+ *  - `topic` la oculta mientras ese tema esté aparcado en siteConfig.topics.
  */
 export interface FaqItem {
   id: string;
@@ -12,9 +14,10 @@ export interface FaqItem {
   answer?: Localized;
   soon?: boolean;
   links?: { page: PageKey; label: Localized; /** Ancla dentro de la página (sin #). */ hash?: string }[];
+  topic?: keyof typeof siteConfig.topics;
 }
 
-export const faq: FaqItem[] = [
+const allFaq: FaqItem[] = [
   {
     id: 'autobuses',
     question: { es: '¿Habrá autobuses?', ca: 'Hi haurà autobusos?', en: 'Will there be buses?', tr: 'Otobüs olacak mı?' },
@@ -27,6 +30,16 @@ export const faq: FaqItem[] = [
     links: [{ page: 'transport', label: { es: 'Ver cómo llegar', ca: 'Veure com arribar-hi', en: 'See getting there', tr: 'Ulaşımı gör' } }],
   },
   {
+    id: 'dress-code',
+    question: { es: '¿Cuál es el dress code?', ca: 'Quin és el dress code?', en: 'What is the dress code?', tr: 'Kıyafet kuralı nedir?' },
+    answer: {
+      es: 'Formal. Chicos: traje y corbata. Chicas: vestido elegante. Todos iremos muy guapos, seguro. Importante: estamos en Santander y es mayo… puede refrescar un poquito, especialmente cuando caiga el sol.',
+      ca: 'Formal. Nois: vestit i corbata. Noies: vestit elegant. Tots anirem molt guapos, segur. Important: som a Santander i és maig… pot refrescar una mica, sobretot quan es pongui el sol.',
+      en: "Formal. Gentlemen: suit and tie. Ladies: elegant dress. We'll all look great, no doubt. Important: this is Santander in May… it can get a little chilly, especially once the sun goes down.",
+      tr: "Resmi. Erkekler: takım elbise ve kravat. Kadınlar: şık elbise. Hepimiz çok şık olacağız, kesin. Önemli: Santander'dayız ve mayıs ayı… özellikle güneş battıktan sonra biraz serinleyebilir.",
+    },
+  },
+  {
     id: 'alojarse',
     question: { es: '¿Dónde recomendamos alojarse?', ca: 'On recomanem allotjar-se?', en: 'Where do we recommend staying?', tr: 'Nerede kalmanızı öneriyoruz?' },
     answer: {
@@ -35,7 +48,7 @@ export const faq: FaqItem[] = [
       en: 'In central Santander, within walking distance of the Centro Botín, where the buses leave from. The accommodation page has a map of the area we recommend. Not sure? Message us on WhatsApp and we will help you choose.',
       tr: "Santander merkezde, otobüslerin kalktığı Centro Botín'e yürüme mesafesinde. Konaklama sayfasında önerdiğimiz bölgenin haritası var. Kararsız mısınız? WhatsApp'tan yazın, seçmenize yardım edelim.",
     },
-    links: [{ page: 'stay', label: { es: 'Ver alojamiento', ca: 'Veure allotjament', en: 'See where to stay', tr: 'Konaklamayı gör' } }],
+    links: [{ page: 'transport', hash: 'alojamiento', label: { es: 'Ver alojamiento', ca: 'Veure allotjament', en: 'See where to stay', tr: 'Konaklamayı gör' } }],
   },
   {
     id: 'coche',
@@ -62,10 +75,10 @@ export const faq: FaqItem[] = [
       tr: 'Vejetaryen ya da intoleranslar için seçenek var mı?',
     },
     answer: {
-      es: 'Sí. Indícanoslo en el formulario de confirmación: hay un campo para alergias, intolerancias y necesidades alimentarias, también para acompañantes y niños.',
-      ca: "Sí. Indica'ns-ho al formulari de confirmació: hi ha un camp per a al·lèrgies, intoleràncies i necessitats alimentàries, també per a acompanyants i nens.",
-      en: 'Yes. Let us know in the RSVP form: there is a field for allergies, intolerances and dietary needs, for your guest and for children too.',
-      tr: 'Evet. Katılım formunda bize bildirin: alerjiler, intoleranslar ve beslenme ihtiyaçları için bir alan var; refakatçiler ve çocuklar için de.',
+      es: 'Sí. Indícanoslo en el formulario de confirmación: hay un campo para alergias, intolerancias y necesidades alimentarias, también para tu acompañante.',
+      ca: "Sí. Indica'ns-ho al formulari de confirmació: hi ha un camp per a al·lèrgies, intoleràncies i necessitats alimentàries, també per al teu acompanyant.",
+      en: 'Yes. Let us know in the RSVP form: there is a field for allergies, intolerances and dietary needs, for your plus-one too.',
+      tr: 'Evet. Katılım formunda bize bildirin: alerjiler, intoleranslar ve beslenme ihtiyaçları için bir alan var; refakatçiniz için de.',
     },
     links: [{ page: 'rsvp', label: { es: 'Confirmar asistencia', ca: 'Confirmar assistència', en: 'RSVP', tr: 'Katılımını bildir' } }],
   },
@@ -89,11 +102,12 @@ export const faq: FaqItem[] = [
     id: 'preboda',
     question: { es: '¿Habrá preboda?', ca: 'Hi haurà preboda?', en: 'Will there be a pre-wedding party?', tr: 'Düğün öncesi parti olacak mı?' },
     answer: {
-      es: 'Sí: el viernes 30 de abril, una quedada informal en Santander para empezar el finde todos juntos. Estamos terminando de decidir el sitio y os lo confirmaremos muy pronto. 🍻',
-      ca: "Sí: el divendres 30 d'abril, una trobada informal a Santander per començar el cap de setmana tots junts. Estem acabant de decidir el lloc i us ho confirmarem molt aviat. 🍻",
-      en: 'Yes: on Friday 30 April, an informal get-together in Santander to start the weekend all together. We are finalising the venue and will confirm it very soon. 🍻',
-      tr: "Evet: 30 Nisan Cuma, hafta sonuna hep birlikte başlamak için Santander'da gayriresmi bir buluşma. Yeri belirlemek üzereyiz ve çok yakında bildireceğiz. 🍻",
+      es: 'Sí: el viernes 30 de abril, una quedada informal en Santander para empezar el finde todos juntos. Estamos terminando de decidir el sitio y os lo confirmaremos muy pronto.',
+      ca: "Sí: el divendres 30 d'abril, una trobada informal a Santander per començar el cap de setmana tots junts. Estem acabant de decidir el lloc i us ho confirmarem molt aviat.",
+      en: 'Yes: on Friday 30 April, an informal get-together in Santander to start the weekend all together. We are finalising the venue and will confirm it very soon.',
+      tr: "Evet: 30 Nisan Cuma, hafta sonuna hep birlikte başlamak için Santander'da gayriresmi bir buluşma. Yeri belirlemek üzereyiz ve çok yakında bildireceğiz.",
     },
+    topic: 'preboda',
     links: [{ page: 'preboda', label: { es: 'Ver la previa', ca: 'Veure la prèvia', en: 'See the pre-wedding', tr: 'Düğün öncesini gör' } }],
   },
   {
@@ -107,17 +121,6 @@ export const faq: FaqItem[] = [
     soon: true,
   },
   {
-    id: 'dress-code',
-    question: { es: '¿Cuál es el dress code?', ca: 'Quin és el dress code?', en: 'What is the dress code?', tr: 'Kıyafet kuralı nedir?' },
-    answer: {
-      es: 'Formal ✨ Chicos: traje y corbata. Chicas: vestido elegante. Todos iremos muy guapos, seguro. Importante: estamos en Santander y es mayo… puede refrescar un poquito, especialmente cuando caiga el sol. 🌊',
-      ca: 'Formal ✨ Nois: vestit i corbata. Noies: vestit elegant. Tots anirem molt guapos, segur. Important: som a Santander i és maig… pot refrescar una mica, sobretot quan es pongui el sol. 🌊',
-      en: "Formal ✨ Gentlemen: suit and tie. Ladies: elegant dress. We'll all look great, no doubt. Important: this is Santander in May… it can get a little chilly, especially once the sun goes down. 🌊",
-      tr: "Resmi ✨ Erkekler: takım elbise ve kravat. Kadınlar: şık elbise. Hepimiz çok şık olacağız, kesin. Önemli: Santander'dayız ve mayıs ayı… özellikle güneş battıktan sonra biraz serinleyebilir. 🌊",
-    },
-    links: [{ page: 'day', label: { es: 'Ver el gran día', ca: 'Veure el gran dia', en: 'See the big day', tr: 'Büyük günü gör' } }],
-  },
-  {
     id: 'regalo',
     question: { es: '¿Qué os podemos regalar?', ca: 'Què us podem regalar?', en: 'What can we give you?', tr: 'Size ne hediye edebiliriz?' },
     answer: {
@@ -126,6 +129,9 @@ export const faq: FaqItem[] = [
       en: 'Having you with us is the greatest gift. But if you would like to give us something, you can help us with our honeymoon and our new life together: ES97 1583 0001 1491 9982 0937.',
       tr: 'Bizim için en büyük hediye sizin varlığınız. Yine de bize bir jest yapmak isterseniz, balayımıza ve yeni hayatımıza katkıda bulunabilirsiniz: ES97 1583 0001 1491 9982 0937.',
     },
-    links: [{ page: 'day', label: { es: 'Copiar el número de cuenta', ca: 'Copiar el número de compte', en: 'Copy the account number', tr: 'Hesap numarasını kopyala' }, hash: 'regalo' }],
+    links: [{ page: 'gift', label: { es: 'Copiar el número de cuenta', ca: 'Copiar el número de compte', en: 'Copy the account number', tr: 'Hesap numarasını kopyala' } }],
   },
 ];
+
+/** Las que se muestran: sin las de temas aparcados. */
+export const faq = allFaq.filter((item) => !item.topic || siteConfig.topics[item.topic]);

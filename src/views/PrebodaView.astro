@@ -5,6 +5,7 @@ import Icon from '@/components/Icon.astro';
 import PhotoBanner from '@/components/PhotoBanner.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
+import { siteConfig } from '@/site.config';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
@@ -16,7 +17,7 @@ const t = getDictionary(locale);
       <p class="eyebrow">{t.preboda.eyebrow}</p>
       <SoonBadge fill />
     </div>
-    <h1 class="title-xl preboda__title">{t.preboda.title} 🍻</h1>
+    <h1 class="title-xl preboda__title">{t.preboda.title}</h1>
   </header>
 
   <section class="container section section--flush-top">
@@ -36,10 +37,16 @@ const t = getDictionary(locale);
       </dl>
     </div>
 
-    <div class="preboda__note">
-      <Icon name="wine" class="preboda__icon" />
-      <p class="small muted">{t.preboda.formNote} <a href={href(locale, 'rsvp')}>{t.common.rsvp}</a>.</p>
-    </div>
+    {
+      siteConfig.topics.preboda && (
+        <div class="preboda__note">
+          <Icon name="wine" class="preboda__icon" />
+          <p class="small muted">
+            {t.preboda.formNote} <a href={href(locale, 'rsvp')}>{t.common.rsvp}</a>.
+          </p>
+        </div>
+      )
+    }
   </section>
 
   <PhotoBanner id="15-img-9697" />

@@ -13,7 +13,7 @@ const t = getDictionary(locale);
 
 <Base page="quiz" title={t.nav.quiz}>
   <header class="container page-head">
-    <SectionHead as="h1" size="xl" eyebrow={`${t.quiz.eyebrow} 🎯`} title={t.quiz.title} lead={t.quiz.lead} />
+    <SectionHead as="h1" size="xl" eyebrow={t.quiz.eyebrow} title={t.quiz.title} lead={t.quiz.lead} />
   </header>
   <section class="container section section--flush-top">
     {quizConfigured ? <QuizGame /> : <p class="soon"><SoonBadge /> <span class="muted">{t.quiz.notReady}</span></p>}

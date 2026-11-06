@@ -21,10 +21,8 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
 {
   iban && (
     <div class:list={['gift', className]} id={id} data-gift data-copied={t.gift.copied} data-copy={t.gift.copy} data-fail={t.gift.copyFail}>
-      <span class="gift__emoji" aria-hidden="true">🎁</span>
+      <span class="gift__mark" aria-hidden="true"><Icon name="gift" /></span>
       <div class="gift__body">
-        <p class="eyebrow">{t.gift.eyebrow}</p>
-        <h2 class="title-md gift__title">{t.gift.title}</h2>
         <p class="gift__text">{t.gift.text}</p>
         <div class="gift__row">
           <span class="gift__iban tabular" data-gift-iban data-value={iban}>{pretty}</span>
@@ -32,8 +30,8 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
             <Icon name="copy" class="gift__icon gift__icon--copy" />
             <Icon name="check" class="gift__icon gift__icon--check" />
           </button>
+          <span class="gift__status small" role="status" aria-live="polite" data-gift-status></span>
         </div>
-        <p class="gift__status small" role="status" aria-live="polite" data-gift-status></p>
       </div>
     </div>
   )
@@ -49,9 +47,15 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
     background: linear-gradient(135deg, var(--coral-2), var(--sun-2));
   }
 
-  .gift__emoji {
-    font-size: 2rem;
-    line-height: 1;
+  .gift__mark {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--coral-dark);
   }
 
   .gift__body {
@@ -59,12 +63,10 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
     flex: 1;
   }
 
-  .gift__title {
-    margin-top: 0.5rem;
-  }
-
   .gift__text {
-    margin-top: 0.75rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 4.5vw, 1.6rem);
+    line-height: 1.3;
     max-width: 56ch;
     color: var(--ink-2);
   }
@@ -141,9 +143,8 @@ const pretty = iban.replace(/(.{4})/g, '$1 ').trim();
   }
 
   .gift__status {
-    min-height: 1.25rem;
-    margin-top: 0.4rem;
     color: var(--sea-dark);
+    font-weight: 500;
   }
 
   @media (max-width: 26em) {

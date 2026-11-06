@@ -12,7 +12,7 @@ const routes: Record<string, string> = {
   home: '/',
   'el-gran-dia': '/el-gran-dia/',
   transporte: '/transporte/',
-  alojamiento: '/alojamiento/',
+  regalo: '/regalo/',
   santander: '/santander/',
   preboda: '/preboda/',
   fotos: '/fotos/',

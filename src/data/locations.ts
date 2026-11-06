@@ -1,3 +1,4 @@
+import type { IconName } from '@/components/icons';
 import type { Localized } from '@/i18n';
 import { googleMapsSearchUrl } from '@/lib/url';
 
@@ -13,7 +14,8 @@ export interface Location {
   /** Nombre propio del lugar (no se traduce). */
   name: string;
   /** Emoji del marcador en el mapa y en las tarjetas. */
-  emoji: string;
+  /** Icono de línea del punto (tarjeta, leyenda y marcador del mapa). */
+  icon: IconName;
   /** Etiqueta corta traducible: "Autobús", "Ceremonia", "Celebración". */
   short: Localized;
   /** Dirección postal, por líneas. */
@@ -33,7 +35,7 @@ export const locations: Location[] = [
   {
     id: 'train',
     name: 'Estación de Santander',
-    emoji: '🚆',
+    icon: 'train',
     short: { es: 'Tren', ca: 'Tren', en: 'Train', tr: 'Tren' },
     address: ['Plaza de las Estaciones, s/n', '39002 Santander'],
     lat: 43.4593,
@@ -49,7 +51,7 @@ export const locations: Location[] = [
   {
     id: 'airport',
     name: 'Aeropuerto Seve Ballesteros',
-    emoji: '✈️',
+    icon: 'plane',
     short: { es: 'Aeropuerto', ca: 'Aeroport', en: 'Airport', tr: 'Havalimanı' },
     address: ['Carretera del Aeropuerto, s/n', '39600 Maliaño, Cantabria'],
     lat: 43.4269,
@@ -65,7 +67,7 @@ export const locations: Location[] = [
   {
     id: 'bus',
     name: 'Centro Botín',
-    emoji: '🚌',
+    icon: 'bus',
     short: { es: 'Autobús', ca: 'Autobús', en: 'Bus', tr: 'Otobüs' },
     address: ['Muelle de Albareda, s/n', '39004 Santander'],
     lat: 43.4602,
@@ -83,7 +85,7 @@ export const locations: Location[] = [
   {
     id: 'ceremony',
     name: 'Santuario de Nuestra Señora de Latas',
-    emoji: '⛪',
+    icon: 'chapel',
     short: { es: 'Ceremonia', ca: 'Cerimònia', en: 'Ceremony', tr: 'Tören' },
     address: ['Barrio Latas, 8', '39160 Loredo, Cantabria'],
     lat: 43.4566,
@@ -100,7 +102,7 @@ export const locations: Location[] = [
   {
     id: 'party',
     name: 'La Huerta de Cubas',
-    emoji: '🥂',
+    icon: 'cocktail',
     short: { es: 'Celebración', ca: 'Celebració', en: 'Celebration', tr: 'Kutlama' },
     address: ['Barrio La Polvorosa', '39793 Cubas, Cantabria'],
     lat: 43.4281,

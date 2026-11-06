@@ -38,6 +38,13 @@ export const siteConfig = {
    */
   rsvpDeadline: { es: '', ca: '', en: '', tr: '' } as Record<Locale, string>,
 
+  /**
+   * Temas aparcados hasta tener la información cerrada (petición de los novios, nov. 2026).
+   * Con false no se pregunta en el formulario ni aparece en las preguntas frecuentes;
+   * para recuperarlos basta con ponerlos a true.
+   */
+  topics: { preboda: false, children: false },
+
   /** Cuenta para los regalos (IBAN, sin espacios). Vacío = no se muestra el bloque de regalo. */
   giftIban: 'ES9715830001149199820937',
 

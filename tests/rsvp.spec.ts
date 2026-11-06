@@ -63,7 +63,7 @@ test.beforeEach(async ({ request }) => {
   await seedSite(request);
 });
 
-test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños', async ({ page, request }, info) => {
+test('respuesta completa (sí) con acompañante, alergias y autobús', async ({ page, request }, info) => {
   const email = uniqueEmail('ana', info);
   await page.goto('/confirmar/');
   await expect(page.locator('[data-rsvp-form]')).toBeVisible();
@@ -81,16 +81,6 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   await page.locator('#diet').fill('Sin gluten');
   await choose(page, 'busOut', 'yes');
   await choose(page, 'busBack', 'no');
-  await choose(page, 'hasChildren', 'yes');
-  await page.locator('select[name="childrenCount"]').selectOption('2');
-  const rows = page.locator('[data-child-row]:not([hidden])');
-  await expect(rows).toHaveCount(2);
-  await rows.nth(0).locator('[data-child="name"]').fill('Leo');
-  await rows.nth(0).locator('[data-child="age"]').fill('4');
-  await rows.nth(1).locator('[data-child="name"]').fill('Mar');
-  await rows.nth(1).locator('[data-child="age"]').fill('2');
-  await rows.nth(1).locator('[data-child="diet"]').fill('huevo');
-  await choose(page, 'preboda', 'maybe');
   await page.locator('#song').fill('Sobreviviré');
   await page.locator('#artist').fill('Mónica Naranjo');
   await page.locator('#comments').fill('¡Qué ganas!');
@@ -99,7 +89,7 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   await expect(page.locator('[data-panel="success"]')).toBeVisible({ timeout: 15_000 });
   await expect(page.locator('[data-panel="success"]')).toContainText('¡Gracias!');
   // El siguiente paso es el juego: mensaje, botón y cuenta atrás de redirección que se puede cancelar
-  await expect(page.locator('[data-panel="success"]')).toContainText('¡Ya estás dentro! Ahora vamos a ver cuánto sabes de nosotros dos… 👀');
+  await expect(page.locator('[data-panel="success"]')).toContainText('¡Ya estás dentro! Ahora vamos a ver cuánto sabes de nosotros dos…');
   await expect(page.locator('[data-redirect-note]')).toHaveText(/Te llevamos al juego en \d s/);
   await expect(page.locator('[data-go-quiz]')).toHaveAttribute('href', '/juego/');
   await page.locator('[data-stay]').click();
@@ -117,10 +107,9 @@ test('respuesta completa (sí) con acompañante, alergias, autobús y dos niños
   expect(d.diet?.stringValue).toBe('Sin gluten');
   expect(d.busOut?.booleanValue).toBe(true);
   expect(d.busBack?.booleanValue).toBe(false);
-  expect(d.children?.arrayValue?.values).toHaveLength(2);
-  expect(d.children?.arrayValue?.values?.[0].mapValue.fields.age.integerValue).toBe('4');
-  expect(d.children?.arrayValue?.values?.[1].mapValue.fields.diet.stringValue).toBe('huevo');
-  expect(d.preboda?.stringValue).toBe('maybe');
+  // Preboda y niños están aparcados (siteConfig.topics): no se preguntan ni se guardan
+  expect(d).not.toHaveProperty('children');
+  expect(d).not.toHaveProperty('preboda');
   expect(d.song?.stringValue).toBe('Sobreviviré');
   expect(d.comments?.stringValue).toBe('¡Qué ganas!');
   expect(d.locale?.stringValue).toBe('es');

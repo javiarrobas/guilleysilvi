@@ -3,25 +3,30 @@ import Base from '@/layouts/Base.astro';
 import SectionHead from '@/components/SectionHead.astro';
 import VenueMap from '@/components/VenueMap.astro';
 import LocationCard from '@/components/LocationCard.astro';
+import AccommodationCard from '@/components/AccommodationCard.astro';
 import PhotoBanner from '@/components/PhotoBanner.astro';
 import Icon from '@/components/Icon.astro';
 import { getDictionary, getLocale } from '@/i18n';
 import { href } from '@/i18n/routes';
-import { flightsUrl, locations, stayZone } from '@/data/locations';
+import { busLocation, flightsUrl, locations, stayZone } from '@/data/locations';
+import { accommodations, accommodationGroups } from '@/data/accommodations';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getDictionary(locale);
+const grouped = accommodationGroups
+  .map((group) => ({ group, items: accommodations.filter((item) => item.group === group) }))
+  .filter(({ items }) => items.length > 0);
 ---
 
 <Base page="transport" title={t.nav.transport}>
   <header class="container page-head">
-    <SectionHead as="h1" size="xl" eyebrow={`${t.transport.eyebrow} 🗺️`} title={t.transport.title} lead={t.transport.lead} />
+    <SectionHead as="h1" size="xl" eyebrow={t.transport.eyebrow} title={t.transport.title} lead={t.transport.lead} />
   </header>
 
   <section class="container section section--flush-top">
     <VenueMap locations={locations} zone={stayZone} zoneLabel={t.transport.zoneTitle} />
     <ul class="legend small">
-      {locations.map((loc) => <li><span class="legend__emoji" aria-hidden="true">{loc.emoji}</span>{loc.name}</li>)}
+      {locations.map((loc) => <li><Icon name={loc.icon} class="legend__icon" />{loc.name}</li>)}
       <li><span class="legend__ring" aria-hidden="true"></span>{t.transport.mapLegendZone}</li>
     </ul>
   </section>
@@ -34,7 +39,7 @@ const t = getDictionary(locale);
   </section>
 
   <section class="container section section--flush-top">
-    <SectionHead eyebrow={`${t.transport.busEyebrow} 🚌`} title={t.transport.busTitle} size="lg" />
+    <SectionHead eyebrow={t.transport.busEyebrow} title={t.transport.busTitle} size="lg" />
     <div class="grid grid--2 buses">
       {
         [t.transport.busOut, t.transport.busBack].map((bus) => (
@@ -53,7 +58,7 @@ const t = getDictionary(locale);
   <section class="container section section--flush-top">
     <div class="flights">
       <div>
-        <p class="eyebrow">{t.transport.flightsEyebrow} ✈️</p>
+        <p class="eyebrow">{t.transport.flightsEyebrow}</p>
         <h2 class="title-md">{t.transport.flightsTitle}</h2>
         <p class="flights__text">{t.transport.flightsText}</p>
         <a class="btn btn--primary" href={flightsUrl(locale)} target="_blank" rel="noopener noreferrer">{t.transport.flightsCta}<Icon name="external" /></a>
@@ -62,20 +67,58 @@ const t = getDictionary(locale);
   </section>
 
   <section class="container section section--flush-top">
-    <div class="grid grid--2 info">
-      <div>
-        <h2 class="title-md">{t.transport.zoneTitle} 🏨</h2>
-        <p class="info__text">{t.transport.zoneText}</p>
-        <a class="arrow-link" href={href(locale, 'stay')}>{t.nav.stay}<Icon name="arrowRight" /></a>
-      </div>
-      <div>
-        <h2 class="title-md">{t.transport.byCarTitle} 🚗</h2>
-        <p class="info__text">{t.transport.byCarText}</p>
-      </div>
+    <div class="info">
+      <h2 class="title-md">{t.transport.byCarTitle}</h2>
+      <p class="info__text">{t.transport.byCarText}</p>
     </div>
   </section>
 
   <PhotoBanner id="07-img-1725" />
+
+  <!-- Alojamiento (antes era una página aparte: las URL antiguas redirigen a este ancla) -->
+  <section class="container section stay" id="alojamiento">
+    <SectionHead eyebrow={t.stay.eyebrow} title={t.stay.title} lead={t.stay.lead} size="xl" id="stay-title" />
+  </section>
+
+  <section class="container section section--flush-top">
+    <div class="zone">
+      <VenueMap locations={[busLocation]} zone={stayZone} zoneLabel={t.stay.zoneTitle} fit="zone" class="zone__map" />
+      <div class="zone__text">
+        <p class="eyebrow">{t.stay.zoneEyebrow}</p>
+        <h3 class="title-md">{t.stay.zoneTitle}</h3>
+        <p class="zone__desc">{t.stay.zoneText}</p>
+        <a class="btn btn--ghost btn--sm" href={busLocation.mapsUrl} target="_blank" rel="noopener noreferrer">
+          {busLocation.name}
+          <Icon name="external" />
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container section section--flush-top">
+    <div class="help">
+      <span class="help__mark" aria-hidden="true"><Icon name="chat" /></span>
+      <div>
+        <h3 class="title-md">{t.stay.helpTitle}</h3>
+        <p class="help__text">{t.stay.helpText}</p>
+      </div>
+    </div>
+  </section>
+
+  {
+    grouped.map(({ group, items }) => (
+      <section class="container section section--flush-top">
+        <SectionHead as="h3" title={t.stay.groups[group]} size="md" />
+        <div class="grid grid--3 cards">
+          {items.map((item) => (
+            <AccommodationCard item={item} />
+          ))}
+        </div>
+      </section>
+    ))
+  }
+
+  <PhotoBanner id="01-img-8506" />
 </Base>
 
 <style>
@@ -93,9 +136,8 @@ const t = getDictionary(locale);
     gap: 0.5rem;
   }
 
-  .legend__emoji {
-    font-size: 1.1rem;
-    line-height: 1;
+  .legend :global(.legend__icon) {
+    color: var(--sea-dark);
   }
 
   .legend__ring {
@@ -164,8 +206,65 @@ const t = getDictionary(locale);
   }
 
   .info__text {
+    margin-top: 1rem;
+    max-width: 60ch;
+    color: var(--ink-2);
+  }
+
+  /* ---------- Alojamiento ---------- */
+  .stay {
+    scroll-margin-top: 4.5rem;
+  }
+
+  .zone {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .zone__desc {
     margin: 1rem 0 1.25rem;
+    color: var(--ink-2);
+  }
+
+  .zone__text .title-md {
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 64em) {
+    .zone {
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      align-items: center;
+      gap: 3rem;
+    }
+  }
+
+  .help {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 5vw, 2.5rem);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, var(--coral-2), var(--sun-2));
+  }
+
+  .help__mark {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: var(--white);
+    color: var(--coral-dark);
+  }
+
+  .help__text {
+    margin-top: 0.75rem;
     max-width: 52ch;
     color: var(--ink-2);
+  }
+
+  .cards {
+    margin-top: 1.5rem;
   }
 </style>

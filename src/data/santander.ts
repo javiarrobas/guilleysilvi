@@ -1,5 +1,6 @@
 import type { ImageMetadata } from 'astro';
 import type { Localized } from '@/i18n';
+import type { IconName } from '@/components/icons';
 import { googleMapsSearchUrl } from '@/lib/url';
 
 /**
@@ -8,12 +9,13 @@ import { googleMapsSearchUrl } from '@/lib/url';
  *
  * Fotos: originales en fotos/santander/ (fuera de git) → `npm run photos` las deja
  * optimizadas en src/assets/santander/ con los nombres de `images` (sin extensión).
- * Un sitio sin foto se muestra con su emoji en grande hasta que la haya.
+ * Un sitio sin foto se muestra con su icono en grande hasta que la haya.
  */
 export interface Place {
   id: string;
   name: string;
-  emoji: string;
+  /** Icono de línea del sitio. */
+  icon: IconName;
   /** La recomendación, en una o dos frases. */
   comment: Localized;
   /** Nombres de fichero en src/assets/santander/ (sin extensión). La primera es la principal. */
@@ -28,7 +30,7 @@ export const places: Place[] = [
   {
     id: 'diluvio',
     name: 'El Diluvio',
-    emoji: '🍳',
+    icon: 'egg',
     comment: {
       es: 'Nuestro pincho de tortilla recomendado. El primero que pedimos al llegar a Santander.',
       ca: 'El nostre pintxo de truita recomanat. El primer que demanem en arribar a Santander.',
@@ -41,7 +43,7 @@ export const places: Place[] = [
   {
     id: 'riojano',
     name: 'El Riojano',
-    emoji: '🦑',
+    icon: 'rabas',
     comment: {
       es: 'Para ir a comer unas buenas rabas.',
       ca: 'Per anar a menjar unes bones rabas.',
@@ -54,7 +56,7 @@ export const places: Place[] = [
   {
     id: 'canadio',
     name: 'Cañadío',
-    emoji: '🍳',
+    icon: 'egg',
     comment: {
       es: 'Otra de las tortillas más famosas de Santander.',
       ca: 'Una altra de les truites més famoses de Santander.',
@@ -67,7 +69,7 @@ export const places: Place[] = [
   {
     id: 'santona',
     name: 'Taberna Santoña',
-    emoji: '🐟',
+    icon: 'anchovy',
     comment: {
       es: 'Para comer anchoas. Las de verdad.',
       ca: 'Per menjar anxoves. Les de veritat.',
@@ -80,7 +82,7 @@ export const places: Place[] = [
   {
     id: 'conveniente',
     name: 'La Conveniente',
-    emoji: '🍷',
+    icon: 'wine',
     comment: {
       es: 'El sitio favorito de Guille: una bodega de siempre, vino, cecina y buen pan.',
       ca: 'El lloc preferit del Guille: un celler de tota la vida, vi, cecina i bon pa.',
@@ -94,7 +96,7 @@ export const places: Place[] = [
   {
     id: 'marucho',
     name: 'El Marucho',
-    emoji: '🦀',
+    icon: 'crab',
     comment: {
       es: 'El sitio favorito de Silvia: marisco en una taberna de barrio sin florituras.',
       ca: 'El lloc preferit de la Silvia: marisc en una taverna de barri sense floritures.',

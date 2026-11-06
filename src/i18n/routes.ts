@@ -6,10 +6,10 @@ export const pageKeys = [
   'home',
   'day',
   'transport',
-  'stay',
   'santander',
   'preboda',
   'photos',
+  'gift',
   'faq',
   'rsvp',
   'quiz',
@@ -18,12 +18,11 @@ export const pageKeys = [
 export type PageKey = (typeof pageKeys)[number];
 
 /** Páginas del menú a pantalla completa (móvil): caben todas. */
-export const navKeys: PageKey[] = ['day', 'transport', 'stay', 'santander', 'preboda', 'photos', 'quiz', 'faq'];
+export const navKeys: PageKey[] = ['day', 'transport', 'santander', 'preboda', 'photos', 'gift', 'quiz', 'faq'];
 
 /**
- * Barra de navegación de escritorio: el menú del brief original más el juego. Con las
- * ocho entradas y el botón de confirmar no cabe a 1280 px en castellano y catalán, así
- * que las preguntas frecuentes quedan en el menú móvil, el pie y el índice de la portada.
+ * Barra de navegación de escritorio: todo menos las preguntas frecuentes, que no caben;
+ * quedan en el menú móvil y en el pie.
  */
 export const desktopNavKeys: PageKey[] = navKeys.filter((key) => key !== 'faq');
 
@@ -36,10 +35,10 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     home: '/',
     day: '/el-gran-dia/',
     transport: '/transporte/',
-    stay: '/alojamiento/',
     santander: '/santander/',
     preboda: '/preboda/',
     photos: '/fotos/',
+    gift: '/regalo/',
     faq: '/preguntas/',
     rsvp: '/confirmar/',
     quiz: '/juego/',
@@ -49,10 +48,10 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     home: '/ca/',
     day: '/ca/el-gran-dia/',
     transport: '/ca/transport/',
-    stay: '/ca/allotjament/',
     santander: '/ca/santander/',
     preboda: '/ca/preboda/',
     photos: '/ca/fotos/',
+    gift: '/ca/regal/',
     faq: '/ca/preguntes/',
     rsvp: '/ca/confirmar/',
     quiz: '/ca/joc/',
@@ -62,10 +61,10 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     home: '/en/',
     day: '/en/the-big-day/',
     transport: '/en/getting-there/',
-    stay: '/en/where-to-stay/',
     santander: '/en/santander/',
     preboda: '/en/pre-wedding/',
     photos: '/en/photos/',
+    gift: '/en/gift/',
     faq: '/en/faq/',
     rsvp: '/en/rsvp/',
     quiz: '/en/quiz/',
@@ -76,10 +75,10 @@ export const slugs: Record<Locale, Record<PageKey, string>> = {
     home: '/tr/',
     day: '/tr/buyuk-gun/',
     transport: '/tr/ulasim/',
-    stay: '/tr/konaklama/',
     santander: '/tr/santander/',
     preboda: '/tr/dugun-oncesi/',
     photos: '/tr/fotograflar/',
+    gift: '/tr/hediye/',
     faq: '/tr/sss/',
     rsvp: '/tr/katilim/',
     quiz: '/tr/oyun/',

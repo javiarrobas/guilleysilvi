@@ -8,9 +8,7 @@ import type { LocationId } from './locations';
  */
 export interface ScheduleItem {
   time: Localized;
-  /** Emoji del hito: es lo que se ve en el marcador del recorrido. */
-  emoji: string;
-  /** Icono de línea, por si el emoji no se renderiza (p. ej. en el pie). */
+  /** Icono de línea del hito: es lo que se ve en el marcador del recorrido. */
   icon: IconName;
   title: Localized;
   /** Nombre del lugar (no se traduce). */
@@ -24,7 +22,6 @@ export interface ScheduleItem {
 export const schedule: ScheduleItem[] = [
   {
     time: '11:30',
-    emoji: '🚌',
     icon: 'bus',
     title: {
       es: 'Salida de buses desde el Centro Botín',
@@ -42,7 +39,6 @@ export const schedule: ScheduleItem[] = [
   },
   {
     time: '12:30',
-    emoji: '⛪',
     icon: 'chapel',
     title: { es: 'Empieza la misa', ca: 'Comença la missa', en: 'The ceremony begins', tr: 'Tören başlıyor' },
     place: 'Santuario de Nuestra Señora de Latas',
@@ -51,7 +47,6 @@ export const schedule: ScheduleItem[] = [
   },
   {
     time: '13:30',
-    emoji: '🚌',
     icon: 'bus',
     title: {
       es: 'Salida de buses hacia La Huerta de Cubas',
@@ -62,7 +57,6 @@ export const schedule: ScheduleItem[] = [
   },
   {
     time: '14:00',
-    emoji: '🥂',
     icon: 'cocktail',
     title: { es: 'Empieza el cóctel', ca: 'Comença el còctel', en: 'The cocktail begins', tr: 'Kokteyl başlıyor' },
     place: 'La Huerta de Cubas',
@@ -71,19 +65,16 @@ export const schedule: ScheduleItem[] = [
   },
   {
     time: '16:00',
-    emoji: '🍽️',
     icon: 'cutlery',
     title: { es: 'Empieza la comida', ca: 'Comença el dinar', en: 'Lunch is served', tr: 'Yemek başlıyor' },
   },
   {
     time: { es: 'Después', ca: 'Després', en: 'Then', tr: 'Sonra' },
-    emoji: '💃🕺',
     icon: 'vinyl',
     title: { es: 'Baile, copas y fiesta', ca: 'Ball, copes i festa', en: 'Dancing, drinks and party', tr: 'Dans, içki ve parti' },
   },
   {
     time: '00:00',
-    emoji: '🪩',
     icon: 'moon',
     title: {
       es: 'Fin de barra libre y fiesta',

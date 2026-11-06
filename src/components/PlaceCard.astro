@@ -22,10 +22,10 @@ const images = placeImages(place);
           <Image class="place__img" src={img} alt={place.name} widths={[480, 800, 1200]} sizes="(min-width: 64em) 420px, (min-width: 40em) 50vw, 100vw" loading={i === 0 ? 'eager' : 'lazy'} />
         ))
       ) : (
-        <span class="place__emoji" aria-hidden="true">{place.emoji}</span>
+        <Icon name={place.icon} class="place__glyph" />
       )
     }
-    <span class="place__badge" aria-hidden="true">{place.emoji}</span>
+    <span class="place__badge" aria-hidden="true"><Icon name={place.icon} /></span>
   </a>
   <div class="place__body">
     {place.favouriteOf && <p class="place__fav">{interpolate(t.santander.favouriteOf, { name: place.favouriteOf })}</p>}
@@ -80,9 +80,11 @@ const images = placeImages(place);
     background: linear-gradient(135deg, var(--sun-2), var(--coral-2));
   }
 
-  .place__emoji {
-    font-size: 4rem;
-    line-height: 1;
+  .place__media :global(.place__glyph) {
+    width: 4rem;
+    height: 4rem;
+    stroke-width: 1;
+    color: var(--sea-dark);
   }
 
   .place__badge {
@@ -96,8 +98,7 @@ const images = placeImages(place);
     border-radius: 50%;
     background: var(--white);
     box-shadow: var(--shadow);
-    font-size: 1.25rem;
-    line-height: 1;
+    color: var(--sea-dark);
   }
 
   .place--none .place__badge {

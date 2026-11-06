@@ -29,7 +29,7 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
             <span class="timeline__time timeline__time--text">{l(item.time, locale)}</span>
           )}
           <span class="timeline__marker" aria-hidden="true">
-            <span class="timeline__emoji">{item.emoji}</span>
+            <Icon name={item.icon} class="timeline__icon" />
           </span>
           <div class="timeline__body">
             <h3 class="timeline__title">{l(item.title, locale)}</h3>
@@ -109,10 +109,10 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
     box-shadow: inset 0 0 0 1px var(--sea-2);
   }
 
-  .timeline__emoji {
-    font-size: 1.25rem;
-    line-height: 1;
-    letter-spacing: -0.15em;
+  .timeline__marker :global(.timeline__icon) {
+    width: 1.3rem;
+    height: 1.3rem;
+    color: var(--sea-dark);
   }
 
   .timeline__body {
@@ -147,8 +147,9 @@ const byId = new Map(locations.map((loc) => [loc.id, loc]));
       --marker: 3.25rem;
       --time-col: 6rem;
     }
-    .timeline__emoji {
-      font-size: 1.5rem;
+    .timeline__marker :global(.timeline__icon) {
+      width: 1.5rem;
+      height: 1.5rem;
     }
     .timeline__item {
       column-gap: 1.5rem;

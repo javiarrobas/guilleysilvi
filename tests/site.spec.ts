@@ -3,8 +3,8 @@ import { test, expect, type Page } from '@playwright/test';
 const pages = [
   { path: '/', h1: /Silvia/ },
   { path: '/el-gran-dia/', h1: /1 de mayo de 2027/ },
-  { path: '/transporte/', h1: /Cómo llegar/ },
-  { path: '/alojamiento/', h1: /Dónde dormir/ },
+  { path: '/transporte/', h1: /Cómo llegar y dónde dormir/ },
+  { path: '/regalo/', h1: /Un detalle/ },
   { path: '/santander/', h1: /Nuestros sitios de siempre/ },
   { path: '/preboda/', h1: /calentar motores/ },
   { path: '/fotos/', h1: /Nosotros/ },
@@ -21,7 +21,7 @@ const pages = [
   { path: '/ca/', h1: /Silvia/, lang: 'ca' },
   { path: '/ca/el-gran-dia/', h1: /1 de maig de 2027/, lang: 'ca' },
   { path: '/ca/transport/', h1: /Com arribar-hi/, lang: 'ca' },
-  { path: '/ca/allotjament/', h1: /On dormir/, lang: 'ca' },
+  { path: '/ca/regal/', h1: /Un detall/, lang: 'ca' },
   { path: '/ca/santander/', h1: /Els nostres llocs de sempre/, lang: 'ca' },
   { path: '/ca/preboda/', h1: /escalfar motors/, lang: 'ca' },
   { path: '/ca/fotos/', h1: /Nosaltres/, lang: 'ca' },
@@ -29,8 +29,8 @@ const pages = [
   { path: '/ca/confirmar/', h1: /Comptem amb tu/, lang: 'ca' },
   { path: '/en/', h1: /Silvia/, lang: 'en' },
   { path: '/en/the-big-day/', h1: /1 May 2027/, lang: 'en' },
-  { path: '/en/getting-there/', h1: /How to get there/, lang: 'en' },
-  { path: '/en/where-to-stay/', h1: /Where to sleep/, lang: 'en' },
+  { path: '/en/getting-there/', h1: /Getting there and where to stay/, lang: 'en' },
+  { path: '/en/gift/', h1: /A gift/, lang: 'en' },
   { path: '/en/santander/', h1: /Our usual places/, lang: 'en' },
   { path: '/en/pre-wedding/', h1: /warming up/, lang: 'en' },
   { path: '/en/photos/', h1: /Us/, lang: 'en' },
@@ -39,7 +39,7 @@ const pages = [
   { path: '/tr/', h1: /Silvia/, lang: 'tr' },
   { path: '/tr/buyuk-gun/', h1: /1 Mayıs 2027/, lang: 'tr' },
   { path: '/tr/ulasim/', h1: /Nasıl gidilir/, lang: 'tr' },
-  { path: '/tr/konaklama/', h1: /Nerede kalınır/, lang: 'tr' },
+  { path: '/tr/hediye/', h1: /Bir jest/, lang: 'tr' },
   { path: '/tr/santander/', h1: /Her zamanki yerlerimiz/, lang: 'tr' },
   { path: '/tr/dugun-oncesi/', h1: /ısınmaya başlıyoruz/, lang: 'tr' },
   { path: '/tr/fotograflar/', h1: /Biz/, lang: 'tr' },
@@ -102,7 +102,16 @@ test('portada: nombres, fecha y foto en la primera pantalla; confirmar y juego j
   expect(names!.y + names!.height).toBeLessThanOrEqual(viewport.height);
   // La foto empieza dentro de la primera pantalla
   expect(photo!.y).toBeLessThan(viewport.height);
-  await expect(page.locator('.hero [data-compact-text]')).toHaveText(/Faltan \d+ días/);
+  // Cuenta atrás completa (DÍAS : HORAS : MINUTOS : SEGUNDOS) que avanza cada segundo
+  const countdown = page.locator('.hero [data-countdown]');
+  await expect(countdown.locator('.countdown__unit')).toHaveCount(4);
+  await expect(countdown.locator('.countdown__sep')).toHaveCount(3);
+  await expect(countdown.locator('.countdown__name')).toHaveText(['días', 'horas', 'minutos', 'segundos']);
+  const seconds = countdown.locator('[data-unit="seconds"]');
+  const before = await seconds.textContent();
+  await expect(seconds).not.toHaveText(before ?? '', { timeout: 2500 });
+  // La brújula del norte junto a "Nos vamos a Santander"
+  await expect(page.locator('.hero__tagline svg.hero__compass')).toHaveCount(1);
   const rsvp = page.locator('.hero').getByRole('link', { name: 'Confirmar asistencia' });
   const quiz = page.locator('.hero').getByRole('link', { name: '¿Cuánto sabes de nosotros?' });
   if (isMobile) {
@@ -115,7 +124,10 @@ test('portada: nombres, fecha y foto en la primera pantalla; confirmar y juego j
   // Después del recorrido del día solo quedan el juego y confirmar
   await expect(page.locator('.essentials, .index')).toHaveCount(0);
   await expect(page.locator('.game')).toHaveCount(1);
-  await expect(page.locator('.banner')).toHaveCount(1);
+  // Recuadro propio y destacado para confirmar, al final de la portada
+  const box = page.locator('[data-home-rsvp]');
+  await expect(box).toHaveCount(1);
+  await expect(box.getByRole('link', { name: 'Confirmar asistencia' })).toHaveAttribute('href', '/confirmar/');
   await rsvp.click();
   await expect(page).toHaveURL(/\/confirmar\/$/);
 });
@@ -141,24 +153,26 @@ test('menú móvil: abre, lista las secciones y navega', async ({ page, isMobile
   const menu = page.locator('#site-menu');
   await expect(menu).toBeVisible();
   await expect(menu.locator('.site-menu__item')).toHaveCount(8);
-  await menu.getByRole('link', { name: 'Alojamiento' }).click();
-  await expect(page).toHaveURL(/\/alojamiento\/$/);
+  await expect(menu.getByRole('link', { name: 'Alojamiento', exact: true })).toHaveCount(0);
+  await menu.getByRole('link', { name: 'Regalo' }).click();
+  await expect(page).toHaveURL(/\/regalo\/$/);
 });
 
 test('escritorio: la navegación principal marca la página actual', async ({ page, isMobile }) => {
   test.skip(isMobile, 'solo en escritorio');
   await page.goto('/transporte/');
-  await expect(page.locator('.nav-desktop a[aria-current="page"]')).toHaveText('Transporte');
+  await expect(page.locator('.nav-desktop a[aria-current="page"]')).toHaveText('Transporte y alojamiento');
 });
 
 test('transporte: el mapa se inicializa con los tres puntos y la zona', async ({ page }) => {
   await page.goto('/transporte/');
-  const map = page.locator('.venue-map');
+  const map = page.locator('.venue-map').first();
   await map.scrollIntoViewIfNeeded();
   await expect(map).toHaveClass(/is-ready/);
-  await expect(page.locator('.venue-marker')).toHaveCount(5); // tren, aeropuerto, bus, ceremonia, celebración
-  await expect(page.locator('.venue-marker--highlight')).toHaveCount(1);
-  await expect(page.locator('path.leaflet-interactive')).toHaveCount(1); // círculo de la zona
+  await expect(map.locator('.venue-marker')).toHaveCount(5); // tren, aeropuerto, bus, ceremonia, celebración
+  await expect(map.locator('.venue-marker--highlight')).toHaveCount(1);
+  await expect(map.locator('.venue-marker svg.icon')).toHaveCount(5); // iconos de línea, no emojis
+  await expect(map.locator('path.leaflet-interactive')).toHaveCount(1); // círculo de la zona
   await expect(page.locator('.leaflet-tile-loaded').first()).toBeVisible({ timeout: 15_000 });
 
   const mapsLinks = page.locator('a[href^="https://www.google.com/maps/"]');
@@ -169,12 +183,14 @@ test('transporte: el mapa se inicializa con los tres puntos y la zona', async ({
   }
 });
 
-test('alojamiento: mapa centrado en la zona recomendada', async ({ page }) => {
-  await page.goto('/alojamiento/');
-  const map = page.locator('.venue-map');
+test('alojamiento: dentro de transporte, con su mapa centrado en la zona recomendada', async ({ page }) => {
+  await page.goto('/transporte/#alojamiento');
+  await expect(page.locator('#alojamiento h2')).toHaveText('Dónde dormir');
+  const map = page.locator('.venue-map').nth(1);
   await map.scrollIntoViewIfNeeded();
   await expect(map).toHaveClass(/is-ready/);
-  await expect(page.locator('.venue-marker')).toHaveCount(1);
+  await expect(map.locator('.venue-marker')).toHaveCount(1);
+  await expect(page.locator('.accommodation, .card').first()).toBeVisible();
   await expect(page.getByText('Escribidnos por WhatsApp').first()).toBeVisible();
 });
 
@@ -222,17 +238,17 @@ test('confirmar: muestra el formulario propio (sin botón de "próximamente")', 
 });
 
 test('banners: cada página lleva una foto de los novios con su punto de interés', async ({ page }) => {
-  for (const path of ['/el-gran-dia/', '/transporte/', '/alojamiento/', '/santander/', '/preboda/', '/juego/', '/ranking/', '/preguntas/', '/confirmar/']) {
+  for (const path of ['/el-gran-dia/', '/transporte/', '/regalo/', '/santander/', '/preboda/', '/juego/', '/ranking/', '/preguntas/', '/confirmar/']) {
     await page.goto(path);
-    const img = page.locator('figure.banner img');
-    await expect(img, path).toHaveCount(1);
-    await expect(img, path).toHaveAttribute('style', /object-position: center \d+%/);
+    const imgs = page.locator('figure.banner img');
+    expect(await imgs.count(), path).toBeGreaterThanOrEqual(1);
+    for (const img of await imgs.all()) await expect(img, path).toHaveAttribute('style', /object-position: center \d+%/);
   }
 });
 
-test('regalo: IBAN visible en el gran día y botón de copiar', async ({ page, context, browserName }) => {
+test('regalo: página propia con el IBAN y botón de copiar', async ({ page, context, browserName }) => {
   if (browserName === 'chromium') await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  await page.goto('/el-gran-dia/');
+  await page.goto('/regalo/');
   const gift = page.locator('#regalo');
   await expect(gift).toContainText('Nuestro mayor regalo es tu presencia');
   await expect(gift.locator('[data-gift-iban]')).toHaveText('ES97 1583 0001 1491 9982 0937');
@@ -240,9 +256,42 @@ test('regalo: IBAN visible en el gran día y botón de copiar', async ({ page, c
   await expect(gift.locator('[data-gift-copy]')).toHaveClass(/is-copied/);
   await expect(gift.locator('[data-gift-status]')).toHaveText('¡Copiado!');
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('ES9715830001149199820937');
-  // La pregunta frecuente enlaza al bloque
+  // La pregunta frecuente enlaza a la página
   await page.goto('/preguntas/');
-  await expect(page.locator('#regalo a[href="/el-gran-dia/#regalo"]')).toHaveCount(1);
+  await expect(page.locator('#regalo a[href="/regalo/"]')).toHaveCount(1);
+});
+
+test('el gran día: sin dress code ni regalo; el dress code está en preguntas', async ({ page }) => {
+  await page.goto('/el-gran-dia/');
+  await expect(page.locator('main')).not.toContainText('Dress code');
+  await expect(page.locator('#regalo, [data-gift]')).toHaveCount(0);
+  await page.goto('/preguntas/');
+  const dress = page.locator('#dress-code');
+  await dress.locator('summary').click();
+  await expect(dress).toContainText('Chicos: traje y corbata');
+});
+
+test('preboda y niños aparcados: ni en el formulario ni en preguntas', async ({ page }) => {
+  await page.goto('/preguntas/');
+  await expect(page.locator('#preboda')).toHaveCount(0);
+  await expect(page.locator('.faq')).not.toContainText(/niños/i);
+  await page.goto('/confirmar/');
+  await expect(page.locator('[data-rsvp-form]')).toBeVisible();
+  await expect(page.locator('input[name="hasChildren"], input[name="preboda"], [data-children]')).toHaveCount(0);
+});
+
+test('sin emojis: iconos de línea en todas las páginas (salvo los avatares del juego)', async ({ page }) => {
+  const emoji = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2728}]/u;
+  for (const path of ['/', '/el-gran-dia/', '/transporte/', '/regalo/', '/santander/', '/preboda/', '/fotos/', '/preguntas/', '/confirmar/', '/juego/']) {
+    await page.goto(path);
+    const text = await page.evaluate(() => {
+      // Fuera los avatares del juego, que son emojis a propósito.
+      const clone = document.body.cloneNode(true) as HTMLElement;
+      clone.querySelectorAll('.emojis, script, style, template').forEach((n) => n.remove());
+      return clone.textContent ?? '';
+    });
+    expect(text.match(emoji)?.[0], path).toBeUndefined();
+  }
 });
 
 test('404 personalizada', async ({ page }) => {
@@ -252,25 +301,25 @@ test('404 personalizada', async ({ page }) => {
 });
 
 test('idiomas: el selector lleva a la misma página en los otros idiomas', async ({ page }) => {
-  await page.goto('/alojamiento/');
+  await page.goto('/regalo/');
   // Los códigos de idioma están siempre a la vista en la cabecera (aria-label: nombre completo).
   await page.getByRole('link', { name: 'Català' }).first().click();
-  await expect(page).toHaveURL(/\/ca\/allotjament\/$/);
+  await expect(page).toHaveURL(/\/ca\/regal\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'ca');
-  await expect(page.locator('h1')).toContainText('On dormir');
+  await expect(page.locator('h1')).toContainText('Un detall');
 
   await page.getByRole('link', { name: 'English' }).first().click();
-  await expect(page).toHaveURL(/\/en\/where-to-stay\/$/);
+  await expect(page).toHaveURL(/\/en\/gift\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('h1')).toContainText('Where to sleep');
+  await expect(page.locator('h1')).toContainText('A gift');
 
   await page.getByRole('link', { name: 'Türkçe' }).first().click();
-  await expect(page).toHaveURL(/\/tr\/konaklama\/$/);
+  await expect(page).toHaveURL(/\/tr\/hediye\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
-  await expect(page.locator('h1')).toContainText('Nerede kalınır');
+  await expect(page.locator('h1')).toContainText('Bir jest');
 
   await page.getByRole('link', { name: 'Castellano' }).first().click();
-  await expect(page).toHaveURL(/\/alojamiento\/$/);
+  await expect(page).toHaveURL(/\/regalo\/$/);
   await expect(page.locator('html')).toHaveAttribute('lang', 'es');
 });
 
