@@ -3,7 +3,7 @@
 > **Ver la web en local**
 >
 > ```bash
-> cd ~/workdir/Others/weddings/guilleysilvi
+> cd ~/workdir/wedoco/youwebit/websites/guilleysilvi
 > nvm use          # Node 22 (el de por defecto en este Mac es el 12 y no funciona)
 > npm run dev      # abre http://localhost:4321
 > ```
